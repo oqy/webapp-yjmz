@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
+	default-lazy-init="true">
+
+	<description>Shiro安全配置</description>
+
+	<!-- Shiro's main business-tier object for web-enabled applications -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="shiroDbRealm" />
+		<property name="cacheManager" ref="ehcacheManager" />
+		<!-- 配置session cluster，若使用缓存，需搭配设置相应的缓存服务器
+		<property name="cacheManager" ref="shiroClusterCacheManager" />
+		<property name="sessionManager" ref="sessionManager" /> -->
+	</bean>
+
+	<!-- 項目自定义的Realm -->
+	<bean id="shiroDbRealm" class="com.minyisoft.webapp.demo.security.ShiroDbRealm"/>
+	
+	<!-- 需使用自定义filter，可于此处先进行注册，如
+	<bean id="personalPlatformFilter" class="com.fusung.webapp.tex100.common.web.filter.PlatformAccessFilter">
+		<property name="webSiteResource" ref="webSiteResource"/>
+		<property name="accessableUserType">
+			<util:constant static-field="com.fusung.webapp.tex100.common.model.enumField.RoleTypeEnum.PERSONAL_PLATFORM_ROLE"/>
+		</property>
+	</bean> -->
+	
+	<!-- Shiro Filter -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<!-- 声明使用自定义filter
+		<property name="filters">
+			<map>
+				<entry key="personalPlatformFilter" value-ref="personalPlatformFilter"/>
+			</map>
+		</property>-->
+		<property name="filterChainDefinitions">
+			<value>
+			    /index.html = anon
+				/** = authc
+				<!-- /** = personalPlatformFilter  -->
+			</value>
+		</property>
+	</bean>
+	
+	<!-- session cluster配置信息，使用Redis作为session存储服务器 ，适合分布式系统使用
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<property name="name">
+			<util:constant static-field="com.minyisoft.webapp.tex100.common.security.SecurityConstant.SESSION_ID_COOKIE_NAME"/>
+		</property>
+		<property name="httpOnly" value="true"/>
+		<property name="path">
+			<util:constant static-field="org.apache.shiro.web.servlet.Cookie.ROOT_PATH"/>
+		</property>
+		<property name="domain" value="${cookie_domain}"/>
+	</bean>
+	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+		<property name="activeSessionsCacheName">
+			<util:constant static-field="com.minyisoft.webapp.core.security.shiro.cache.ShiroClusterCacheManager.SESSION_CLUSTER_SESSION_CACHE_NAME"/>
+		</property>
+	</bean>
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionIdCookie" ref="sessionIdCookie"/>
+		<property name="sessionValidationSchedulerEnabled" value="false"/>
+		<property name="sessionDAO" ref="sessionDAO"/>
+	</bean> -->
+	
+	<!-- 用户授权及sesseion信息Cache，采用redis作为缓存服务器 
+	<bean id="shiroClusterCacheManager" class="com.minyisoft.webapp.core.security.shiro.cache.ShiroClusterCacheManager">
+		<property name="jedisTemplate" ref="jedisTemplate"/>
+	</bean> -->
+	
+	<!-- Ehcache缓存服务器，适合单机系统使用 -->
+	<bean id="ehcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"/>
+	
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+</beans>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
+   		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+   		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+    	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+    	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+    	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
+   
+    <description>Demo工程公共配置</description>
+    
+    <util:properties id="applicationProperties" location="classpath:application.properties"/>
+    <context:property-placeholder ignore-resource-not-found="true" ignore-unresolvable="true" properties-ref="applicationProperties"/>
+    
+	<!-- DBCP连接池 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxActive" value="15" />
+		<property name="maxIdle" value="10" />
+		<property name="minIdle" value="5" />
+		<property name="maxWait" value="5000" />
+		<property name="validationQuery" value="select 1 from dual" />
+		<property name="testOnBorrow" value="true" />
+		<property name="logAbandoned" value="true" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="150" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="100000" />
+		<property name="minEvictableIdleTimeMillis" value="120000" />
+	</bean>
+	<!-- 初始化数据表结构 -->
+	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
+		<jdbc:script location="classpath:sql/schema.sql" />
+	</jdbc:initialize-database>
+   
+	<!-- myBatis模板配置信息  -->
+	<bean id="sqlSessionFactory" class="com.minyisoft.webapp.core.utils.mybatis.CustomSqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="describableEnumPackage" value="com.minyisoft.webapp.demo.model" />
+		<property name="typeAliasesPackage" value="com.minyisoft.webapp.demo.model" />
+		<property name="mapperLocations" value="classpath*:com/minyisoft/webapp/demo/persistence/*SqlMap.xml" />
+	</bean>
+	<!-- scan for mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.minyisoft.webapp.demo.persistence" />
+	</bean>
+	
+	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+	<context:component-scan base-package="com.minyisoft.webapp.demo">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	<context:component-scan base-package="com.minyisoft.webapp.core.utils" />
+	
+	<aop:aspectj-autoproxy expose-proxy="true"/>
+
+	<!-- 声明式事务配置  -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="batch*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="create*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="send*" propagation="SUPPORTS" />
+			<tx:method name="manage*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="submit*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="execute*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="count*" read-only="true" />
+			<tx:method name="is*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config expose-proxy="true">
+		<!-- com.fusung.webapp.tex100.*.service.impl内所有类方法均实现事务支持 -->
+		<aop:pointcut id="programmeServicePointCut"
+			expression="execution(* com.minyisoft.webapp.demo.service.impl..*(..))" />
+		<aop:advisor advice-ref="txAdvice"
+			pointcut-ref="programmeServicePointCut" order="10"/>
+	</aop:config>
+	
+	<!-- 加载权限等系统基础资源文件 -->
+	<bean id="infrastructureResourceLoader" class="com.minyisoft.webapp.core.utils.spring.InfrastructureResourceLoader">
+		<property name="permissionDefinitions" value="classpath*:com/minyisoft/webapp/demo/security/permission/*.permission"/>
+		<property name="describableEnumDescriptionBaseNames">
+			<list>
+				<value>com.minyisoft.webapp.demo.model.enumField.enumDescription</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 验证器配置  -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="validationMessageSource">
+			<bean class="org.springframework.context.support.ResourceBundleMessageSource">
+				<property name="basenames">
+					<list>
+						<value>com.minyisoft.webapp.core.model.validationMessage</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- Redis配置，用于系统接入Redis服务
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxActive" value="${redis.pool.maxActive}" />  
+        <property name="maxIdle" value="${redis.pool.maxIdle}" />
+        <property name="minIdle" value="${redis.pool.minIdle}" />
+        <property name="maxWait" value="${redis.pool.maxWait}" />
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />  
+    </bean>  
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg name="host" value="${redis.hostname}"/>
+		<constructor-arg name="port" value="${redis.port}"/>
+		<constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
+		<constructor-arg name="timeout" value="100000"/>
+	</bean>
+	<bean id="jedisTemplate" class="com.fusung.webapp.core.utils.redis.JedisTemplate">
+		<constructor-arg name="jedisPool" ref="jedisPool"/>
+	</bean> -->
+	
+	<!-- 以Redis作为缓存服务器的缓存配置， 
+		   若只使用Spring提供的cache注解，可直接使用<cache:annotation-driven/>开启缓存服务
+		   若需额外使用@ModelCacheable或@ModelCacheEvict注解，先注释<cache:annotation-driven/>，然后打开后续的bean定义
+	-->
+	<!-- <cache:annotation-driven/> -->
+	<!-- <bean id="annotationCacheOperationSource" class="org.springframework.cache.annotation.AnnotationCacheOperationSource">
+		<constructor-arg name="annotationParser">
+			<bean class="com.fusung.webapp.core.utils.spring.cache.interceptor.CustomSpringCacheAnnotationParser"/>
+		</constructor-arg>
+	</bean>
+	<bean id="cacheInterceptor" class="com.fusung.webapp.core.utils.spring.cache.interceptor.CustomCacheInterceptor">
+		<property name="cacheOperationSources" ref="annotationCacheOperationSource"/>
+		<property name="cacheManager" ref="cacheManager"/>
+	</bean>
+	<bean id="beanFactoryCacheOperationSourceAdvisor" class="org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor">
+		<property name="cacheOperationSource" ref="annotationCacheOperationSource"/>
+		<property name="adviceBeanName" value="cacheInterceptor"/>
+	</bean>
+	<bean id="cacheManager" class="com.fusung.webapp.core.utils.spring.cache.redis.RedisCacheManager">
+		<constructor-arg name="template" ref="jedisTemplate"/>
+	</bean> -->
+	
+	<!-- RestTemplate配置  -->
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<constructor-arg value="UTF-8" />
+				</bean>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+            </list>
+        </property>
+	</bean>
+	
+	<!-- 并发线程池配置  -->
+	<!-- <bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+		<property name="maxPoolSize" value="50" />
+		<property name="queueCapacity" value="1000" /> -->
+		<!-- 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者 -->
+		<!-- <property name="rejectedExecutionHandler"> -->
+			<!-- CallerRunsPolicy:主线程直接执行该任务，执行完之后尝试添加下一个任务到线程池中，可以有效降低向线程池内添加任务的速度 -->
+			<!-- <bean
+				class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+		</property>
+	</bean> -->
+</beans>
