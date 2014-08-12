@@ -12,7 +12,7 @@
 		<javax-servlet.version>2.5</javax-servlet.version>
 		<h2.version>1.3.173</h2.version>
 		<xstream.version>1.4.5</xstream.version>
-		<spring.version>3.2.4.RELEASE</spring.version>
+		<spring.version>4.0.1.RELEASE</spring.version>
 		<junit.version>4.11</junit.version>
 
 		<!-- Plugin的属性定义 -->

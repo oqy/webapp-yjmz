@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.utils.mapper.json.JsonMapper;
-import com.minyisoft.webapp.core.utils.redis.JedisTemplate;
 import com.minyisoft.webapp.yjmz.weixin.dto.send.Article;
 import com.minyisoft.webapp.yjmz.weixin.dto.send.NewsMessage;
 import com.minyisoft.webapp.yjmz.weixin.dto.send.TextMessage;
@@ -38,11 +37,9 @@ public class WeixinConnectService {
 	private String sendMessageUrl;
 	@Autowired
 	private RestTemplate restTemplate;
-	@Autowired
-	private JedisTemplate jedisTemplate;
 
 	// 微信access_token在redis的键值
-	private static final String WEIXIN_ACCESS_TOKEN_KEY = "weixin:access_token";
+	//private static final String WEIXIN_ACCESS_TOKEN_KEY = "weixin:access_token";
 
 	/**
 	 * 获取微信access_token
@@ -50,16 +47,16 @@ public class WeixinConnectService {
 	 * @return
 	 */
 	public String getAccessToken() {
-		String accessToken = null;
-		if (StringUtils.isNotBlank(accessToken = jedisTemplate.get(WEIXIN_ACCESS_TOKEN_KEY))) {
+		//String accessToken = null;
+		/*if (StringUtils.isNotBlank(accessToken = jedisTemplate.get(WEIXIN_ACCESS_TOKEN_KEY))) {
 			return accessToken;
-		}
+		}*/
 		Map<String, String> resultMap = _queryFromWeixinServer(MessageFormat.format(accessTokenUrl, weixinAppID,
 				weixinAppSecret));
 		if (resultMap.containsKey("access_token")) {
 			// 在redis中缓存access_token，过期时间比微信官方时间短1分钟
-			jedisTemplate.setex(WEIXIN_ACCESS_TOKEN_KEY, resultMap.get("access_token"),
-					Integer.parseInt(resultMap.get("expires_in")) - 60);
+			//jedisTemplate.setex(WEIXIN_ACCESS_TOKEN_KEY, resultMap.get("access_token"),
+					//Integer.parseInt(resultMap.get("expires_in")) - 60);
 			return resultMap.get("access_token");
 		} else {
 			logger.error(MessageFormat.format("获取微信access_token失败，错误码：{0}，错误提示：{1}", resultMap.get("errcode"),

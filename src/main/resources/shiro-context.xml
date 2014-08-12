@@ -2,8 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
 	default-lazy-init="true">
 
 	<description>Shiro安全配置</description>
@@ -18,30 +18,16 @@
 	</bean>
 
 	<!-- 項目自定义的Realm -->
-	<bean id="shiroDbRealm" class="com.minyisoft.webapp.demo.security.ShiroDbRealm"/>
-	
-	<!-- 需使用自定义filter，可于此处先进行注册，如
-	<bean id="personalPlatformFilter" class="com.fusung.webapp.tex100.common.web.filter.PlatformAccessFilter">
-		<property name="webSiteResource" ref="webSiteResource"/>
-		<property name="accessableUserType">
-			<util:constant static-field="com.fusung.webapp.tex100.common.model.enumField.RoleTypeEnum.PERSONAL_PLATFORM_ROLE"/>
-		</property>
-	</bean> -->
+	<bean id="shiroDbRealm" class="com.minyisoft.webapp.yjmz.common.security.ShiroDbRealm"/>
 	
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
-		<!-- 声明使用自定义filter
-		<property name="filters">
-			<map>
-				<entry key="personalPlatformFilter" value-ref="personalPlatformFilter"/>
-			</map>
-		</property>-->
+		<!-- 声明使用自定义filter -->
 		<property name="filterChainDefinitions">
 			<value>
 			    /index.html = anon
 				/** = authc
-				<!-- /** = personalPlatformFilter  -->
 			</value>
 		</property>
 	</bean>

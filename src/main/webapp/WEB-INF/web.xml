@@ -29,7 +29,7 @@
 	</listener>
 
 	<servlet>
-		<servlet-name>mytestMVC</servlet-name>
+		<servlet-name>yjmzMVC</servlet-name>
 		<servlet-class>
 			org.springframework.web.servlet.DispatcherServlet
 		</servlet-class>
@@ -40,7 +40,7 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>mytestMVC</servlet-name>
+		<servlet-name>yjmzMVC</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
@@ -100,12 +100,18 @@
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 	
 	<error-page>
 		<error-code>404</error-code>
-		<location>/resource/404.htm</location>
+		<location>/404.htm</location>
+	</error-page>
+	<error-page>
+		<error-code>400</error-code>
+		<location>/404.htm</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/404.htm</location>
 	</error-page>
 </web-app>
