@@ -1,6 +1,5 @@
 package com.minyisoft.webapp.yjmz.common.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -11,12 +10,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.core.model.DataBaseInfo;
@@ -82,36 +81,38 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	/**
 	 * 创建用户密码
 	 * 
-	 * @param oriUserPassword
+	 * @param plainPassword
 	 *            用户密码明文
 	 */
-	public void constructUserPassword(String oriUserPassword) {
-		Assert.hasText(oriUserPassword, "用户密码不允许为空");
+	public void constructUserPassword(String plainPassword) {
+		Assert.hasText(plainPassword, "用户密码不允许为空");
 		if (StringUtils.isBlank(userPasswordSalt)) {
 			setUserPasswordSalt(EncodeUtils.encodeHex(DigestUtils.generateSalt(4)));
 		}
-		setUserPassword(new SimpleHash(ShiroDbRealm.hashAlgorithm, oriUserPassword, userPasswordSalt,
-				ShiroDbRealm.hashInterations).toHex());
+		setUserPassword(ShiroDbRealm.hashPassword(plainPassword, userPasswordSalt));
 	}
 
 	/**
 	 * 待检查用户密码是否正确
 	 * 
-	 * @param undeterminedPassword
+	 * @param plainPassword
 	 *            待检查密码明文
 	 * @return
 	 */
-	public boolean isPasswordCorrect(String undeterminedPassword) {
-		if (StringUtils.isBlank(undeterminedPassword)) {
-			return false;
+	public boolean isPasswordCorrect(String plainPassword) {
+		return StringUtils.isBlank(plainPassword) ? false : StringUtils.equals(userPassword,
+				ShiroDbRealm.hashPassword(plainPassword, userPasswordSalt));
+	}
+
+	private Optional<UserOrgEntity> _getUserOrgEntity(ISystemOrgObject org) {
+		if (org != null) {
+			for (UserOrgEntity userOrg : userOrgList) {
+				if (userOrg.getOrg().equals(org)) {
+					return Optional.of(userOrg);
+				}
+			}
 		}
-		if (StringUtils.isBlank(userPasswordSalt)) {
-			return StringUtils.equals(userPassword, new SimpleHash(ShiroDbRealm.hashAlgorithm, undeterminedPassword,
-					null, ShiroDbRealm.hashInterations).toHex());
-		} else {
-			return StringUtils.equals(userPassword, new SimpleHash(ShiroDbRealm.hashAlgorithm, undeterminedPassword,
-					userPasswordSalt, ShiroDbRealm.hashInterations).toHex());
-		}
+		return Optional.absent();
 	}
 
 	/**
@@ -121,12 +122,7 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public boolean isBelongTo(ISystemOrgObject org) {
-		for (UserOrgEntity userOrg : userOrgList) {
-			if (userOrg.getOrg().equals(org)) {
-				return true;
-			}
-		}
-		return false;
+		return _getUserOrgEntity(org).isPresent();
 	}
 
 	/**
@@ -136,12 +132,8 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public String getUserPath(ISystemOrgObject org) {
-		for (UserOrgEntity userOrg : userOrgList) {
-			if (org.equals(userOrg.getOrg())) {
-				return userOrg.getUserPath();
-			}
-		}
-		return null;
+		Optional<UserOrgEntity> optionalUserOrgEntity = _getUserOrgEntity(org);
+		return optionalUserOrgEntity.isPresent() ? optionalUserOrgEntity.get().getUserPath() : null;
 	}
 
 	/**
@@ -151,27 +143,20 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public UserInfo getUpperUser(ISystemOrgObject org) {
-		for (UserOrgEntity userOrg : userOrgList) {
-			if (org.equals(userOrg.getOrg())) {
-				return userOrg.getUpperUser();
-			}
-		}
-		return null;
+		Optional<UserOrgEntity> optionalUserOrgEntity = _getUserOrgEntity(org);
+		return optionalUserOrgEntity.isPresent() ? optionalUserOrgEntity.get().getUpperUser() : null;
 	}
 
 	/**
 	 * 获取指定组织架构的用户级次
 	 * 
 	 * @return
+	 * 
+	 *         public int getUserLevel(ISystemOrgObject org) { String userPath =
+	 *         getUserPath(org); if (StringUtils.isBlank(userPath)) { return 99;
+	 *         } else { return StringUtils.split(userPath,
+	 *         SystemConstant.ID_SEPARATOR).length; } }
 	 */
-	public int getUserLevel(ISystemOrgObject org) {
-		String userPath = getUserPath(org);
-		if (StringUtils.isBlank(userPath)) {
-			return 99;
-		} else {
-			return StringUtils.split(userPath, SystemConstant.ID_SEPARATOR).length;
-		}
-	}
 
 	/**
 	 * 获取用户所在指定类型的组织架构列表
@@ -181,9 +166,9 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends ISystemOrgObject> List<T> getOrgList(Class<T> orgClazz) {
-		if (orgClazz != null && !CollectionUtils.isEmpty(userOrgList)) {
+		if (orgClazz != null && !userOrgList.isEmpty()) {
 			Class<?> userClass = ClassUtils.getUserClass(orgClazz);
-			List<T> orgList = new ArrayList<T>();
+			List<T> orgList = Lists.newArrayList();
 			for (UserOrgEntity userOrg : userOrgList) {
 				if (userOrg != null && userClass.isAssignableFrom(userOrg.getOrg().getClass())) {
 					orgList.add((T) userOrg.getOrg());

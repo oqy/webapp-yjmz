@@ -69,9 +69,6 @@
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="RoleCriteria" resultMap="RoleResult">
-  	<if test="pageDevice!=null">
-  	select * from( select A.*, rownum rn from ( 
-  	</if>
     select
             	fvalue ,
             	fname ,
@@ -85,8 +82,8 @@
           from t_common_role
     <include refid="getCriteriaCondition"/>
     order by fvalue asc, fid
-	<if test="pageDevice!=null">
-	) A where (#{pageDevice.endRowNumberOfCurrentPage})>=rownum) WHERE rn >= #{pageDevice.startRowNumberOfCurrentPage}
+    <if test="pageDevice!=null">
+	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
   </select>
   

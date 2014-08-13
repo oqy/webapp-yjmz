@@ -2,6 +2,7 @@ package com.minyisoft.webapp.yjmz.common.security;
 
 import java.util.List;
 
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,11 +19,11 @@ public class ShiroDbRealm extends AbstractShiroDbRealm<UserInfo, RoleInfo> {
 	/**
 	 * 登录密码哈希算法
 	 */
-	public static final String hashAlgorithm = "MD5";
+	private static final String hashAlgorithm = "MD5";
 	/**
 	 * 登录密码哈希迭代次数
 	 */
-	public static final int hashInterations = 1024;
+	private static final int hashInterations = 1024;
 
 	@Autowired
 	private UserService userService;
@@ -68,5 +69,16 @@ public class ShiroDbRealm extends AbstractShiroDbRealm<UserInfo, RoleInfo> {
 	@Override
 	public BasePrincipal createPrincipal(ISystemUserObject user) {
 		return new BasePrincipal(user);
+	}
+
+	/**
+	 * 加密密码
+	 * 
+	 * @param plainPassword
+	 * @param passwordSalt
+	 * @return
+	 */
+	public static String hashPassword(final String plainPassword, final String passwordSalt) {
+		return new SimpleHash(hashAlgorithm, plainPassword, passwordSalt, hashInterations).toHex();
 	}
 }

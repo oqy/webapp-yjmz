@@ -8,8 +8,12 @@
       <result property="userLoginName" column="fuserloginname" />
       <result property="userPassword" column="fuserpassword" />
       <result property="userPasswordSalt" column="fuserpasswordsalt" />
+      <result property="userMale" column="fusermale" />
       <result property="cellPhoneNumber" column="fcellphonenumber" />
+      <result property="loginCount" column="flogincount" />
+      <result property="lastLoginTime" column="flastlogintime" />
       <result property="weixinOpenId" column="fweixinopenid" />
+      <result property="defaultLoginOrg" column="fdefaultloginorgid" typeHandler="bizModelHandler" />
       <result property="name" column="fname" />
       <result property="description" column="fdescription" />
       <result property="createUser" column="fcreateuserid" typeHandler="bizModelHandler" />
@@ -28,8 +32,12 @@
             	fuserloginname ,
             	fuserpassword ,
             	fuserpasswordsalt ,
+            	fusermale ,
             	fcellphonenumber ,
+            	flogincount ,
+            	flastlogintime ,
             	fweixinopenid ,
+            	fdefaultloginorgid ,
             	fname ,
             	fdescription ,
             	fcreateuserid ,
@@ -62,15 +70,16 @@
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="UserCriteria" resultMap="UserResult">
-  	<if test="pageDevice!=null">
-  	select * from( select A.*, rownum rn from ( 
-  	</if>
     select
             	fuserloginname ,
             	fuserpassword ,
             	fuserpasswordsalt ,
+            	fusermale ,
             	fcellphonenumber ,
+            	flogincount ,
+            	flastlogintime ,
             	fweixinopenid ,
+            	fdefaultloginorgid ,
             	fname ,
             	fdescription ,
             	fcreateuserid ,
@@ -82,18 +91,20 @@
           from t_common_user
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
-	) A where (#{pageDevice.endRowNumberOfCurrentPage})>=rownum) WHERE rn >= #{pageDevice.startRowNumberOfCurrentPage}
+	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
   </select>
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="UserInfo">
-    insert into t_common_user (fuserloginname,fuserpassword,fuserpasswordsalt,fcellphonenumber,fweixinopenid,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) values(#{userLoginName},#{userPassword},#{userPasswordSalt},#{cellPhoneNumber},#{weixinOpenId},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_common_user (fuserloginname,fuserpassword,fuserpasswordsalt,fusermale,fcellphonenumber,flogincount,flastlogintime,fweixinopenid,fdefaultloginorgid,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{userLoginName},#{userPassword},#{userPasswordSalt},#{userMale},#{cellPhoneNumber},#{loginCount},#{lastLoginTime},#{weixinOpenId},#{defaultLoginOrg.id},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="UserInfo">
-    update t_common_user set fuserloginname=#{userLoginName},fuserpassword=#{userPassword},fuserpasswordsalt=#{userPasswordSalt},fcellphonenumber=#{cellPhoneNumber},fweixinopenid=#{weixinOpenId},fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_common_user set fuserloginname=#{userLoginName},fuserpassword=#{userPassword},fuserpasswordsalt=#{userPasswordSalt},fusermale=#{userMale},fcellphonenumber=#{cellPhoneNumber},flogincount=#{loginCount},flastlogintime=#{lastLoginTime},fweixinopenid=#{weixinOpenId},
+    fdefaultloginorgid=#{defaultLoginOrg.id},fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

@@ -76,9 +76,6 @@
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="PermissionCriteria" resultMap="PermissionResult">
-  	<if test="pageDevice!=null">
-  	select * from( select A.*, rownum rn from ( 
-  	</if>
     select
             	fvalue ,
             	fgrouplabel ,
@@ -95,7 +92,7 @@
     <include refid="getCriteriaCondition"/>
     order by fmodulecode asc,fgrouplabel asc
 	<if test="pageDevice!=null">
-	) A where (#{pageDevice.endRowNumberOfCurrentPage})>=rownum) WHERE rn >= #{pageDevice.startRowNumberOfCurrentPage}
+	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
   </select>
   

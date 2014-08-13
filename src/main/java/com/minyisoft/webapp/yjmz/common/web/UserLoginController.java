@@ -16,6 +16,6 @@ public class UserLoginController extends BaseController {
 	 */
 	@RequestMapping(value = { "/", "index.html" }, method = RequestMethod.GET)
 	public String getLoginForm() {
-		return "signin";
+		return "index";
 	}
 }
