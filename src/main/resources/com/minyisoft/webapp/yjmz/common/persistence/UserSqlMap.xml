@@ -100,4 +100,72 @@
   <delete id="batchDelete" parameterType="list">
     delete from t_common_user where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
   </delete>
+  
+  <!-- 获取用户所在组织（公司或富星后台管理员）信息 -->
+  <resultMap id="UserOrgResult" type="UserOrgEntity">
+      <result property="org" column="forgid" typeHandler="bizModelHandler" />
+      <result property="upperUser" column="fupperuserid" typeHandler="bizModelHandler" />
+      <result property="userPath" column="fuserpath" />
+    </resultMap>
+  
+  <select id="getUserOrganization" parameterType="UserInfo" resultMap="UserOrgResult">
+    select forgid,fupperuserid,fuserpath from t_common_user_org where fuserid=#{id} order by forgid asc
+  </select>
+  
+  <insert id="insertUserOrganization">
+    insert into t_common_user_org(fid,fuserid,forgid,fupperuserid,fuserpath) 
+    values(sys_guid(),#{user.id},#{org.id},#{upperUser.id},#{userPath})
+  </insert>
+  
+  <delete id="deleteUserOrganization">
+  	delete from t_common_user_org where fuserid=#{user.id} and forgid=#{org.id}
+  </delete>
+  
+  <delete id="deleteOrganizationUsers">
+  	delete from t_common_user_org where forgid=#{org.id}
+  </delete>
+  
+  <delete id="updateUserPathAfterUserOrgDelete">
+  	update t_common_user_org o set 
+  	o.fuserpath=<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(newUpperUser)">(select fuserpath||'|'||o.fuserid from t_common_user_org where fuserid=#{newUpperUser.id} and forgid=#{org.id})</if>
+  				<if test="newUpperUser==null">'|'||fuserid</if>,
+  	o.fupperuserid=#{newUpperUser.id} where o.fupperuserid=#{deleteUser.id} and o.forgid=#{org.id}
+  </delete>
+  
+  <!-- 获取用户登录记录 
+  <resultMap id="UserLoginResult" type="UserLoginLogEntity">
+      <result property="user" column="fuserid" typeHandler="bizModelHandler" />
+      <result property="loginTime" column="flogintime" />
+      <result property="ipAddress" column="fipaddress"  />
+      <result property="ipRegion" column="fipregion" />
+    </resultMap>
+  
+  <select id="getUserLoginCollection" resultMap="UserLoginResult">
+  	<if test="pageDevice!=null">
+  	select * from( select A.*, rownum rn from ( 
+  	</if>
+    select
+    			fuserid,
+            	flogintime,
+            	fipaddress,
+            	fipregion
+          from t_common_userlogin
+    where fuserid=#{user.id}
+    order by flogintime desc
+	<if test="pageDevice!=null">
+	) A where (#{pageDevice.endRowNumberOfCurrentPage})>=rownum) WHERE rn >= #{pageDevice.startRowNumberOfCurrentPage}
+	</if>
+  </select>
+  
+  <update id="increaseUserLoginCount" parameterType="UserInfo">
+    update t_common_user set flogincount=flogincount+1 ,fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
+  
+  <update id="insertUserLoginLog">
+    insert into t_common_userlogin(fid,fuserid,flogintime,fipaddress,fipregion) values(sys_guid(),#{userLoginDetail.user.id},systimestamp,#{userLoginDetail.ipAddress},#{userLoginDetail.ipRegion})
+  </update>-->
+  
+  <update id="clearWeixinOpenId" parameterType="String">
+    update t_common_user set fweixinopenid=null where fweixinopenid=#{id}
+  </update>
 </mapper>

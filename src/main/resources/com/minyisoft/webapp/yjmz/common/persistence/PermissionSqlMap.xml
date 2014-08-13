@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.PermissionDao">
+  <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
+  <resultMap id="PermissionResult" type="PermissionInfo">
+      <result property="value" column="fvalue" />
+      <result property="groupLabel" column="fgrouplabel" />
+      <result property="moduleCode" column="fmodulecode" />
+      <result property="name" column="fname" />
+      <result property="description" column="fdescription" />
+      <result property="createUser" column="fcreateuserid" typeHandler="bizModelHandler" />
+      <result property="createDate" column="fcreatedate" />
+      <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
+      <result property="lastUpdateDate" column="flastupdatedate" />
+      <result property="version" column="fversion" />
+      <result property="id" column="fid" />
+    </resultMap>
+
+  <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
+
+  <!-- 根据ID查询记录 -->
+  <select id="getEntity" parameterType="String" resultMap="PermissionResult">
+    select
+            	fvalue ,
+            	fgrouplabel ,
+            	fmodulecode ,
+            	fname ,
+            	fdescription ,
+            	fcreateuserid ,
+            	fcreatedate ,
+            	flastupdateuserid ,
+            	flastupdatedate ,
+            	fversion,
+            	fid 
+          from t_common_permission
+    where fid = #{id}
+  </select>
+  
+  <select id="getRolePermission" parameterType="RoleInfo" resultMap="PermissionResult">
+    select
+            	p.fid ,            	
+            	p.fversion,
+            	p.fcreateuserid ,            	
+            	p.fdescription ,            	
+            	p.fname ,            	
+            	p.fvalue ,            	
+            	p.flastupdateuserid ,            	
+            	p.fcreatedate ,            	
+            	p.flastupdatedate ,
+            	p.fgrouplabel,
+            	p.fmodulecode
+    from  t_common_role_permission rp left join t_common_permission p on rp.fpermissionid=p.fid
+    where froleid = #{id}
+    order by fmodulecode asc,fgrouplabel asc
+  </select>
+  
+  <!-- 查询条件SQL -->
+  <sql id="getCriteriaCondition">
+  	<where>
+		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
+            fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
+            and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+	</where>
+  </sql>
+  
+  <!-- 获取满足指定过滤条件的记录数 -->
+  <select id="countEntity" parameterType="PermissionCriteria" resultType="int">
+    select count(*) from t_common_permission
+    <include refid="getCriteriaCondition"/>
+  </select>
+  
+  <!-- 获取满足指定过滤条件的记录 -->
+  <select id="getEntityCollection" parameterType="PermissionCriteria" resultMap="PermissionResult">
+  	<if test="pageDevice!=null">
+  	select * from( select A.*, rownum rn from ( 
+  	</if>
+    select
+            	fvalue ,
+            	fgrouplabel ,
+            	fmodulecode ,
+            	fname ,
+            	fdescription ,
+            	fcreateuserid ,
+            	fcreatedate ,
+            	flastupdateuserid ,
+            	flastupdatedate ,
+            	fversion,
+            	fid 
+          from t_common_permission
+    <include refid="getCriteriaCondition"/>
+    order by fmodulecode asc,fgrouplabel asc
+	<if test="pageDevice!=null">
+	) A where (#{pageDevice.endRowNumberOfCurrentPage})>=rownum) WHERE rn >= #{pageDevice.startRowNumberOfCurrentPage}
+	</if>
+  </select>
+  
+  <!-- 通用记录插入操作 --> 
+  <insert id="insertEntity" parameterType="PermissionInfo">
+    insert into t_common_permission (fvalue,fgrouplabel,fmodulecode,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{value},#{groupLabel},#{moduleCode},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+  </insert>
+
+  <!-- 通用记录更新操作 --> 
+  <update id="updateEntity" parameterType="PermissionInfo">
+    update t_common_permission set fvalue=#{value},fgrouplabel=#{groupLabel},fmodulecode=#{moduleCode},fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},
+    fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate} ,fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
+
+  <!-- 通用记录删除操作 -->
+  <delete id="batchDelete" parameterType="list">
+    delete from t_common_permission where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  
+  <delete id="flushPermission">
+    delete from t_common_permission
+  </delete>
+  
+  <delete id="deleteUselessRolePermission">
+    delete from t_common_role_permission where fpermissionid not in (select fid from t_common_permission)
+  </delete>
+</mapper>

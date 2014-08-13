@@ -11,13 +11,23 @@ import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 
 public interface UserService extends BaseService<UserInfo, UserCriteria> {
 	/**
+	 * 编辑指定企业会员账户并赋予角色
+	 * 
+	 * @param org
+	 * @param targetUser
+	 * @param upperUser
+	 * @param roles
+	 */
+	void editOrgUser(ISystemOrgObject org, UserInfo targetUser, UserInfo upperUser, RoleInfo... roles);
+
+	/**
 	 * 获取指定用户于指定组织架构包含角色
 	 * 
 	 * @param user
 	 * @param org
 	 * @return
 	 */
-	public List<RoleInfo> getUserRoles(UserInfo user, ISystemOrgObject org);
+	List<RoleInfo> getUserRoles(UserInfo user, ISystemOrgObject org);
 
 	/**
 	 * 获取指定用户于指定组织架构包含权限
@@ -26,5 +36,21 @@ public interface UserService extends BaseService<UserInfo, UserCriteria> {
 	 * @param org
 	 * @return
 	 */
-	public List<PermissionInfo> getUserPermissions(UserInfo user, ISystemOrgObject org);
+	List<PermissionInfo> getUserPermissions(UserInfo user, ISystemOrgObject org);
+
+	/**
+	 * 删除指定组织架构用户
+	 * 
+	 * @param user
+	 * @param org
+	 */
+	void deleteOrgUser(UserInfo user, ISystemOrgObject org);
+
+	/**
+	 * 绑定微信用户
+	 * 
+	 * @param user
+	 * @param weixinOpenId
+	 */
+	void bindWeixinOpenId(UserInfo user, String weixinOpenId);
 }
