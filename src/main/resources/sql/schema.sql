@@ -61,7 +61,7 @@ create table T_COMMON_PERMISSION
 
 create table T_COMMON_USER_ORG
 (
-  FID          varchar(32) not null,
+  FID          varchar(36) not null,
   FUSERID      varchar(32),
   FORGID       varchar(32),
   FUPPERUSERID varchar(32),
@@ -87,3 +87,5 @@ create table T_COMMON_ROLE_PERMISSION
 );
 
 insert into t_common_user(fid,fcreatedate,fname,fuserloginname,fuserpassword,fuserpasswordsalt) values('AAABR8Qev3KEgi7aew1G8JUc2qtHfXML',now(),'系统管理员','admin','65e26de12aeac2eed0729d977d4ddd44','bb81f26d');
+insert into t_common_role(fvalue,fname,fcreatedate,fid) values('ADMINISTRATOR','系统管理员',now(),'AAABR8QfMr6LYoVnC7RHeI9VMox37vue');
+insert into t_common_user_role(fid,fuserid,froleid) values(UUID(),'AAABR8Qev3KEgi7aew1G8JUc2qtHfXML','AAABR8QfMr6LYoVnC7RHeI9VMox37vue');

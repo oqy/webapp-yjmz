@@ -53,10 +53,10 @@
   <!-- 查询条件SQL -->
   <sql id="getCriteriaCondition">
   	<where>
-		<if test="ids!=null">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
             fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
-		<if test="excludeIds!=null">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
 	</where>
@@ -138,7 +138,7 @@
   
   <delete id="updateUserPathAfterUserOrgDelete">
   	update t_common_user_org o set 
-  	o.fuserpath=<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(newUpperUser)">(select fuserpath||'|'||o.fuserid from t_common_user_org where fuserid=#{newUpperUser.id} and forgid=#{org.id})</if>
+  	o.fuserpath=<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(newUpperUser)">(select fuserpath||'|'||o.fuserid from t_common_user_org where fuserid=#{newUpperUser.id} and forgid=#{org.id})</if>
   				<if test="newUpperUser==null">'|'||fuserid</if>,
   	o.fupperuserid=#{newUpperUser.id} where o.fupperuserid=#{deleteUser.id} and o.forgid=#{org.id}
   </delete>

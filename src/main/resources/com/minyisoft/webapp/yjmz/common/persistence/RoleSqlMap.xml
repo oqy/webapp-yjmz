@@ -46,16 +46,22 @@
             	r.fversion,
             	r.fid  
     from  t_common_user_role ur left join t_common_role r on ur.froleid=r.fid
-    where fuserid = #{user.id} and forgid= #{org.id}
+    where fuserid = #{user.id} 
+    <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
+    	and forgid= #{org.id}
+    </if>
+    <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isEmpty(org)">
+    	and forgid is null
+    </if>
   </select>
   
   <!-- 查询条件SQL -->
   <sql id="getCriteriaCondition">
   	<where>
-		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
             fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
-		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
 	</where>

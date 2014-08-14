@@ -59,10 +59,10 @@
   <!-- 查询条件SQL -->
   <sql id="getCriteriaCondition">
   	<where>
-		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
             fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
-		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
 	</where>
