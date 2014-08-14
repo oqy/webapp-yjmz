@@ -1,0 +1,27 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" class="login-bg">
+<head>
+<title>在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="css/compiled/signin.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/signin.css'}"/>
+</head>
+<body>
+<div class="login-wrapper"> <a href="index.html"> <img class="logo" src="img/logo-white.png" th:src="@{'/resource/img/logo-white.png'}"/> </a>
+  <div class="box">
+    <div class="content-wrap">
+      <form role="form" th:action="@{'/login.html'}" method="post">
+        <h6>登录</h6>
+        <div class="alert alert-danger" role="alert" th:if="${!#strings.isEmpty(errorMsg)}" th:text="${errorMsg}">抱歉，您输入的用户名和密码有误，请检查</div>
+        <input class="form-control" type="text" name="userLoginName" id="userLoginName" placeholder="登录用户名/手机号"/>
+        <input class="form-control" type="password" name="userPassword" id="userPassword" placeholder="密码"/>
+        <button type="submit" class="btn btn-primary btn-block">登录</button>
+        </form>
+    </div>
+  </div>
+</div>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>

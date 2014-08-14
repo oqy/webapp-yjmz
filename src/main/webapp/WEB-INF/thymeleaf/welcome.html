@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>欢迎登录在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+<link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/index.css'}" />
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <!-- upper main stats -->
+  <div id="main-stats">
+    <div class="row stats-row">
+      <div class="col-md-3 col-sm-3 stat">
+        <div class="data"> <span class="number">2457</span> 访问 </div>
+        <span class="date">今天</span> </div>
+      <div class="col-md-3 col-sm-3 stat">
+        <div class="data"> <span class="number">3240</span> 用户 </div>
+        <span class="date">2013年11月</span> </div>
+      <div class="col-md-3 col-sm-3 stat">
+        <div class="data"> <span class="number">322</span> 订单 </div>
+        <span class="date">本周</span> </div>
+      <div class="col-md-3 col-sm-3 stat last">
+        <div class="data"> <span class="number">$2,340</span> 销售金额 </div>
+        <span class="date">最近30天</span> </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>

@@ -11,6 +11,22 @@ import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 
 public interface UserService extends BaseService<UserInfo, UserCriteria> {
 	/**
+	 * 用户登录
+	 * 
+	 * @param userLoginInputString
+	 * @param userPassword
+	 * @return 成功登录用户
+	 */
+	UserInfo userLogin(String userLoginInputString, String userPassword);
+
+	/**
+	 * 当前登录用户切换登录组织架构
+	 * 
+	 * @param newOrg
+	 */
+	void currentUserSwitchOrg(ISystemOrgObject newOrg);
+
+	/**
 	 * 编辑指定企业会员账户并赋予角色
 	 * 
 	 * @param org

@@ -9,6 +9,14 @@ import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 
 public interface UserDao extends BaseDao<UserInfo, UserCriteria> {
 	/**
+	 * 累加用户登录次数
+	 * 
+	 * @param user
+	 * @return
+	 */
+	int increaseUserLoginCount(UserInfo user);
+
+	/**
 	 * 添加用户所在组织（公司或富星后台管理员）信息
 	 * 
 	 * @param user

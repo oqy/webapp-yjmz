@@ -1,0 +1,19 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" class="login-bg">
+<head th:fragment="css" th:remove="tag">
+<!-- bootstrap -->
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-overrides.css" th:href="@{'/resource/css/bootstrap/bootstrap-overrides.css'}"/>
+<!-- global styles -->
+<link rel="stylesheet" type="text/css" href="css/compiled/layout.css" th:href="@{'/resource/css/compiled/layout.css'}"/>
+<link rel="stylesheet" type="text/css" href="css/compiled/elements.css" th:href="@{'/resource/css/compiled/elements.css'}"/>
+<link rel="stylesheet" type="text/css" href="css/compiled/icons.css" th:href="@{'/resource/css/compiled/icons.css'}"/>
+<!-- libraries -->
+<link rel="stylesheet" type="text/css" href="css/lib/font-awesome.css" th:href="@{'/resource/css/lib/font-awesome.css'}"/>
+</head>
+<body th:fragment="js" th:remove="tag">
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="js/theme.js" th:src="@{'/resource/js/theme.js'}"></script>
+</body>
+</html>

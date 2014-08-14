@@ -47,7 +47,7 @@
             	fid ,
             	fversion 
           from t_common_user
-    where fid = #{id}
+    where fid = #{id} or fuserloginname = #{id} or fcellphonenumber = #{id}
   </select>
   
   <!-- 查询条件SQL -->
@@ -168,13 +168,13 @@
 	</if>
   </select>
   
-  <update id="increaseUserLoginCount" parameterType="UserInfo">
-    update t_common_user set flogincount=flogincount+1 ,fversion=fversion+1 where fid=#{id} and fversion=#{version}
-  </update>
-  
   <update id="insertUserLoginLog">
     insert into t_common_userlogin(fid,fuserid,flogintime,fipaddress,fipregion) values(sys_guid(),#{userLoginDetail.user.id},systimestamp,#{userLoginDetail.ipAddress},#{userLoginDetail.ipRegion})
   </update>-->
+  
+  <update id="increaseUserLoginCount" parameterType="UserInfo">
+    update t_common_user set flogincount=flogincount+1,flastlogintime=now(),fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
   
   <update id="clearWeixinOpenId" parameterType="String">
     update t_common_user set fweixinopenid=null where fweixinopenid=#{id}

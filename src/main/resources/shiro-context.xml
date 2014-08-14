@@ -23,10 +23,11 @@
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
-		<!-- 声明使用自定义filter -->
+		<property name="LoginUrl" value="/login.html"/>
 		<property name="filterChainDefinitions">
 			<value>
-			    /index.html = anon
+			    /login.html = anon
+			    /resource/** = anon
 				/** = authc
 			</value>
 		</property>
