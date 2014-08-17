@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.UserOrgRelationDao">
+  <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
+  <resultMap id="UserOrgRelationResult" type="UserOrgRelationInfo">
+      <result property="user" column="fuserid" typeHandler="bizModelHandler" />
+      <result property="org" column="forgid" typeHandler="bizModelHandler" />
+      <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
+      <result property="jobNumber" column="fjobnumber" />
+      <result property="title" column="ftitle" />
+      <result property="upperUser" column="fupperuserid" typeHandler="bizModelHandler" />
+      <result property="seq" column="fseq" />
+      <result property="id" column="fid" />
+      <result property="version" column="fversion" />
+    </resultMap>
+
+  <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
+
+  <!-- 根据ID查询记录 -->
+  <select id="getEntity" parameterType="String" resultMap="UserOrgRelationResult">
+    select
+            	fuserid ,
+            	forgid ,
+            	fdepartmentid ,
+            	fjobnumber ,
+            	ftitle ,
+            	fupperuserid ,
+            	fseq ,
+            	fid ,
+            	fversion 
+          from t_common_userorgrelation
+    where fid = #{id}
+  </select>
+  
+  <!-- 查询条件SQL -->
+  <sql id="getCriteriaCondition">
+  	<where>
+		<if test="ids!=null">
+            fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+		<if test="excludeIds!=null">
+            and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+	</where>
+  </sql>
+  
+  <!-- 获取满足指定过滤条件的记录数 -->
+  <select id="countEntity" parameterType="UserOrgRelationCriteria" resultType="int">
+    select count(*) from t_common_userorgrelation
+    <include refid="getCriteriaCondition"/>
+  </select>
+  
+  <!-- 获取满足指定过滤条件的记录 -->
+  <select id="getEntityCollection" parameterType="UserOrgRelationCriteria" resultMap="UserOrgRelationResult">
+    select
+            	fuserid ,
+            	forgid ,
+            	fdepartmentid ,
+            	fjobnumber ,
+            	ftitle ,
+            	fupperuserid ,
+            	fseq ,
+            	fid ,
+            	fversion 
+          from t_common_userorgrelation
+    <include refid="getCriteriaCondition"/>
+	<if test="pageDevice!=null">
+	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	</if>
+  </select>
+  
+  <!-- 通用记录插入操作 --> 
+  <insert id="insertEntity" parameterType="UserOrgRelationInfo">
+    insert into t_common_userorgrelation (fuserid,forgid,fdepartmentid,fjobnumber,ftitle,fupperuserid,fseq,fid) 
+    values(#{user.id},#{org.id},#{department.id},#{jobNumber},#{title},#{upperUser.id},#{seq},#{id})
+  </insert>
+
+  <!-- 通用记录更新操作 --> 
+  <update id="updateEntity" parameterType="UserOrgRelationInfo">
+    update t_common_userorgrelation set fuserid=#{user.id},forgid=#{org.id},fdepartmentid=#{department.id},fjobnumber=#{jobNumber},
+    ftitle=#{title},fupperuserid=#{upperUser.id},fseq=#{seq},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
+
+  <!-- 通用记录删除操作 -->
+  <delete id="batchDelete" parameterType="list">
+    delete from t_common_userorgrelation where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  
+  <delete id="deleteRelations" parameterType="UserInfo">
+    delete from t_common_userorgrelation where fuserid=#{id}
+  </delete>
+</mapper>

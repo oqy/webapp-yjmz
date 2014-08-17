@@ -50,13 +50,13 @@
 		class="com.minyisoft.webapp.core.utils.mybatis.CustomSqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="describableEnumPackage" value="com.minyisoft.webapp.yjmz" />
-		<property name="typeAliasesPackage" value="com.minyisoft.webapp.yjmz.common.model" />
+		<property name="typeAliasesPackage" value="com.minyisoft.webapp.yjmz.common.model,com.minyisoft.webapp.yjmz.oa.model" />
 		<property name="mapperLocations"
 			value="classpath*:com/minyisoft/webapp/yjmz/**/persistence/*SqlMap.xml" />
 	</bean>
 	<!-- scan for mappers and let them be autowired -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.minyisoft.webapp.yjmz.common.persistence" />
+		<property name="basePackage" value="com.minyisoft.webapp.yjmz.common.persistence,com.minyisoft.webapp.yjmz.oa.persistence" />
 	</bean>
 
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->

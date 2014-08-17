@@ -5,6 +5,8 @@
 <mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.UserDao">
   <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
   <resultMap id="UserResult" type="UserInfo">
+      <id property="id" column="fid" />
+      <result property="status" column="fstatus" />
       <result property="userLoginName" column="fuserloginname" />
       <result property="userPassword" column="fuserpassword" />
       <result property="userPasswordSalt" column="fuserpasswordsalt" />
@@ -20,8 +22,12 @@
       <result property="createDate" column="fcreatedate" />
       <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
       <result property="lastUpdateDate" column="flastupdatedate" />
-      <result property="id" column="fid" />
       <result property="version" column="fversion" />
+      <collection property="orgRelations" column="fid" javaType="ArrayList" ofType="UserOrgRelationInfo">
+		<constructor>
+		   <idArg column="forgrelationid" typeHandler="bizModelHandler"/>
+		</constructor>
+	  </collection>
     </resultMap>
 
   <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
@@ -29,25 +35,27 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="UserResult">
     select
-            	fuserloginname ,
-            	fuserpassword ,
-            	fuserpasswordsalt ,
-            	fusermale ,
-            	fcellphonenumber ,
-            	flogincount ,
-            	flastlogintime ,
-            	fweixinopenid ,
-            	fdefaultloginorgid ,
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fid ,
-            	fversion 
-          from t_common_user
-    where fid = #{id} or fuserloginname = #{id} or fcellphonenumber = #{id}
+    			u.fstatus ,
+            	u.fuserloginname ,
+            	u.fuserpassword ,
+            	u.fuserpasswordsalt ,
+            	u.fusermale ,
+            	u.fcellphonenumber ,
+            	u.flogincount ,
+            	u.flastlogintime ,
+            	u.fweixinopenid ,
+            	u.fdefaultloginorgid ,
+            	u.fname ,
+            	u.fdescription ,
+            	u.fcreateuserid ,
+            	u.fcreatedate ,
+            	u.flastupdateuserid ,
+            	u.flastupdatedate ,
+            	u.fid ,
+            	u.fversion ,
+            	r.fid as forgrelationid
+          from t_common_user u left join t_common_userorgrelation r on u.fid=r.fuserid
+    where u.fid = #{id} or u.fuserloginname = #{id} or u.fcellphonenumber = #{id}
   </select>
   
   <!-- 查询条件SQL -->
@@ -70,40 +78,44 @@
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="UserCriteria" resultMap="UserResult">
-    select
-            	fuserloginname ,
-            	fuserpassword ,
-            	fuserpasswordsalt ,
-            	fusermale ,
-            	fcellphonenumber ,
-            	flogincount ,
-            	flastlogintime ,
-            	fweixinopenid ,
-            	fdefaultloginorgid ,
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fid ,
-            	fversion 
-          from t_common_user
+  	select
+  		u.fstatus ,
+		u.fuserloginname ,
+	    u.fuserpassword ,
+	    u.fuserpasswordsalt ,
+	    u.fusermale ,
+	    u.fcellphonenumber ,
+	    u.flogincount ,
+	    u.flastlogintime ,
+	    u.fweixinopenid ,
+	    u.fdefaultloginorgid ,
+	    u.fname ,
+	    u.fdescription ,
+	    u.fcreateuserid ,
+	    u.fcreatedate ,
+	    u.flastupdateuserid ,
+	    u.flastupdatedate ,
+	    u.fid ,
+	    u.fversion ,
+	    r.fid as forgrelationid 
+	from 
+    (select * from t_common_user
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
+	) u left join t_common_userorgrelation r on u.fid=r.fuserid
   </select>
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="UserInfo">
-    insert into t_common_user (fuserloginname,fuserpassword,fuserpasswordsalt,fusermale,fcellphonenumber,flogincount,flastlogintime,fweixinopenid,fdefaultloginorgid,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{userLoginName},#{userPassword},#{userPasswordSalt},#{userMale},#{cellPhoneNumber},#{loginCount},#{lastLoginTime},#{weixinOpenId},#{defaultLoginOrg.id},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_common_user (fstatus,fuserloginname,fuserpassword,fuserpasswordsalt,fusermale,fcellphonenumber,flogincount,flastlogintime,fweixinopenid,fdefaultloginorgid,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{status},#{userLoginName},#{userPassword},#{userPasswordSalt},#{userMale},#{cellPhoneNumber},#{loginCount},#{lastLoginTime},#{weixinOpenId},#{defaultLoginOrg.id},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="UserInfo">
-    update t_common_user set fuserloginname=#{userLoginName},fuserpassword=#{userPassword},fuserpasswordsalt=#{userPasswordSalt},fusermale=#{userMale},fcellphonenumber=#{cellPhoneNumber},flogincount=#{loginCount},flastlogintime=#{lastLoginTime},fweixinopenid=#{weixinOpenId},
+    update t_common_user set fstatus=#{status},fuserloginname=#{userLoginName},fuserpassword=#{userPassword},fuserpasswordsalt=#{userPasswordSalt},fusermale=#{userMale},fcellphonenumber=#{cellPhoneNumber},flogincount=#{loginCount},flastlogintime=#{lastLoginTime},fweixinopenid=#{weixinOpenId},
     fdefaultloginorgid=#{defaultLoginOrg.id},fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
@@ -112,20 +124,21 @@
     delete from t_common_user where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
   </delete>
   
-  <!-- 获取用户所在组织（公司或富星后台管理员）信息 -->
+  <!-- 获取用户所在组织（公司或富星后台管理员）信息 
   <resultMap id="UserOrgResult" type="UserOrgEntity">
+      <result property="jobNumber" column="fjobnumber" />
       <result property="org" column="forgid" typeHandler="bizModelHandler" />
       <result property="upperUser" column="fupperuserid" typeHandler="bizModelHandler" />
       <result property="userPath" column="fuserpath" />
     </resultMap>
   
   <select id="getUserOrganization" parameterType="UserInfo" resultMap="UserOrgResult">
-    select forgid,fupperuserid,fuserpath from t_common_user_org where fuserid=#{id} order by forgid asc
+    select fjobnumber,forgid,fupperuserid,fuserpath from t_common_user_org where fuserid=#{id} order by forgid asc
   </select>
   
   <insert id="insertUserOrganization">
-    insert into t_common_user_org(fid,fuserid,forgid,fupperuserid,fuserpath) 
-    values(sys_guid(),#{user.id},#{org.id},#{upperUser.id},#{userPath})
+    insert into t_common_user_org(fid,fuserid,fjobnumber,forgid,fupperuserid,fuserpath) 
+    values(sys_guid(),#{user.id},#{jobNumber},#{org.id},#{upperUser.id},#{userPath})
   </insert>
   
   <delete id="deleteUserOrganization">
@@ -141,7 +154,7 @@
   	o.fuserpath=<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(newUpperUser)">(select fuserpath||'|'||o.fuserid from t_common_user_org where fuserid=#{newUpperUser.id} and forgid=#{org.id})</if>
   				<if test="newUpperUser==null">'|'||fuserid</if>,
   	o.fupperuserid=#{newUpperUser.id} where o.fupperuserid=#{deleteUser.id} and o.forgid=#{org.id}
-  </delete>
+  </delete>-->
   
   <!-- 获取用户登录记录 
   <resultMap id="UserLoginResult" type="UserLoginLogEntity">

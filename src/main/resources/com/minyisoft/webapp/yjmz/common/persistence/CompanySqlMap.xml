@@ -5,14 +5,20 @@
 <mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.CompanyDao">
   <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
   <resultMap id="CompanyResult" type="CompanyInfo">
+      <id property="id" column="fid" />
+      <result property="status" column="fstatus" />
       <result property="name" column="fname" />
       <result property="description" column="fdescription" />
       <result property="createUser" column="fcreateuserid" typeHandler="bizModelHandler" />
       <result property="createDate" column="fcreatedate" />
       <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
       <result property="lastUpdateDate" column="flastupdatedate" />
-      <result property="id" column="fid" />
       <result property="version" column="fversion" />
+      <collection property="departments" column="fid" javaType="ArrayList" ofType="DepartmentInfo">
+		<constructor>
+		   <idArg column="fdepartmentid" typeHandler="bizModelHandler"/>
+		</constructor>
+	  </collection>
     </resultMap>
 
   <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
@@ -20,15 +26,17 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="CompanyResult">
     select
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fid ,
-            	fversion 
-          from t_common_company
+    			c.fstatus ,
+            	c.fname ,
+            	c.fdescription ,
+            	c.fcreateuserid ,
+            	c.fcreatedate ,
+            	c.flastupdateuserid ,
+            	c.flastupdatedate ,
+            	c.fid ,
+            	c.fversion ,
+            	d.fid as fdepartmentid
+          from t_common_company c left join t_common_department d on c.fid = d.forgid
     where fid = #{id}
   </select>
   
@@ -52,30 +60,36 @@
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="CompanyCriteria" resultMap="CompanyResult">
-    select
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fid ,
-            	fversion 
-          from t_common_company
+  	select 
+  		c.fstatus ,
+  		c.fname ,
+        c.fdescription ,
+        c.fcreateuserid ,
+        c.fcreatedate ,
+        c.flastupdateuserid ,
+        c.flastupdatedate ,
+        c.fid ,
+        c.fversion ,
+        d.fid as fdepartmentid
+    from 
+    (select * from t_common_company
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
+	) c left join t_common_department d on c.fid = d.forgid
   </select>
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="CompanyInfo">
-    insert into t_common_company (fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) values(#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_common_company (fstatus,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{status},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="CompanyInfo">
-    update t_common_company set fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_common_company set fstatus=#{status},fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},
+    flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

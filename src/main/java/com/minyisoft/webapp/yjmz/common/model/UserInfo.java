@@ -24,6 +24,7 @@ import com.minyisoft.webapp.core.model.ISystemUserObject;
 import com.minyisoft.webapp.core.security.utils.DigestUtils;
 import com.minyisoft.webapp.core.security.utils.EncodeUtils;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum;
+import com.minyisoft.webapp.yjmz.common.model.enumField.UserStatusEnum;
 import com.minyisoft.webapp.yjmz.common.security.ShiroDbRealm;
 import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
 
@@ -35,6 +36,9 @@ import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
 @Setter
 @ModelKey(0x147C41EBF72L)
 public class UserInfo extends DataBaseInfo implements ISystemUserObject {
+	@Label("用户状态")
+	@NotNull
+	private UserStatusEnum status = UserStatusEnum.INCUMBENCY;
 	@Label("用户登录账号")
 	@NotBlank
 	private String userLoginName;
@@ -58,7 +62,7 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	// 默认登录组织，即登录后首先进入的组织，无组织时为null
 	private ISystemOrgObject defaultLoginOrg;
 	// 用户所在组织列表
-	private List<UserOrgEntity> userOrgList = Collections.emptyList();
+	private List<UserOrgRelationInfo> orgRelations = Collections.emptyList();
 
 	/**
 	 * 禁止在程序外部直接设定password，统一通过constructUserPassword方法进行设置
@@ -104,9 +108,9 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 				ShiroDbRealm.hashPassword(plainPassword, userPasswordSalt));
 	}
 
-	private Optional<UserOrgEntity> _getUserOrgEntity(ISystemOrgObject org) {
+	private Optional<UserOrgRelationInfo> _getUserOrgEntity(ISystemOrgObject org) {
 		if (org != null) {
-			for (UserOrgEntity userOrg : userOrgList) {
+			for (UserOrgRelationInfo userOrg : orgRelations) {
 				if (userOrg.getOrg().equals(org)) {
 					return Optional.of(userOrg);
 				}
@@ -132,8 +136,16 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public String getUserPath(ISystemOrgObject org) {
-		Optional<UserOrgEntity> optionalUserOrgEntity = _getUserOrgEntity(org);
-		return optionalUserOrgEntity.isPresent() ? optionalUserOrgEntity.get().getUserPath() : null;
+		Optional<UserOrgRelationInfo> optionalUserOrgEntity = _getUserOrgEntity(org);
+		if (optionalUserOrgEntity.isPresent()) {
+			UserOrgRelationInfo orgRelation = optionalUserOrgEntity.get();
+			if (orgRelation.getUpperUser() != null) {
+				return orgRelation.getUpperUser().getUserPath(org) + SystemConstant.ID_SEPARATOR + getId();
+			} else {
+				return SystemConstant.ID_SEPARATOR + getId();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -143,7 +155,7 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public UserInfo getUpperUser(ISystemOrgObject org) {
-		Optional<UserOrgEntity> optionalUserOrgEntity = _getUserOrgEntity(org);
+		Optional<UserOrgRelationInfo> optionalUserOrgEntity = _getUserOrgEntity(org);
 		return optionalUserOrgEntity.isPresent() ? optionalUserOrgEntity.get().getUpperUser() : null;
 	}
 
@@ -166,10 +178,10 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends ISystemOrgObject> List<T> getOrgList(Class<T> orgClazz) {
-		if (orgClazz != null && !userOrgList.isEmpty()) {
+		if (orgClazz != null && !orgRelations.isEmpty()) {
 			Class<?> userClass = ClassUtils.getUserClass(orgClazz);
 			List<T> orgList = Lists.newArrayList();
-			for (UserOrgEntity userOrg : userOrgList) {
+			for (UserOrgRelationInfo userOrg : orgRelations) {
 				if (userOrg != null && userClass.isAssignableFrom(userOrg.getOrg().getClass())) {
 					orgList.add((T) userOrg.getOrg());
 				}

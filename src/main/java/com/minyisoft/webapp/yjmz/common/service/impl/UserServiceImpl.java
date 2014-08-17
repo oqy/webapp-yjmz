@@ -2,7 +2,6 @@ package com.minyisoft.webapp.yjmz.common.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -20,25 +19,30 @@ import com.minyisoft.webapp.core.model.PermissionInfo;
 import com.minyisoft.webapp.core.security.shiro.BasePrincipal;
 import com.minyisoft.webapp.core.security.shiro.cache.ShiroClusterCacheManager;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
-import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.persistence.PermissionDao;
 import com.minyisoft.webapp.yjmz.common.persistence.RoleDao;
-import com.minyisoft.webapp.yjmz.common.persistence.SecurityDao;
 import com.minyisoft.webapp.yjmz.common.persistence.UserDao;
+import com.minyisoft.webapp.yjmz.common.persistence.UserOrgRelationDao;
+import com.minyisoft.webapp.yjmz.common.service.UserOrgRelationService;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
 
 @Service("userService")
 public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, UserDao> implements UserService {
-	@Autowired
-	private SecurityDao securityDao;
+	//@Autowired
+	//private SecurityDao securityDao;
 	@Autowired
 	private RoleDao roleDao;
 	@Autowired
 	private PermissionDao psermissionDao;
+	@Autowired
+	private UserOrgRelationService userOrgRelationService;
+	@Autowired
+	private UserOrgRelationDao userOrgRelationDao;
 
 	@Override
 	public UserInfo userLogin(String userLoginInputString, String userPassword) {
@@ -90,10 +94,25 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		// 将当前登录用户信息同步到session中
 		((DefaultSecurityManager) SecurityUtils.getSecurityManager()).getSubjectDAO().save(securitySubject);
 	}
+	
+	@Override
+	public void delete(UserInfo info) {
+		throw new ServiceException("不允许删除系统用户信息");
+	}
+	
+	@Override
+	public void submit(UserInfo info) {
+		super.submit(info);
+		userOrgRelationDao.deleteRelations(info);
+		for (UserOrgRelationInfo relation : info.getOrgRelations()) {
+			relation.setUser(info);
+			userOrgRelationService.submit(relation);
+		}
+	}
 
 	@Override
 	public void editOrgUser(ISystemOrgObject org, UserInfo targetUser, UserInfo upperUser, RoleInfo... roles) {
-		Assert.notNull(org, "待编辑用户所在组织架构不能为空");
+		/*Assert.notNull(org, "待编辑用户所在组织架构不能为空");
 		Assert.notNull(targetUser, "待编辑用户不能为空");
 		Assert.isTrue(upperUser == null || upperUser.isBelongTo(org), "上级用户不属于指定组织");
 		Assert.isTrue(upperUser == null || !upperUser.equals(targetUser), "目标用户与上级用户相同");
@@ -121,10 +140,21 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		// 增加对应组织信息
 		getBaseDao().insertUserOrganization(
 				targetUser,
+				null,
 				org,
 				upperUser,
 				upperUser != null ? upperUser.getUserPath(org) + SystemConstant.ID_SEPARATOR + targetUser.getId()
-						: SystemConstant.ID_SEPARATOR + targetUser.getId());
+						: SystemConstant.ID_SEPARATOR + targetUser.getId());*/
+	}
+
+	@Override
+	protected void _validateDataBeforeSubmit(UserInfo info) {
+		if (!info.equals(SystemConstant.ADMINISTRATOR_USER)) {
+			Assert.isTrue(!CollectionUtils.isEmpty(info.getOrgRelations()), "待编辑用户尚未设置组织隶属关系");
+		}
+		if (info.getDefaultLoginOrg() != null) {
+			Assert.isTrue(info.isBelongTo(info.getDefaultLoginOrg()), "待编辑用户并不隶属于待设置的默认登录组织");
+		}
 	}
 
 	@Override
@@ -145,7 +175,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 
 	@Override
 	public void deleteOrgUser(UserInfo user, ISystemOrgObject org) {
-		if (user == null || org == null || !user.isBelongTo(org)) {
+		/*if (user == null || org == null || !user.isBelongTo(org)) {
 			return;
 		}
 		// 若待删除组织为用户默认登录组织，清空设定
@@ -158,7 +188,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		// 删除用户组织信息
 		getBaseDao().deleteUserOrganization(user, org);
 		// 设定新的上下级关系
-		getBaseDao().updateUserPathAfterUserOrgDelete(user, user.getUpperUser(org), org);
+		getBaseDao().updateUserPathAfterUserOrgDelete(user, user.getUpperUser(org), org);*/
 	}
 
 	@Override

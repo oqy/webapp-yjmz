@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minyisoft.webapp.yjmz.oa.persistence.PurchaseReqBillDao">
+  <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
+  <resultMap id="PurchaseReqBillResult" type="PurchaseReqBillInfo">
+  	  <id property="id" column="fid" />
+      <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
+      <result property="billNumber" column="fbillnumber" />
+      <result property="description" column="fdescription" />
+      <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
+      <result property="createUser" column="fcreateuserid" typeHandler="bizModelHandler" />
+      <result property="createDate" column="fcreatedate" />
+      <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
+      <result property="lastUpdateDate" column="flastupdatedate" />
+      <result property="version" column="fversion" />
+      <collection property="entry" column="fid" javaType="ArrayList" ofType="PurchaseReqEntryInfo">
+		<constructor>
+		   <idArg column="fpurchasereqentryid" typeHandler="bizModelHandler"/>
+		</constructor>
+	  </collection>
+    </resultMap>
+
+  <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
+
+  <!-- 根据ID查询记录 -->
+  <select id="getEntity" parameterType="String" resultMap="PurchaseReqBillResult">
+    select
+            	p.fdepartmentid ,
+            	p.fbillnumber ,
+            	p.fdescription ,
+            	p.fsourcebillid ,
+            	p.fcreateuserid ,
+            	p.fcreatedate ,
+            	p.flastupdateuserid ,
+            	p.flastupdatedate ,
+            	p.fid ,
+            	p.fversion ,
+            	e.fid as fpurchasereqentryid
+          from t_oa_purchasereqbill p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
+    where fid = #{id}
+  </select>
+  
+  <!-- 查询条件SQL -->
+  <sql id="getCriteriaCondition">
+  	<where>
+		<if test="ids!=null">
+            fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+		<if test="excludeIds!=null">
+            and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+	</where>
+  </sql>
+  
+  <!-- 获取满足指定过滤条件的记录数 -->
+  <select id="countEntity" parameterType="PurchaseReqBillCriteria" resultType="int">
+    select count(*) from t_oa_purchasereqbill
+    <include refid="getCriteriaCondition"/>
+  </select>
+  
+  <!-- 获取满足指定过滤条件的记录 -->
+  <select id="getEntityCollection" parameterType="PurchaseReqBillCriteria" resultMap="PurchaseReqBillResult">
+    select
+            	p.fdepartmentid ,
+            	p.fbillnumber ,
+            	p.fdescription ,
+            	p.fsourcebillid ,
+            	p.fcreateuserid ,
+            	p.fcreatedate ,
+            	p.flastupdateuserid ,
+            	p.flastupdatedate ,
+            	p.fid ,
+            	p.fversion ,
+            	e.fid as fpurchasereqentryid
+    from 
+    (select * from t_oa_purchasereqbill
+    <include refid="getCriteriaCondition"/>
+	<if test="pageDevice!=null">
+	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	</if>
+	) p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
+  </select>
+  
+  <!-- 通用记录插入操作 --> 
+  <insert id="insertEntity" parameterType="PurchaseReqBillInfo">
+    insert into t_oa_purchasereqbill (fdepartmentid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{department.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+  </insert>
+
+  <!-- 通用记录更新操作 --> 
+  <update id="updateEntity" parameterType="PurchaseReqBillInfo">
+    update t_oa_purchasereqbill set fdepartmentid=#{department.id},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},
+    fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
+
+  <!-- 通用记录删除操作 -->
+  <delete id="batchDelete" parameterType="list">
+    delete from t_oa_purchasereqbill where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+</mapper>
