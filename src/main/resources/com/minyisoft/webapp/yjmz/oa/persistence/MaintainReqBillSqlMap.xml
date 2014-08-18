@@ -14,6 +14,7 @@
       <result property="finishDate" column="ffinishdate" />
       <result property="receiver" column="freceiverid" typeHandler="bizModelHandler" />
       <result property="examiner" column="fexaminerid" typeHandler="bizModelHandler" />
+      <result property="processInstanceId" column="fprocessinstanceid" />
       <result property="billNumber" column="fbillnumber" />
       <result property="description" column="fdescription" />
       <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
@@ -42,6 +43,7 @@
             	m.ffinishdate ,
             	m.freceiverid ,
             	m.fexaminerid ,
+            	m.fprocessinstanceid ,
             	m.fbillnumber ,
             	m.fdescription ,
             	m.fsourcebillid ,
@@ -85,6 +87,7 @@
             	m.ffinishdate ,
             	m.freceiverid ,
             	m.fexaminerid ,
+            	m.fprocessinstanceid ,
             	m.fbillnumber ,
             	m.fdescription ,
             	m.fsourcebillid ,
@@ -106,14 +109,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="MaintainReqBillInfo">
-    insert into t_oa_maintainreqbill (fapplydepartmentid,fapplyuserid,flocation,fmaintaintypesid,fmaintenancemanid,ffinishdate,freceiverid,fexaminerid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{applyDepartment.id},#{applyUser.id},#{location},#{maintainTypes.id},#{maintenanceMan.id},#{finishDate},#{receiver.id},#{examiner.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_maintainreqbill (fapplydepartmentid,fapplyuserid,flocation,fmaintaintypesid,fmaintenancemanid,ffinishdate,freceiverid,fexaminerid,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{applyDepartment.id},#{applyUser.id},#{location},#{maintainTypes.id},#{maintenanceMan.id},#{finishDate},#{receiver.id},#{examiner.id},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="MaintainReqBillInfo">
     update t_oa_maintainreqbill set fapplydepartmentid=#{applyDepartment.id},fapplyuserid=#{applyUser.id},flocation=#{location},fmaintaintypesid=#{maintainTypes.id},fmaintenancemanid=#{maintenanceMan.id},ffinishdate=#{finishDate},freceiverid=#{receiver.id},fexaminerid=#{examiner.id},
-    fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    fprocessinstanceid=#{processInstanceId},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

@@ -7,6 +7,7 @@
   <resultMap id="PurchaseReqBillResult" type="PurchaseReqBillInfo">
   	  <id property="id" column="fid" />
       <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
+      <result property="processInstanceId" column="fprocessinstanceid" />
       <result property="billNumber" column="fbillnumber" />
       <result property="description" column="fdescription" />
       <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
@@ -28,6 +29,7 @@
   <select id="getEntity" parameterType="String" resultMap="PurchaseReqBillResult">
     select
             	p.fdepartmentid ,
+            	p.fprocessinstanceid ,
             	p.fbillnumber ,
             	p.fdescription ,
             	p.fsourcebillid ,
@@ -39,7 +41,7 @@
             	p.fversion ,
             	e.fid as fpurchasereqentryid
           from t_oa_purchasereqbill p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
-    where fid = #{id}
+    where p.fid = #{id}
   </select>
   
   <!-- 查询条件SQL -->
@@ -64,6 +66,7 @@
   <select id="getEntityCollection" parameterType="PurchaseReqBillCriteria" resultMap="PurchaseReqBillResult">
     select
             	p.fdepartmentid ,
+            	p.fprocessinstanceid ,
             	p.fbillnumber ,
             	p.fdescription ,
             	p.fsourcebillid ,
@@ -85,14 +88,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="PurchaseReqBillInfo">
-    insert into t_oa_purchasereqbill (fdepartmentid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{department.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_purchasereqbill (fdepartmentid,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{department.id},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="PurchaseReqBillInfo">
-    update t_oa_purchasereqbill set fdepartmentid=#{department.id},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},
-    fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_oa_purchasereqbill set fdepartmentid=#{department.id},fprocessinstanceid=#{processInstanceId},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},
+    fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

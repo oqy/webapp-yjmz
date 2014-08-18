@@ -178,3 +178,7 @@ create table t_oa_purchasereqentry(
   fversion int default 1, 
   primary key (fid)
 );
+
+ALTER TABLE t_oa_maintainreqbill ADD fprocessinstanceid VARCHAR(32) NULL AFTER fexaminerid;
+ALTER TABLE t_oa_purchasereqbill ADD fprocessinstanceid VARCHAR(32) NULL AFTER fdepartmentid;
+ALTER TABLE t_oa_report ADD fprocessinstanceid VARCHAR(32) NULL AFTER fattachmenturl;

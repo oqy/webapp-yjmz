@@ -18,7 +18,7 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:root-context.xml,classpath*:shiro-context.xml</param-value>
+		<param-value>classpath*:*-context.xml</param-value>
 	</context-param>
 
 	<!-- Spring刷新Introspector防止内存泄露 -->

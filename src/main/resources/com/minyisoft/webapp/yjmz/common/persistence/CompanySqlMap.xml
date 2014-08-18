@@ -37,7 +37,7 @@
             	c.fversion ,
             	d.fid as fdepartmentid
           from t_common_company c left join t_common_department d on c.fid = d.forgid
-    where fid = #{id}
+    where c.fid = #{id}
   </select>
   
   <!-- 查询条件SQL -->

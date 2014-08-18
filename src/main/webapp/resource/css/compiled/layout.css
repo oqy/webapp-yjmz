@@ -8,7 +8,7 @@ body {
   /*-webkit-font-smoothing: antialiased;*/
 }
 
-h1, h2, h3, h4, h5 {
+/*h1, h2, h3, h4, h5 {
   margin: 0;
   line-height: inherit;
   color: #29323d;
@@ -16,7 +16,7 @@ h1, h2, h3, h4, h5 {
 h1 small, h2 small, h3 small, h4 small, h5 small {
   margin-left: 15px;
   font-style: italic;
-}
+}*/
 
 body.menu {
   overflow-x: hidden;

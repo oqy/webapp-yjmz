@@ -14,6 +14,7 @@ import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.core.model.BillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 
 /**
@@ -22,7 +23,7 @@ import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 @Getter
 @Setter
 @ModelKey(0x147E24CEB79L)
-public class MaintainReqBillInfo extends BillBaseInfo {
+public class MaintainReqBillInfo extends BillBaseInfo implements WorkFlowBusinessModel {
 	@Label("申请部门")
 	@NotNull
 	private DepartmentInfo applyDepartment;
@@ -46,4 +47,11 @@ public class MaintainReqBillInfo extends BillBaseInfo {
 	private UserInfo receiver;
 	// 验收人
 	private UserInfo examiner;
+	// 工作流流程实例id
+	private String processInstanceId;
+
+	@Override
+	public String getName() {
+		return applyDepartment.getName() + "工程维修单[" + getBillNumber() + "]";
+	}
 }

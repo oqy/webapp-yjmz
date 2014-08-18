@@ -4,7 +4,8 @@
 <title>编辑公司-在线OA系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css"></style>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
 </head>
 <body>
 <!-- navbar -->
@@ -15,23 +16,19 @@
 <!-- end sidebar -->
 <!-- main container -->
 <div class="content">
-<div id="pad-wrapper">
-    <h2>编辑公司</h2>
-    <form role="form" class="form-horizontal">
-    <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">名称：</label>
-    <div class="col-sm-6">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Password：</label>
-    <div class="col-sm-6">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password"/>
-    </div>
-  </div>
+  <div id="pad-wrapper">
+    <h3>编辑公司</h3>
+    <form role="form" class="form-horizontal" th:action="@{'/admin/companyEdit.html'}" method="post">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">名称：</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="name" name="name" placeholder="请输入公司名称" th:value="${company.name}"/>
+        </div>
+      </div>
+      <input name="companyId" type="hidden" th:value="${company.id}"/>
+      <button type="submit" class="btn btn-default">提交</button>
     </form>
-    </div>
+  </div>
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:substituteby="component/resource::js"></script>

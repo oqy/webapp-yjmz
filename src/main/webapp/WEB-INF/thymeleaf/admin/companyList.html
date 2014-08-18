@@ -4,8 +4,9 @@
 <title>公司列表-在线OA系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css"></style>
-<link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/index.css'}" />
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+<link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/index.css'}" th:remove="all"/>
 </head>
 <body>
 <!-- navbar -->
@@ -17,26 +18,27 @@
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
-    <h2>公司列表<a th:href="@{'/admin/companyEdit.html'}" role="button" class="btn btn-success pull-right">+ 新增公司</a></h2>
-    
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th></th>
-              <th>名称</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="company :${companies}">
-              <td th:text="${companyStat.count}"></td>
-              <td th:text="${company.name}"></td>
-              <td><a th:href="" class="btn btn-primary" role="button">详情</a><a th:href="" class="btn btn-primary" role="button">编辑</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <h3>公司列表<a th:href="@{'/admin/companyEdit.html'}" role="button" class="btn btn-success pull-right">+ 新增公司</a></h3>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th>名称</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="company :${companies}">
+          <td th:text="${companyStat.count}"></td>
+          <td th:text="${company.name}"></td>
+          <td th:text="${company.status.description}"></td>
+          <td><a th:href="@{'/admin/companyEdit.html?companyId='+${company.id}}" class="btn btn-default" role="button">详情</a>&nbsp;<a th:href="@{'/admin/companyEdit.html?companyId='+${company.id}}" class="btn btn-default" role="button">编辑</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 <!-- end main container -->
 <script type="text/javascript" th:substituteby="component/resource::js"></script>
 </body>

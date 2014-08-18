@@ -46,7 +46,7 @@ public class LoginController extends BaseController {
 				UserInfo loginUser = userService.userLogin(userLoginName, userPassword);
 				// 若是系统管理员登录，转入系统管理页面
 				if (loginUser.equals(SystemConstant.ADMINISTRATOR_USER)) {
-					return "redirect:admin/index.html";
+					return "redirect:admin/companyList.html";
 				}
 				// 否则进入用户管理页面
 				List<CompanyInfo> optionCompanies = loginUser.getOrgList(CompanyInfo.class);

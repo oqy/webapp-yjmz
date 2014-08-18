@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.WorkFlowConfigDao">
+  <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
+  <resultMap id="WorkFlowConfigResult" type="WorkFlowConfigInfo">
+      <result property="processDefinitionId" column="fprocessdefinitionid" />
+      <result property="workFlowStatus" column="fworkflowstatus" />
+      <result property="defineOrg" column="fdefineorgid" typeHandler="bizModelHandler" />
+      <result property="workFlowType" column="fworkflowtype" />
+      <result property="name" column="fname" />
+      <result property="description" column="fdescription" />
+      <result property="createUser" column="fcreateuserid" typeHandler="bizModelHandler" />
+      <result property="createDate" column="fcreatedate" />
+      <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
+      <result property="lastUpdateDate" column="flastupdatedate" />
+      <result property="id" column="fid" />
+      <result property="version" column="fversion" />
+    </resultMap>
+
+  <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
+
+  <!-- 根据ID查询记录 -->
+  <select id="getEntity" parameterType="String" resultMap="WorkFlowConfigResult">
+    select
+            	fprocessdefinitionid ,
+            	fworkflowstatus ,
+            	fdefineorgid ,
+            	fworkflowtype ,
+            	fname ,
+            	fdescription ,
+            	fcreateuserid ,
+            	fcreatedate ,
+            	flastupdateuserid ,
+            	flastupdatedate ,
+            	fid ,
+            	fversion 
+          from t_common_workflowconfig
+    where fid = #{id}
+  </select>
+  
+  <!-- 查询条件SQL -->
+  <sql id="getCriteriaCondition">
+  	<where>
+		<if test="ids!=null">
+            fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+		<if test="excludeIds!=null">
+            and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+        <if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(workFlowStatus)">
+			and fworkflowstatus=#{workFlowStatus}
+		</if>
+		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(defineOrg)">
+			and fdefineorgid=#{defineOrg.id}
+		</if>
+		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(workFlowType)">
+			and fworkflowtype=#{workFlowType}
+		</if>
+	</where>
+  </sql>
+  
+  <!-- 获取满足指定过滤条件的记录数 -->
+  <select id="countEntity" parameterType="WorkFlowConfigCriteria" resultType="int">
+    select count(*) from t_common_workflowconfig
+    <include refid="getCriteriaCondition"/>
+  </select>
+  
+  <!-- 获取满足指定过滤条件的记录 -->
+  <select id="getEntityCollection" parameterType="WorkFlowConfigCriteria" resultMap="WorkFlowConfigResult">
+  	<if test="pageDevice!=null">
+  	select * from( select A.*, rownum rn from ( 
+  	</if>
+    select
+            	fprocessdefinitionid ,
+            	fworkflowstatus ,
+            	fdefineorgid ,
+            	fworkflowtype ,
+            	fname ,
+            	fdescription ,
+            	fcreateuserid ,
+            	fcreatedate ,
+            	flastupdateuserid ,
+            	flastupdatedate ,
+            	fid ,
+            	fversion 
+          from t_common_workflowconfig
+    <include refid="getCriteriaCondition"/>
+    order by fcreatedate desc
+	<if test="pageDevice!=null">
+	) A where (#{pageDevice.endRowNumberOfCurrentPage})>=rownum) WHERE rn >= #{pageDevice.startRowNumberOfCurrentPage}
+	</if>
+  </select>
+  
+  <!-- 通用记录插入操作 --> 
+  <insert id="insertEntity" parameterType="WorkFlowConfigInfo">
+    insert into t_common_workflowconfig (fprocessdefinitionid,fworkflowstatus,fdefineorgid,fworkflowtype,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{processDefinitionId},#{workFlowStatus},#{defineOrg.id},#{workFlowType},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+  </insert>
+
+  <!-- 通用记录更新操作 --> 
+  <update id="updateEntity" parameterType="WorkFlowConfigInfo">
+    update t_common_workflowconfig set fprocessdefinitionid=#{processDefinitionId},fworkflowstatus=#{workFlowStatus},fdefineorgid=#{defineOrg.id},fworkflowtype=#{workFlowType},fname=#{name},fdescription=#{description},
+    fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
+
+  <!-- 通用记录删除操作 -->
+  <delete id="batchDelete" parameterType="list">
+    delete from t_common_workflowconfig where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+</mapper>
