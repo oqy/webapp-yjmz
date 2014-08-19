@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
 import com.minyisoft.webapp.yjmz.common.service.DepartmentService;
-import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 
 /**
  * @author qingyong_ou 部门管理controller
  */
 @Controller
 @RequestMapping("/admin")
-public class DepartmentController extends ManageBaseController {
+public class DepartmentController extends BaseController {
 	@Autowired
 	private DepartmentService departmentService;
 

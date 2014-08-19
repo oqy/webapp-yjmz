@@ -29,20 +29,20 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
+import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.UserFormType;
-import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 
 /**
  * @author qingyong_ou 工作流任务中心controller
  */
 @Controller
 @RequestMapping("/admin")
-public class WorkFlowTaskController extends ManageBaseController {
+public class WorkFlowTaskController extends BaseController {
 	@Autowired
 	private WorkFlowTaskService workFlowTaskService;
 	@Autowired

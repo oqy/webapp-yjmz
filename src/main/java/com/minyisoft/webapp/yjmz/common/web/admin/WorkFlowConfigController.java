@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
+import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.WorkFlowConfigCriteria;
@@ -26,14 +27,13 @@ import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper.ProcessResourceType;
-import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 
 /**
  * @author qingyong_ou 工作流流程定义配置信息
  */
 @Controller
 @RequestMapping("/admin")
-public class WorkFlowConfigController extends ManageBaseController {
+public class WorkFlowConfigController extends BaseController {
 	@Autowired
 	private WorkFlowConfigService workFlowConfigService;
 	private final ActivitiHelper activitiHelper;

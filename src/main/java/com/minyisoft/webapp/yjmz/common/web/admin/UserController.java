@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserStatusEnum;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
-import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 
 /**
  * @author qingyong_ou 系统用户管理controller
  */
 @Controller
 @RequestMapping("/admin")
-public class UserController extends ManageBaseController {
+public class UserController extends BaseController {
 	@Autowired
 	private UserService userService;
 

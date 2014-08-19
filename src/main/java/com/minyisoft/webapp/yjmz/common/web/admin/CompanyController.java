@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.enumField.CompanyStatusEnum;
 import com.minyisoft.webapp.yjmz.common.service.CompanyService;
-import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 
 /**
  * @author qingyong_ou 公司管理controller
  */
 @Controller
 @RequestMapping("/admin")
-public class CompanyController extends ManageBaseController {
+public class CompanyController extends BaseController {
 	@Autowired
 	private CompanyService companyService;
 
