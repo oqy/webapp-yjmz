@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>公司详情-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3><span th:text="${company.name}+'·公司详情'">公司详情</span><a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyList.html'}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回公司列表</a></h3>
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="active"><a href="#department" role="tab" data-toggle="tab">部门列表</a></li>
+      <li><a href="#role" role="tab" data-toggle="tab">角色列表</a></li>
+      <li><a href="#user" role="tab" data-toggle="tab">员工列表</a></li>
+    </ul>
+    <div class="tab-content mt10">
+      <div class="tab-pane active" id="department">
+        <table class="table table-hover">
+          <thead style="border-top:none;">
+            <tr>
+              <th>序号</th>
+              <th>名称</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="department :${company.departments}">
+              <td th:text="${department.seq}"></td>
+              <td th:text="${department.name}"></td>
+              <td><a th:href="@{'/admin/departmentEdit.html?departmentId='+${department.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <a th:if="${company.status.value eq 0}" role="button" class="btn btn-default pull-right" th:href="@{'/admin/departmentEdit.html?companyId='+${company.id}}">新增部门</a> </div>
+      <div class="tab-pane" id="role"> </div>
+      <div class="tab-pane table-responsive" id="user">
+        <table class="table table-hover">
+          <thead style="border-top:none;">
+            <tr>
+              <th>序号</th>
+              <th>部门</th>
+              <th>姓名</th>
+              <th>性别</th>
+              <th>工号</th>
+              <th>职衔</th>
+              <th>联系手机</th>
+              <th>上级领导</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="userOrgRelation :${company.userOrgRelations}">
+              <td th:text="${userOrgRelationStat.count}"></td>
+              <td th:text="${userOrgRelation.department!=null}?${userOrgRelation.department.name}"></td>
+              <td th:text="${userOrgRelation.user.name}"></td>
+              <td th:text="${userOrgRelation.user.userMale.description}"></td>
+              <td th:text="${userOrgRelation.jobNumber}"></td>
+              <td th:text="${userOrgRelation.title}"></td>
+              <td th:text="${userOrgRelation.user.cellPhoneNumber}"></td>
+              <td th:text="${userOrgRelation.upperUser!=null}?${userOrgRelation.upperUser.name}"></td>
+              <td><a th:href="@{'/admin/userOrgRelationEdit.html?userOrgRelationId='+${userOrgRelation.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/userOrgRelationDelete.htmll?userOrgRelationId='+${company.id}}" class="btn btn-default btn-sm" role="button" onclick="return window.confim('是否确定从本公司删除指定用户？')">删除</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <a th:if="${company.status.value eq 0}" role="button" class="btn btn-default pull-right" th:href="@{'/admin/userOrgRelationEdit.html?companyId='+${company.id}}">新增员工</a> </div>
+    </div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>

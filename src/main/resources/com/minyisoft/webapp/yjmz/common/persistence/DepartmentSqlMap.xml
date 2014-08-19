@@ -7,6 +7,7 @@
   <resultMap id="DepartmentResult" type="DepartmentInfo">
       <result property="name" column="fname" />
       <result property="org" column="forgid" typeHandler="bizModelHandler" />
+      <result property="seq" column="fseq" />
       <result property="id" column="fid" />
       <result property="version" column="fversion" />
     </resultMap>
@@ -18,6 +19,7 @@
     select
     			fname ,
             	forgid ,
+            	fseq ,
             	fid ,
             	fversion 
           from t_common_department
@@ -47,6 +49,7 @@
     select
     			fname ,
             	forgid ,
+            	fseq ,
             	fid ,
             	fversion 
           from t_common_department
@@ -58,12 +61,12 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="DepartmentInfo">
-    insert into t_common_department (fname,forgid,fid) values(#{name},#{org.id},#{id})
+    insert into t_common_department (fname,forgid,fseq,fid) values(#{name},#{org.id},#{seq},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="DepartmentInfo">
-    update t_common_department set forgid=#{org.id},fname=#{name},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_common_department set forgid=#{org.id},fname=#{name},fseq=#{seq},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

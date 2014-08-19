@@ -35,7 +35,7 @@ import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.UserFormType;
-import com.minyisoft.webapp.yjmz.common.web.ManageBaseController;
+import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 
 /**
  * @author qingyong_ou 工作流任务中心controller
@@ -64,7 +64,7 @@ public class WorkFlowTaskController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "myInvolvedProcessInstances.do", method = RequestMethod.GET)
 	public String getMyInvolvedProcessInstances(@ModelAttribute("currentUser") UserInfo currentUser, Model model,
-			PageDevice pageDevice) throws Exception {
+			PageDevice pageDevice) {
 		model.addAttribute("involvedProcessInstances",
 				workFlowTaskService.getInvolvedProcessInstance(currentUser, pageDevice));
 		model.addAttribute("pageDevice", pageDevice);
@@ -75,7 +75,7 @@ public class WorkFlowTaskController extends ManageBaseController {
 	 * 获取我的待处理任务列表
 	 */
 	@RequestMapping(value = "myTodoTasks.do", method = RequestMethod.GET)
-	public String getMyTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model) throws Exception {
+	public String getMyTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model) {
 		model.addAttribute("todoTasks", workFlowTaskService.getTodoTasks(currentUser));
 		model.addAttribute("activitiHelper", activitiHelper);
 		return "admin/common/myTodoTasks";
@@ -86,7 +86,7 @@ public class WorkFlowTaskController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "processTodoTask.do", method = RequestMethod.GET, params = "taskId")
 	public String viewTodoTask(@ModelAttribute("currentUser") UserInfo currentUser, @RequestParam String taskId,
-			Model model) throws Exception {
+			Model model) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		model.addAttribute("task", task);
 		List<FormProperty> formProperties = formService.getTaskFormData(task.getId()).getFormProperties();
@@ -110,8 +110,7 @@ public class WorkFlowTaskController extends ManageBaseController {
 	 * 签收任务
 	 */
 	@RequestMapping(value = "claimTodoTask.do", method = RequestMethod.GET, params = "taskId")
-	public String claimTodoTask(@ModelAttribute("currentUser") UserInfo currentUser, @RequestParam String taskId)
-			throws Exception {
+	public String claimTodoTask(@ModelAttribute("currentUser") UserInfo currentUser, @RequestParam String taskId) {
 		taskService.claim(taskId, currentUser.getId());
 		return "redirect:myTodoTasks.do";
 	}
@@ -155,7 +154,7 @@ public class WorkFlowTaskController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "myDoneTasks.do", method = RequestMethod.GET)
 	public String getMyDoneTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model,
-			PageDevice pageDevice) throws Exception {
+			PageDevice pageDevice) {
 		model.addAttribute("doneTasks", workFlowTaskService.getDoneTask(currentUser, pageDevice));
 		model.addAttribute("activitiHelper", activitiHelper);
 		model.addAttribute("pageDevice", pageDevice);
@@ -182,7 +181,7 @@ public class WorkFlowTaskController extends ManageBaseController {
 	 * 获取流程实例详细信息
 	 */
 	@RequestMapping(value = "processInstanceDetail.do", method = RequestMethod.GET, params = "processInstanceId")
-	public String getProcessInstanceDetail(@RequestParam String processInstanceId, Model model) throws Exception {
+	public String getProcessInstanceDetail(@RequestParam String processInstanceId, Model model) {
 		_prepareProcessInstanceDetailData(processInstanceId, model);
 		return "admin/common/processInstanceDetail";
 	}

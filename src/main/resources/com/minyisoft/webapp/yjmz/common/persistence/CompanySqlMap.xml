@@ -14,9 +14,14 @@
       <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
       <result property="lastUpdateDate" column="flastupdatedate" />
       <result property="version" column="fversion" />
-      <collection property="departments" column="fid" javaType="ArrayList" ofType="DepartmentInfo">
+      <collection property="departments" column="fid" ofType="DepartmentInfo">
 		<constructor>
-		   <idArg column="fdepartmentid" typeHandler="bizModelHandler"/>
+		   <idArg column="fdepartmentid" javaType="String"/>
+		</constructor>
+	  </collection>
+	  <collection property="userOrgRelations" column="fid" ofType="UserOrgRelationInfo">
+		<constructor>
+		   <idArg column="fuserorgrelationid" javaType="String"/>
 		</constructor>
 	  </collection>
     </resultMap>
@@ -35,9 +40,12 @@
             	c.flastupdatedate ,
             	c.fid ,
             	c.fversion ,
-            	d.fid as fdepartmentid
-          from t_common_company c left join t_common_department d on c.fid = d.forgid
+            	d.fid as fdepartmentid,
+            	r.fid as fuserorgrelationid
+          from t_common_company c left join t_common_department d on c.fid = d.forgid 
+          		left join t_common_userorgrelation r on c.fid=r.forgid
     where c.fid = #{id}
+    order by d.fseq asc, r.fuserpath asc
   </select>
   
   <!-- 查询条件SQL -->
@@ -70,7 +78,8 @@
         c.flastupdatedate ,
         c.fid ,
         c.fversion ,
-        d.fid as fdepartmentid
+        d.fid as fdepartmentid,
+        r.fid as fuserorgrelationid
     from 
     (select * from t_common_company
     <include refid="getCriteriaCondition"/>
@@ -78,6 +87,8 @@
 	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
 	) c left join t_common_department d on c.fid = d.forgid
+		left join t_common_userorgrelation r on c.fid=r.forgid
+	order by c.fstatus asc, c.fcreatedate asc, c.fid, d.fseq asc, r.fuserpath asc
   </select>
   
   <!-- 通用记录插入操作 --> 

@@ -1,8 +1,9 @@
-package com.minyisoft.webapp.yjmz.common.web;
+package com.minyisoft.webapp.yjmz.common.web.manage;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 
 @Controller
 public class WelcomeController extends ManageBaseController {

@@ -23,9 +23,9 @@
       <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
       <result property="lastUpdateDate" column="flastupdatedate" />
       <result property="version" column="fversion" />
-      <collection property="orgRelations" column="fid" javaType="ArrayList" ofType="UserOrgRelationInfo">
+      <collection property="orgRelations" column="fid" ofType="UserOrgRelationInfo">
 		<constructor>
-		   <idArg column="forgrelationid" typeHandler="bizModelHandler"/>
+		   <idArg column="forgrelationid" javaType="String"/>
 		</constructor>
 	  </collection>
     </resultMap>
@@ -105,6 +105,7 @@
 	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
 	) u left join t_common_userorgrelation r on u.fid=r.fuserid
+	order by hex(u.fname) desc, u.fid
   </select>
   
   <!-- 通用记录插入操作 --> 

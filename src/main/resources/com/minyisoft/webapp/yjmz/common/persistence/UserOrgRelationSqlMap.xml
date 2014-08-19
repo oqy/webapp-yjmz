@@ -73,14 +73,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="UserOrgRelationInfo">
-    insert into t_common_userorgrelation (fuserid,forgid,fdepartmentid,fjobnumber,ftitle,fupperuserid,fseq,fid) 
-    values(#{user.id},#{org.id},#{department.id},#{jobNumber},#{title},#{upperUser.id},#{seq},#{id})
+    insert into t_common_userorgrelation (fuserid,forgid,fdepartmentid,fjobnumber,ftitle,fupperuserid,fseq,fid,fuserpath) 
+    values(#{user.id},#{org.id},#{department.id},#{jobNumber},#{title},#{upperUser.id},#{seq},#{id},#{userPath})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="UserOrgRelationInfo">
     update t_common_userorgrelation set fuserid=#{user.id},forgid=#{org.id},fdepartmentid=#{department.id},fjobnumber=#{jobNumber},
-    ftitle=#{title},fupperuserid=#{upperUser.id},fseq=#{seq},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    ftitle=#{title},fupperuserid=#{upperUser.id},fseq=#{seq},fversion=fversion+1,fuserpath=#{userPath} where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->
@@ -88,7 +88,7 @@
     delete from t_common_userorgrelation where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
   </delete>
   
-  <delete id="deleteRelations" parameterType="UserInfo">
-    delete from t_common_userorgrelation where fuserid=#{id}
+  <delete id="deleteRelation">
+    delete from t_common_userorgrelation where fuserid=#{user.id} and forgid=#{org.id}
   </delete>
 </mapper>

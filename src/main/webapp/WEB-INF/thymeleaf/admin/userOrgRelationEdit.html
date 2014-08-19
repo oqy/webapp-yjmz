@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>编辑用户-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑用户<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回公司详情</a></h3>
+    <form role="form" class="form-horizontal" th:action="@{'/admin/userOrgRelationEdit.html'}" method="post" style="margin-top:20px;">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-md-2 control-label">公司名称：</label>
+        <div class="col-md-4">
+          <p class="form-control-static" th:text="${company.name}"></p>
+        </div></div>
+      <div class="form-group" >
+        <label for="department" class="col-md-2 control-label">所属部门：</label>
+        <div class="col-md-4">
+          <select id="department" name="department" class="form-control">
+            <option value="">请选择用户所属部门</option>
+            <option th:each="department : ${company.departments}" th:value="${department.id}" th:text="${department.name}" th:selected="${department.equals(userOrgRelation.department)}"></option>
+          </select>
+      </div>
+      </div>
+      <div class="form-group" th:if="${userOrgRelation.user!=null}">
+        <label for="inputEmail3" class="col-md-2 control-label">用户姓名：</label>
+        <div class="col-md-4">
+          <p class="form-control-static" th:text="${userOrgRelation.user.name}"></p>
+        </div>
+      </div>
+      <div class="form-group" th:if="${userOrgRelation.user==null and !#lists.isEmpty(users)}">
+        <label for="userName" class="col-md-2 control-label">选择方式：</label>
+        <div class="col-md-10">
+          <label class="radio-inline">
+          <input type="radio" name="userSelectType" id="userSelectType0" value="0" checked="checked"/>新建用户
+          </label>
+          <label class="radio-inline">
+          <input type="radio" name="userSelectType" id="userSelectType1" value="1"/>从已有用户中选择
+          </label>
+        </div>
+      </div>
+      <div class="addNewUser form-group" th:if="${userOrgRelation.user==null}">
+        <label for="userName" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;用户姓名：</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" id="userName" name="user.name" placeholder="请输入员工姓名"/>
+        </div>
+        <label for="userName" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;性别：</label>
+        <div class="col-md-4">
+          <select id="userMale" name="user.userMale" class="form-control">
+            <option th:each="userMale : ${userMales}" th:value="${userMale.value}" th:text="${userMale.description}"></option>
+          </select>
+        </div>
+      </div>
+      <div class="addNewUser form-group" th:if="${userOrgRelation.user==null}">
+        <label for="userCellPhoneNumber" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;联系手机：</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" id="userCellPhoneNumber" name="user.cellPhoneNumber" placeholder="请输入员工联系手机" />
+          <br/>注：联系电话即为该用户系统初始登录名及登录密码
+        </div>
+      </div>
+      <div class="selectExistsUser form-group" th:if="${userOrgRelation.user==null and !#lists.isEmpty(users)}" th:style="${userOrgRelation.user==null}?'display:none'">
+        <label for="existsUser" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;选择用户：</label>
+        <div class="col-md-4">
+          <select id="existsUser" name="existsUser" class="form-control">
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}" th:selected="${userOrgRelation.user!=null} and ${userOrgRelation.user.equals(user)}"></option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="jobNumber" class="col-md-2 control-label">工号：</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" id="jobNumber" name="jobNumber" placeholder="请输入员工工号" th:value="${userOrgRelation.jobNumber}"/>
+        </div>
+        <label for="title" class="col-md-2 control-label">职衔：</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" id="title" name="title" placeholder="请输入员工职衔" th:value="${userOrgRelation.title}"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="upperUser" class="col-md-2 control-label">上级用户：</label>
+        <div class="col-md-4">
+          <select id="upperUser" name="upperUser" class="form-control">
+            <option value="">无</option>
+            <option th:each="orgRelation : ${company.userOrgRelations}" th:value="${orgRelation.user.id}" th:text="${orgRelation.user.name}" th:selected="${userOrgRelation.upperUser!=null} and ${userOrgRelation.upperUser.equals(orgRelation.user)}"></option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+          <button type="submit" class="btn btn-default">提交</button>
+          <button type="reset" class="btn btn-info">重置</button>
+          <input name="org" type="hidden" th:value="${company.id}"/>
+          <input name="userOrgRelationId" type="hidden" th:value="${userOrgRelation.id}"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('input[name="userSelectType"]').click(function(){
+		if(jQuery(this).val()=='0'){
+			jQuery('.selectExistsUser').hide();
+			jQuery('.addNewUser').show();
+		}else{
+			jQuery('.selectExistsUser').show();
+			jQuery('.addNewUser').hide();
+		}
+	});
+});
+</script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package com.minyisoft.webapp.yjmz.common.model;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -26,5 +25,7 @@ public class CompanyInfo extends DataBaseInfo implements ISystemOrgObject {
 	@NotNull
 	private CompanyStatusEnum status = CompanyStatusEnum.NORMAL;
 	// 包含部门
-	private List<DepartmentInfo> departments = Collections.emptyList();
+	private List<DepartmentInfo> departments;
+	// 包含员工组织关系信息
+	private List<UserOrgRelationInfo> userOrgRelations;
 }

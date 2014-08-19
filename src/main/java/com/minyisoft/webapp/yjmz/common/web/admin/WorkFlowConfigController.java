@@ -26,7 +26,7 @@ import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper.ProcessResourceType;
-import com.minyisoft.webapp.yjmz.common.web.ManageBaseController;
+import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 
 /**
  * @author qingyong_ou 工作流流程定义配置信息
@@ -65,7 +65,7 @@ public class WorkFlowConfigController extends ManageBaseController {
 	 * 删除工作流定义
 	 */
 	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "deleteId")
-	public String deleteWorkFlowConfig(@RequestParam("deleteId") WorkFlowConfigInfo workFlowConfig) throws Exception {
+	public String deleteWorkFlowConfig(@RequestParam("deleteId") WorkFlowConfigInfo workFlowConfig) {
 		workFlowConfigService.delete(workFlowConfig);
 		return "redirect:workFlowConfigList.do?workFlowStatus=" + WorkFlowStatusEnum.SUSPEND.getValue();
 	}
@@ -74,7 +74,7 @@ public class WorkFlowConfigController extends ManageBaseController {
 	 * 挂起工作流定义
 	 */
 	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "suspendId")
-	public String suspendWorkFlowConfig(@RequestParam("suspendId") WorkFlowConfigInfo workFlowConfig) throws Exception {
+	public String suspendWorkFlowConfig(@RequestParam("suspendId") WorkFlowConfigInfo workFlowConfig) {
 		workFlowConfigService.suspendProcessDefinition(workFlowConfig);
 		return "redirect:workFlowConfigList.do?workFlowStatus=" + WorkFlowStatusEnum.SUSPEND.getValue();
 	}
@@ -83,8 +83,7 @@ public class WorkFlowConfigController extends ManageBaseController {
 	 * 激活工作流定义
 	 */
 	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "activateId")
-	public String activateWorkFlowConfig(@RequestParam("activateId") WorkFlowConfigInfo workFlowConfig)
-			throws Exception {
+	public String activateWorkFlowConfig(@RequestParam("activateId") WorkFlowConfigInfo workFlowConfig) {
 		workFlowConfigService.activateProcessDefinition(workFlowConfig);
 		return "redirect:workFlowConfigList.do?workFlowStatus=" + WorkFlowStatusEnum.NORMAL.getValue();
 	}
@@ -94,7 +93,7 @@ public class WorkFlowConfigController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "workFlowConfigEdit.do", method = RequestMethod.GET)
 	public String getWorkFlowConfigEditForm(@RequestParam(required = false) WorkFlowConfigInfo workFlowConfig,
-			Model model) throws Exception {
+			Model model) {
 		model.addAttribute("workFlowConfig", workFlowConfig);
 		if (workFlowConfig == null) {
 			model.addAttribute("workFlowTypes", SupportedWorkFlowTypeEnum.values());
@@ -148,7 +147,7 @@ public class WorkFlowConfigController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "processInstanceList.do", method = RequestMethod.GET, params = "workFlowConfigId")
 	public String getProcessInstanceList(@RequestParam("workFlowConfigId") WorkFlowConfigInfo workFlowConfig,
-			PageDevice pageDevice, Model model) throws Exception {
+			PageDevice pageDevice, Model model) {
 		model.addAttribute("workFlowConfig", workFlowConfig);
 		model.addAttribute("processInstances",
 				workFlowConfigService.getProcessInstances(workFlowConfig.getProcessDefinitionId(), pageDevice));

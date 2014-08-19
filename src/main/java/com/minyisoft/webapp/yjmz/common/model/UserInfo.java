@@ -62,7 +62,7 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	// 默认登录组织，即登录后首先进入的组织，无组织时为null
 	private ISystemOrgObject defaultLoginOrg;
 	// 用户所在组织列表
-	private List<UserOrgRelationInfo> orgRelations = Collections.emptyList();
+	private List<UserOrgRelationInfo> orgRelations;
 
 	/**
 	 * 禁止在程序外部直接设定password，统一通过constructUserPassword方法进行设置

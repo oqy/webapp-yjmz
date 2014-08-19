@@ -2,6 +2,7 @@ package com.minyisoft.webapp.yjmz.common.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -9,7 +10,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -21,15 +21,11 @@ import com.minyisoft.webapp.core.security.shiro.cache.ShiroClusterCacheManager;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
-import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.persistence.PermissionDao;
 import com.minyisoft.webapp.yjmz.common.persistence.RoleDao;
 import com.minyisoft.webapp.yjmz.common.persistence.UserDao;
-import com.minyisoft.webapp.yjmz.common.persistence.UserOrgRelationDao;
-import com.minyisoft.webapp.yjmz.common.service.UserOrgRelationService;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
-import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
 
 @Service("userService")
 public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, UserDao> implements UserService {
@@ -39,10 +35,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 	private RoleDao roleDao;
 	@Autowired
 	private PermissionDao psermissionDao;
-	@Autowired
-	private UserOrgRelationService userOrgRelationService;
-	@Autowired
-	private UserOrgRelationDao userOrgRelationDao;
 
 	@Override
 	public UserInfo userLogin(String userLoginInputString, String userPassword) {
@@ -101,16 +93,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 	}
 	
 	@Override
-	public void submit(UserInfo info) {
-		super.submit(info);
-		userOrgRelationDao.deleteRelations(info);
-		for (UserOrgRelationInfo relation : info.getOrgRelations()) {
-			relation.setUser(info);
-			userOrgRelationService.submit(relation);
-		}
-	}
-
-	@Override
 	public void editOrgUser(ISystemOrgObject org, UserInfo targetUser, UserInfo upperUser, RoleInfo... roles) {
 		/*Assert.notNull(org, "待编辑用户所在组织架构不能为空");
 		Assert.notNull(targetUser, "待编辑用户不能为空");
@@ -149,11 +131,18 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 
 	@Override
 	protected void _validateDataBeforeSubmit(UserInfo info) {
-		if (!info.equals(SystemConstant.ADMINISTRATOR_USER)) {
-			Assert.isTrue(!CollectionUtils.isEmpty(info.getOrgRelations()), "待编辑用户尚未设置组织隶属关系");
-		}
 		if (info.getDefaultLoginOrg() != null) {
 			Assert.isTrue(info.isBelongTo(info.getDefaultLoginOrg()), "待编辑用户并不隶属于待设置的默认登录组织");
+		}
+	}
+	
+	@Override
+	protected void _validateDataBeforeAdd(UserInfo info) {
+		if (StringUtils.isBlank(info.getUserLoginName())) {
+			info.setUserLoginName(info.getCellPhoneNumber());
+		}
+		if (StringUtils.isBlank(info.getUserPassword())) {
+			info.constructUserPassword(info.getCellPhoneNumber());
 		}
 	}
 

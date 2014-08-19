@@ -182,3 +182,5 @@ create table t_oa_purchasereqentry(
 ALTER TABLE t_oa_maintainreqbill ADD fprocessinstanceid VARCHAR(32) NULL AFTER fexaminerid;
 ALTER TABLE t_oa_purchasereqbill ADD fprocessinstanceid VARCHAR(32) NULL AFTER fdepartmentid;
 ALTER TABLE t_oa_report ADD fprocessinstanceid VARCHAR(32) NULL AFTER fattachmenturl;
+ALTER TABLE t_common_userorgrelation ADD fuserpath VARCHAR(200) NULL;
+ALTER TABLE t_common_department ADD fseq INT NULL DEFAULT 1 AFTER forgid;

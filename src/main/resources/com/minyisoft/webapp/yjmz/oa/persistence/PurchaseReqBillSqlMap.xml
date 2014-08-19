@@ -16,9 +16,9 @@
       <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
       <result property="lastUpdateDate" column="flastupdatedate" />
       <result property="version" column="fversion" />
-      <collection property="entry" column="fid" javaType="ArrayList" ofType="PurchaseReqEntryInfo">
+      <collection property="entry" column="fid" ofType="PurchaseReqEntryInfo">
 		<constructor>
-		   <idArg column="fpurchasereqentryid" typeHandler="bizModelHandler"/>
+		   <idArg column="fpurchasereqentryid" javaType="String"/>
 		</constructor>
 	  </collection>
     </resultMap>
