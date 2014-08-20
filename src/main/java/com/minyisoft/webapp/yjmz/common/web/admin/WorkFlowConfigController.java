@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.activiti.engine.ProcessEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,12 +35,6 @@ import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper.ProcessReso
 public class WorkFlowConfigController extends BaseController {
 	@Autowired
 	private WorkFlowConfigService workFlowConfigService;
-	private final ActivitiHelper activitiHelper;
-
-	@Autowired
-	public WorkFlowConfigController(ProcessEngine processEngine) {
-		activitiHelper = ActivitiHelper.createInstance(processEngine);
-	}
 
 	/**
 	 * 获取工作流流程定义配置信息
@@ -127,7 +120,7 @@ public class WorkFlowConfigController extends BaseController {
 	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "processDefinitionId")
 	public String getProcessDefinitionDiagram(@RequestParam String processDefinitionId, HttpServletResponse response)
 			throws Exception {
-		Optional<InputStream> resourceAsStream = activitiHelper.getProcessDefinitionResource(processDefinitionId,
+		Optional<InputStream> resourceAsStream = ActivitiHelper.getProcessDefinitionResource(processDefinitionId,
 				ProcessResourceType.IMAGE);
 
 		if (resourceAsStream.isPresent()) {

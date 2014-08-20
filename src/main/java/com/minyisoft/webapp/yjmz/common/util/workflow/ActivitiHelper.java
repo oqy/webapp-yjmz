@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -26,15 +27,9 @@ import com.google.common.collect.Lists;
  * @author qingyong_ou Activiti工具类
  */
 public final class ActivitiHelper {
-	private ProcessEngine processEngine;
+	private static final ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
-	private ActivitiHelper(ProcessEngine engine) {
-		Assert.notNull(engine);
-		this.processEngine = engine;
-	}
-
-	public static ActivitiHelper createInstance(ProcessEngine engine) {
-		return new ActivitiHelper(engine);
+	private ActivitiHelper() {
 	}
 
 	/**
@@ -52,7 +47,7 @@ public final class ActivitiHelper {
 	 * @param resourceType
 	 * @return
 	 */
-	public Optional<InputStream> getProcessDefinitionResource(String processDefinitionId,
+	public static Optional<InputStream> getProcessDefinitionResource(String processDefinitionId,
 			ProcessResourceType resourceType) {
 		Assert.hasText(processDefinitionId, "工作流程定义ID不能为空");
 		ProcessDefinition processDefinition = processEngine.getRepositoryService().createProcessDefinitionQuery()
@@ -72,7 +67,7 @@ public final class ActivitiHelper {
 	 * @param processInstanceId
 	 * @return
 	 */
-	public Optional<String> getProcessInstanceBusinessKey(String processInstanceId) {
+	public static Optional<String> getProcessInstanceBusinessKey(String processInstanceId) {
 		Assert.hasText(processInstanceId, "流程实例ID不能为空");
 		// 首先判断是否为正在运行的实例
 		ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery()
@@ -95,7 +90,7 @@ public final class ActivitiHelper {
 	 * @param processInstanceId
 	 * @return
 	 */
-	public Optional<InputStream> getProcessInstanceDiagram(String processInstanceId) {
+	public static Optional<InputStream> getProcessInstanceDiagram(String processInstanceId) {
 		Assert.hasText(processInstanceId, "流程实例ID不能为空");
 		// 首先判断是否为正在运行的实例
 		ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery()
@@ -114,7 +109,7 @@ public final class ActivitiHelper {
 		return Optional.absent();
 	}
 
-	private InputStream getProcessInstanceDiagram(String processInstanceId, String processDefinitionId,
+	private static InputStream getProcessInstanceDiagram(String processInstanceId, String processDefinitionId,
 			boolean isRuntimeProcessInstance) {
 		List<String> highLightedActivities = Lists.newArrayList();
 		List<HistoricActivityInstance> historicActivityInstances = processEngine.getHistoryService()
@@ -137,7 +132,7 @@ public final class ActivitiHelper {
 				highLightedFlows);
 	}
 
-	private List<String> getHighLightedFlows(List<String> highLightedActivities,
+	private static List<String> getHighLightedFlows(List<String> highLightedActivities,
 			ReadOnlyProcessDefinition processDefinition) {
 		List<String> highLightedFlows = Lists.newArrayList();
 		PvmActivity currentActivity;
@@ -158,7 +153,7 @@ public final class ActivitiHelper {
 	 * @param task
 	 * @return
 	 */
-	public String getBusinessKey(Task task) {
+	public static String getBusinessKey(Task task) {
 		Assert.notNull(task);
 		ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery()
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
@@ -171,7 +166,7 @@ public final class ActivitiHelper {
 	 * @param task
 	 * @return
 	 */
-	public String getBusinessKey(HistoricTaskInstance task) {
+	public static String getBusinessKey(HistoricTaskInstance task) {
 		Assert.notNull(task);
 		HistoricProcessInstance processInstance = processEngine.getHistoryService()
 				.createHistoricProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
@@ -184,7 +179,7 @@ public final class ActivitiHelper {
 	 * @param processInstanceId
 	 * @return
 	 */
-	public List<HistoricTaskInstance> getHistoricTaskInstances(String processInstanceId) {
+	public static List<HistoricTaskInstance> getHistoricTaskInstances(String processInstanceId) {
 		Assert.hasLength(processInstanceId);
 		return processEngine.getHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processInstanceId)
 				.includeTaskLocalVariables().orderByHistoricTaskInstanceStartTime().asc().list();

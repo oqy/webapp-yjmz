@@ -43,6 +43,11 @@
 			<bean
 				class="com.minyisoft.webapp.yjmz.weixin.interceptor.WeixinOAuthInterceptor"/>
 		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/**" />
+			<bean
+				class="com.minyisoft.webapp.yjmz.common.web.admin.interceptor.AuthenticationInterceptor"/>
+		</mvc:interceptor>
 	</mvc:interceptors>
 	
 	<!-- 文件上传Resolver -->

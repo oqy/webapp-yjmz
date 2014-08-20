@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.FormService;
-import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.impl.form.BooleanFormType;
@@ -52,13 +51,6 @@ public class WorkFlowTaskController extends BaseController {
 	@Autowired
 	private UserService userService;
 
-	private final ActivitiHelper activitiHelper;
-
-	@Autowired
-	public WorkFlowTaskController(ProcessEngine processEngine) {
-		activitiHelper = ActivitiHelper.createInstance(processEngine);
-	}
-
 	/**
 	 * 获取我参与的主任务列表
 	 */
@@ -77,7 +69,6 @@ public class WorkFlowTaskController extends BaseController {
 	@RequestMapping(value = "myTodoTasks.do", method = RequestMethod.GET)
 	public String getMyTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model) {
 		model.addAttribute("todoTasks", workFlowTaskService.getTodoTasks(currentUser));
-		model.addAttribute("activitiHelper", activitiHelper);
 		return "admin/common/myTodoTasks";
 	}
 
@@ -156,7 +147,6 @@ public class WorkFlowTaskController extends BaseController {
 	public String getMyDoneTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model,
 			PageDevice pageDevice) {
 		model.addAttribute("doneTasks", workFlowTaskService.getDoneTask(currentUser, pageDevice));
-		model.addAttribute("activitiHelper", activitiHelper);
 		model.addAttribute("pageDevice", pageDevice);
 		return "admin/common/myDoneTasks";
 	}
@@ -167,7 +157,7 @@ public class WorkFlowTaskController extends BaseController {
 	@RequestMapping(value = "processInstanceDiagram.do", method = RequestMethod.GET, params = "processInstanceId")
 	public void getProcessInstanceDiagram(@RequestParam String processInstanceId, HttpServletResponse response)
 			throws Exception {
-		Optional<InputStream> imageStream = activitiHelper.getProcessInstanceDiagram(processInstanceId);
+		Optional<InputStream> imageStream = ActivitiHelper.getProcessInstanceDiagram(processInstanceId);
 		if (imageStream.isPresent()) {
 			byte[] b = new byte[1024];
 			int len;
@@ -191,10 +181,10 @@ public class WorkFlowTaskController extends BaseController {
 	 */
 	private void _prepareProcessInstanceDetailData(String processInstanceId, Model model) {
 		model.addAttribute("processInstanceId", processInstanceId);
-		Optional<String> businessKey = activitiHelper.getProcessInstanceBusinessKey(processInstanceId);
+		Optional<String> businessKey = ActivitiHelper.getProcessInstanceBusinessKey(processInstanceId);
 		if (businessKey.isPresent() && ObjectUuidUtils.isLegalId(businessKey.get())) {
 			model.addAttribute("businessKey", businessKey.get());
 		}
-		model.addAttribute("historicTaskInstances", activitiHelper.getHistoricTaskInstances(processInstanceId));
+		model.addAttribute("historicTaskInstances", ActivitiHelper.getHistoricTaskInstances(processInstanceId));
 	}
 }
