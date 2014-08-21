@@ -6,10 +6,10 @@
   <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
   <resultMap id="MaintainReqBillResult" type="MaintainReqBillInfo">
       <id property="id" column="fid" />
-      <result property="applyDepartment" column="fapplydepartmentid" typeHandler="bizModelHandler" />
-      <result property="applyUser" column="fapplyuserid" typeHandler="bizModelHandler" />
+      <result property="company" column="fcompanyid" typeHandler="bizModelHandler" />
+      <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
       <result property="location" column="flocation" />
-      <result property="maintainTypes" column="fmaintaintypesid" typeHandler="describableEnumArrayHandler"/>
+      <result property="maintainTypes" column="fmaintaintypes" typeHandler="describableEnumArrayHandler"/>
       <result property="maintenanceMan" column="fmaintenancemanid" typeHandler="bizModelHandler" />
       <result property="finishDate" column="ffinishdate" />
       <result property="receiver" column="freceiverid" typeHandler="bizModelHandler" />
@@ -35,10 +35,10 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="MaintainReqBillResult">
     select
-            	m.fapplydepartmentid ,
-            	m.fapplyuserid ,
+    			m.fcompanyid ,
+            	m.fdepartmentid ,
             	m.flocation ,
-            	m.fmaintaintypesid ,
+            	m.fmaintaintypes ,
             	m.fmaintenancemanid ,
             	m.ffinishdate ,
             	m.freceiverid ,
@@ -79,10 +79,10 @@
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="MaintainReqBillCriteria" resultMap="MaintainReqBillResult">
     select
-            	m.fapplydepartmentid ,
-            	m.fapplyuserid ,
+    			m.fcompanyid ,
+            	m.fdepartmentid ,
             	m.flocation ,
-            	m.fmaintaintypesid ,
+            	m.fmaintaintypes ,
             	m.fmaintenancemanid ,
             	m.ffinishdate ,
             	m.freceiverid ,
@@ -109,13 +109,13 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="MaintainReqBillInfo">
-    insert into t_oa_maintainreqbill (fapplydepartmentid,fapplyuserid,flocation,fmaintaintypesid,fmaintenancemanid,ffinishdate,freceiverid,fexaminerid,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{applyDepartment.id},#{applyUser.id},#{location},#{maintainTypes.id},#{maintenanceMan.id},#{finishDate},#{receiver.id},#{examiner.id},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_maintainreqbill (fcompanyid,fdepartmentid,flocation,fmaintaintypes,fmaintenancemanid,ffinishdate,freceiverid,fexaminerid,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{location},#{maintainTypes,typeHandler=describableEnumArrayHandler},#{maintenanceMan.id},#{finishDate},#{receiver.id},#{examiner.id},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="MaintainReqBillInfo">
-    update t_oa_maintainreqbill set fapplydepartmentid=#{applyDepartment.id},fapplyuserid=#{applyUser.id},flocation=#{location},fmaintaintypesid=#{maintainTypes.id},fmaintenancemanid=#{maintenanceMan.id},ffinishdate=#{finishDate},freceiverid=#{receiver.id},fexaminerid=#{examiner.id},
+    update t_oa_maintainreqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},flocation=#{location},fmaintaintypes=#{maintainTypes,typeHandler=describableEnumArrayHandler},fmaintenancemanid=#{maintenanceMan.id},ffinishdate=#{finishDate},freceiverid=#{receiver.id},fexaminerid=#{examiner.id},
     fprocessinstanceid=#{processInstanceId},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 

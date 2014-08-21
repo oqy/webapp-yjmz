@@ -85,4 +85,8 @@
   <delete id="batchDelete" parameterType="list">
     delete from t_oa_purchasereqentry where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
   </delete>
+  
+  <delete id="deleteByPurchaseReqBill" parameterType="PurchaseReqBillInfo">
+    delete from t_oa_purchasereqentry where freqbillid = #{id}
+  </delete>
 </mapper>

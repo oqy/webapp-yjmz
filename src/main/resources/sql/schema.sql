@@ -184,3 +184,11 @@ ALTER TABLE t_oa_purchasereqbill ADD fprocessinstanceid VARCHAR(32) NULL AFTER f
 ALTER TABLE t_oa_report ADD fprocessinstanceid VARCHAR(32) NULL AFTER fattachmenturl;
 ALTER TABLE t_common_userorgrelation ADD fuserpath VARCHAR(200) NULL;
 ALTER TABLE t_common_department ADD fseq INT NULL DEFAULT 1 AFTER forgid;
+ALTER TABLE t_common_role ADD forgid VARCHAR(32) NULL FIRST;
+ALTER TABLE t_common_user_role DROP FORGID;
+ALTER TABLE t_oa_maintainreqbill CHANGE fapplydepartmentid fdepartmentid VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE t_oa_maintainreqbill DROP fapplyuserid;
+ALTER TABLE t_oa_maintainreqbill CHANGE fmaintaintypesid  fmaintaintypes VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE t_oa_maintainreqbill ADD fcompanyid VARCHAR(32) NULL FIRST;
+ALTER TABLE t_oa_purchasereqbill ADD fcompanyid VARCHAR(32) NULL FIRST;
+ALTER TABLE t_oa_report ADD fcompanyid VARCHAR(32) NULL FIRST;

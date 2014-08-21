@@ -33,16 +33,45 @@
               <th>操作</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody th:if="${!#lists.isEmpty(company.departments)}">
             <tr th:each="department :${company.departments}">
               <td th:text="${department.seq}"></td>
               <td th:text="${department.name}"></td>
-              <td><a th:href="@{'/admin/departmentEdit.html?departmentId='+${department.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+              <td><a th:href="@{'/admin/departmentEdit.html?departmentId='+${department.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/departmentDelete.html?departmentId='+${department.id}}" class="btn btn-default btn-sm" role="button" onclick="return window.confim('是否确定从本公司删除指定部门？')">删除</a></td>
+            </tr>
+          </tbody>
+          <tbody th:if="${#lists.isEmpty(company.departments)}">
+            <tr>
+              <td colspan="3">暂未设置部门信息</td>
             </tr>
           </tbody>
         </table>
         <a th:if="${company.status.value eq 0}" role="button" class="btn btn-default pull-right" th:href="@{'/admin/departmentEdit.html?companyId='+${company.id}}">新增部门</a> </div>
-      <div class="tab-pane" id="role"> </div>
+      <div class="tab-pane" id="role"> 
+      	<table class="table table-hover">
+          <thead style="border-top:none;">
+            <tr>
+              <th>序号</th>
+              <th>名称</th>
+              <th>角色键值</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody th:if="${!#lists.isEmpty(companyRoles)}">
+            <tr th:each="role :${companyRoles}">
+              <td th:text="${roleStat.count}"></td>
+              <td th:text="${role.name}"></td>
+              <td th:text="${role.value}"></td>
+              <td><a th:href="@{'/admin/roleEdit.html?roleId='+${role.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/roleDelete.html?roleId='+${role.id}}" class="btn btn-default btn-sm" role="button" onclick="return window.confim('是否确定从本公司删除指定角色？')">删除</a></td>
+            </tr>
+          </tbody>
+          <tbody th:if="${#lists.isEmpty(companyRoles)}">
+            <tr>
+              <td colspan="3">暂未设置公司角色</td>
+            </tr>
+          </tbody>
+        </table>
+      	<a th:if="${company.status.value eq 0}" role="button" class="btn btn-default pull-right" th:href="@{'/admin/roleEdit.html?companyId='+${company.id}}">新增角色</a> </div>
       <div class="tab-pane table-responsive" id="user">
         <table class="table table-hover">
           <thead style="border-top:none;">
@@ -58,7 +87,7 @@
               <th>操作</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody th:if="${!#lists.isEmpty(company.userOrgRelations)}">
             <tr th:each="userOrgRelation :${company.userOrgRelations}">
               <td th:text="${userOrgRelationStat.count}"></td>
               <td th:text="${userOrgRelation.department!=null}?${userOrgRelation.department.name}"></td>
@@ -69,6 +98,11 @@
               <td th:text="${userOrgRelation.user.cellPhoneNumber}"></td>
               <td th:text="${userOrgRelation.upperUser!=null}?${userOrgRelation.upperUser.name}"></td>
               <td><a th:href="@{'/admin/userOrgRelationEdit.html?userOrgRelationId='+${userOrgRelation.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/userOrgRelationDelete.htmll?userOrgRelationId='+${company.id}}" class="btn btn-default btn-sm" role="button" onclick="return window.confim('是否确定从本公司删除指定用户？')">删除</a></td>
+            </tr>
+          </tbody>
+          <tbody th:if="${#lists.isEmpty(company.userOrgRelations)}">
+            <tr>
+              <td colspan="3">暂未添加企业员工</td>
             </tr>
           </tbody>
         </table>

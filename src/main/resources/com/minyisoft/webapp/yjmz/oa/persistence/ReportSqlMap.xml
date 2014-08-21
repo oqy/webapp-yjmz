@@ -5,6 +5,7 @@
 <mapper namespace="com.minyisoft.webapp.yjmz.oa.persistence.ReportDao">
   <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
   <resultMap id="ReportResult" type="ReportInfo">
+      <result property="company" column="fcompanyid" typeHandler="bizModelHandler" />
       <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
       <result property="fileNumber" column="ffilenumber" />
       <result property="reportTitle" column="freporttitle" />
@@ -26,6 +27,7 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="ReportResult">
     select
+    			fcompanyid ,
             	fdepartmentid ,
             	ffilenumber ,
             	freporttitle ,
@@ -65,6 +67,7 @@
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="ReportCriteria" resultMap="ReportResult">
     select
+    			fcompanyid ,
             	fdepartmentid ,
             	ffilenumber ,
             	freporttitle ,
@@ -88,13 +91,13 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="ReportInfo">
-    insert into t_oa_report (fdepartmentid,ffilenumber,freporttitle,fattachmenturl,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{department.id},#{fileNumber},#{reportTitle},#{attachmentUrl},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_report (fcompanyid,fdepartmentid,ffilenumber,freporttitle,fattachmenturl,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{fileNumber},#{reportTitle},#{attachmentUrl},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="ReportInfo">
-    update t_oa_report set fdepartmentid=#{department.id},ffilenumber=#{fileNumber},freporttitle=#{reportTitle},fattachmenturl=#{attachmentUrl},fprocessinstanceid=#{processInstanceId},fbillnumber=#{billNumber},fdescription=#{description},
+    update t_oa_report set fcompanyid=#{company.id},fdepartmentid=#{department.id},ffilenumber=#{fileNumber},freporttitle=#{reportTitle},fattachmenturl=#{attachmentUrl},fprocessinstanceid=#{processInstanceId},fbillnumber=#{billNumber},fdescription=#{description},
     fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 

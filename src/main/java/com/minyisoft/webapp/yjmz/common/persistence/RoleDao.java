@@ -19,7 +19,33 @@ public interface RoleDao extends BaseDao<RoleInfo, RoleCriteria> {
 	 * @param org
 	 * @return
 	 */
-	List<RoleInfo> getUserRole(@Param("user") UserInfo user, @Param("org") ISystemOrgObject org);
+	List<RoleInfo> getUserRoles(@Param("user") UserInfo user, @Param("org") ISystemOrgObject org);
+
+	/**
+	 * 删除指定用户在指定组织的所有角色
+	 * 
+	 * @param user
+	 * @param org
+	 * @return
+	 */
+	int deleteUserRoles(@Param("user") UserInfo user, @Param("org") ISystemOrgObject org);
+
+	/**
+	 * 插入用户与角色对应关系
+	 * 
+	 * @param user
+	 * @param role
+	 * @return
+	 */
+	int insertUserRole(@Param("user") UserInfo user, @Param("role") RoleInfo role);
+
+	/**
+	 * 删除指定权限角色的角色——用户对应关系
+	 * 
+	 * @param role
+	 * @return
+	 */
+	int deleteRoleUser(RoleInfo role);
 
 	/**
 	 * 插入角色与权限对应关系
@@ -37,12 +63,4 @@ public interface RoleDao extends BaseDao<RoleInfo, RoleCriteria> {
 	 * @return
 	 */
 	int deleteRolePermission(RoleInfo role);
-
-	/**
-	 * 删除指定权限角色的角色——用户对应关系
-	 * 
-	 * @param role
-	 * @return
-	 */
-	int deleteRoleUser(RoleInfo role);
 }

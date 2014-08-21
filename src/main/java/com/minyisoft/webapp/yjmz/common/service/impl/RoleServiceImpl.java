@@ -1,9 +1,5 @@
 package com.minyisoft.webapp.yjmz.common.service.impl;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -11,15 +7,11 @@ import com.minyisoft.webapp.core.model.PermissionInfo;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.RoleCriteria;
-import com.minyisoft.webapp.yjmz.common.persistence.PermissionDao;
 import com.minyisoft.webapp.yjmz.common.persistence.RoleDao;
 import com.minyisoft.webapp.yjmz.common.service.RoleService;
 
 @Service("roleService")
 public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleCriteria, RoleDao> implements RoleService {
-	@Autowired
-	private PermissionDao permissionDao;
-
 	@Override
 	public void delete(RoleInfo role) {
 		super.delete(role);
@@ -28,28 +20,25 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleCriteria, Rol
 	}
 
 	@Override
-	public void submitRoleWithPermission(RoleInfo role, List<PermissionInfo> permissions) {
-		if (role == null) {
-			return;
-		}
-		submit(role);
-
-		// 首先删除角色关联的所有权限
-		getBaseDao().deleteRolePermission(role);
-		// 设置角色对应的权限信息
-		if (CollectionUtils.isEmpty(permissions)) {
-			return;
-		}
-		for (PermissionInfo permission : permissions) {
-			getBaseDao().insertRolePermission(role, permission);
-		}
+	public void addNew(RoleInfo info) {
+		super.addNew(info);
+		_addRolePermission(info);
 	}
 
 	@Override
-	public List<PermissionInfo> getRolePermissions(RoleInfo role) {
-		if (role == null || !role.isIdPresented()) {
-			return Collections.emptyList();
+	public void save(RoleInfo info) {
+		super.save(info);
+		_addRolePermission(info);
+	}
+
+	private void _addRolePermission(RoleInfo role) {
+		// 首先删除角色关联的所有权限
+		getBaseDao().deleteRolePermission(role);
+		if (!CollectionUtils.isEmpty(role.getPermissions())) {
+			// 设置角色对应的权限信息
+			for (PermissionInfo permission : role.getPermissions()) {
+				getBaseDao().insertRolePermission(role, permission);
+			}
 		}
-		return permissionDao.getRolePermission(role);
 	}
 }

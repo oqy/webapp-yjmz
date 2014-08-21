@@ -11,8 +11,7 @@ import lombok.Setter;
 
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
-import com.minyisoft.webapp.core.model.BillBaseInfo;
-import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
+import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
@@ -23,13 +22,7 @@ import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 @Getter
 @Setter
 @ModelKey(0x147E24CEB79L)
-public class MaintainReqBillInfo extends BillBaseInfo implements WorkFlowBusinessModel {
-	@Label("申请部门")
-	@NotNull
-	private DepartmentInfo applyDepartment;
-	@Label("申请人")
-	@NotNull
-	private UserInfo applyUser;
+public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlowBusinessModel {
 	@Label("位置")
 	@NotNull
 	private String location;
@@ -52,6 +45,10 @@ public class MaintainReqBillInfo extends BillBaseInfo implements WorkFlowBusines
 
 	@Override
 	public String getName() {
-		return applyDepartment.getName() + "工程维修单[" + getBillNumber() + "]";
+		StringBuffer sb = new StringBuffer(getCompany().getName());
+		if (getDepartment() != null) {
+			sb.append(getDepartment().getName());
+		}
+		return sb.append("工程维修单[").append(getBillNumber()).append("]").toString();
 	}
 }

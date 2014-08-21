@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
+import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
+import com.minyisoft.webapp.yjmz.common.model.criteria.RoleCriteria;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum;
+import com.minyisoft.webapp.yjmz.common.service.RoleService;
 import com.minyisoft.webapp.yjmz.common.service.UserOrgRelationService;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
@@ -28,6 +31,8 @@ public class UserOrgRelationController extends BaseController {
 	private UserOrgRelationService userOrgRelationService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RoleService roleService;
 
 	@ModelAttribute("userOrgRelation")
 	public UserOrgRelationInfo populateUserOrgRelation(
@@ -47,12 +52,24 @@ public class UserOrgRelationController extends BaseController {
 		}
 		model.addAttribute("company", company);
 		model.addAttribute("userOrgRelation", userOrgRelation);
+
 		// 用户性别
 		model.addAttribute("userMales", UserMaleEnum.values());
+
 		// 除系统管理员外全体用户
 		UserCriteria userCriteria = new UserCriteria();
 		userCriteria.setExcludeIds(SystemConstant.ADMINISTATOR_USER_ID);
 		model.addAttribute("users", userService.getCollection(userCriteria));
+
+		// 公司包含角色
+		RoleCriteria roleCriteria = new RoleCriteria();
+		roleCriteria.setOrg(company);
+		model.addAttribute("companyRoles", roleService.getCollection(roleCriteria));
+
+		// 用户已拥有的组织角色
+		if (userOrgRelation.getUser() != null) {
+			model.addAttribute("userOrgRoles", userService.getUserRoles(userOrgRelation.getUser(), company));
+		}
 		return "admin/userOrgRelationEdit";
 	}
 
@@ -61,11 +78,12 @@ public class UserOrgRelationController extends BaseController {
 	 */
 	@RequestMapping(value = "userOrgRelationEdit.html", method = RequestMethod.POST)
 	public String processDepartmentEditForm(@ModelAttribute("userOrgRelation") UserOrgRelationInfo userOrgRelation,
-			@RequestParam(value = "existsUser", required = false) UserInfo existsUser) {
+			@RequestParam(value = "existsUser", required = false) UserInfo existsUser,
+			@RequestParam(value = "roles", required = false) RoleInfo[] roles) {
 		if (existsUser != null) {
 			userOrgRelation.setUser(existsUser);
 		}
-		userOrgRelationService.submit(userOrgRelation);
+		userOrgRelationService.submit(userOrgRelation, roles);
 		return "redirect:companyDetail.html?companyId=" + userOrgRelation.getOrg().getId();
 	}
 

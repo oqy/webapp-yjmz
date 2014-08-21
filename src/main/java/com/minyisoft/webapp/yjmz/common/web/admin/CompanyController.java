@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
+import com.minyisoft.webapp.yjmz.common.model.criteria.RoleCriteria;
 import com.minyisoft.webapp.yjmz.common.model.enumField.CompanyStatusEnum;
 import com.minyisoft.webapp.yjmz.common.service.CompanyService;
+import com.minyisoft.webapp.yjmz.common.service.RoleService;
 
 /**
  * @author qingyong_ou 公司管理controller
@@ -21,6 +23,8 @@ import com.minyisoft.webapp.yjmz.common.service.CompanyService;
 public class CompanyController extends BaseController {
 	@Autowired
 	private CompanyService companyService;
+	@Autowired
+	private RoleService roleService;
 
 	/**
 	 * 获取公司列表
@@ -50,7 +54,7 @@ public class CompanyController extends BaseController {
 	 * 保存编辑信息
 	 */
 	@RequestMapping(value = "companyEdit.html", method = RequestMethod.POST)
-	public String processCompanyEditForm(@ModelAttribute("company") CompanyInfo company){
+	public String processCompanyEditForm(@ModelAttribute("company") CompanyInfo company) {
 		companyService.submit(company);
 		return "redirect:companyList.html";
 	}
@@ -61,6 +65,10 @@ public class CompanyController extends BaseController {
 	@RequestMapping(value = "companyDetail.html", method = RequestMethod.GET)
 	public String getCompanyDetailPage(@ModelAttribute("company") CompanyInfo company, Model model) {
 		model.addAttribute("company", company);
+		// 公司已有系统角色
+		RoleCriteria roleCriteria = new RoleCriteria();
+		roleCriteria.setOrg(company);
+		model.addAttribute("companyRoles", roleService.getCollection(roleCriteria));
 		return "admin/companyDetail";
 	}
 }

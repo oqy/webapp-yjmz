@@ -5,6 +5,8 @@
 <mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.RoleDao">
   <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
   <resultMap id="RoleResult" type="RoleInfo">
+  	  <id property="id" column="fid" />
+      <result property="org" column="forgid" typeHandler="bizModelHandler" />
       <result property="value" column="fvalue" />
       <result property="name" column="fname" />
       <result property="description" column="fdescription" />
@@ -13,7 +15,11 @@
       <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
       <result property="lastUpdateDate" column="flastupdatedate" />
       <result property="version" column="fversion" />
-      <result property="id" column="fid" />
+      <collection property="permissions" column="fid" ofType="PermissionInfo">
+		<constructor>
+		   <idArg column="fpermissionid" javaType="String"/>
+		</constructor>
+	  </collection>
     </resultMap>
 
   <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
@@ -21,21 +27,7 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="RoleResult">
     select
-            	fvalue ,
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fversion,
-            	fid 
-          from t_common_role
-    where fid = #{id}
-  </select>
-  
-  <select id="getUserRole" resultMap="RoleResult">
-    select
+    			r.forgid ,
             	r.fvalue ,
             	r.fname ,
             	r.fdescription ,
@@ -44,14 +36,33 @@
             	r.flastupdateuserid ,
             	r.flastupdatedate ,
             	r.fversion,
-            	r.fid  
+            	r.fid ,
+            	rp.fpermissionid
+          from t_common_role r left join t_common_role_permission rp on r.fid = rp.froleid
+    where r.fid = #{id}
+  </select>
+  
+  <select id="getUserRoles" resultMap="RoleResult">
+    select
+    			r.forgid ,
+            	r.fvalue ,
+            	r.fname ,
+            	r.fdescription ,
+            	r.fcreateuserid ,
+            	r.fcreatedate ,
+            	r.flastupdateuserid ,
+            	r.flastupdatedate ,
+            	r.fversion,
+            	r.fid  ,
+            	rp.fpermissionid
     from  t_common_user_role ur left join t_common_role r on ur.froleid=r.fid
-    where fuserid = #{user.id} 
+    		left join t_common_role_permission rp on r.fid = rp.froleid
+    where ur.fuserid = #{user.id} 
     <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
-    	and forgid= #{org.id}
+    	and r.forgid= #{org.id}
     </if>
     <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isEmpty(org)">
-    	and forgid is null
+    	and r.forgid is null
     </if>
   </select>
   
@@ -63,6 +74,9 @@
         </if>
 		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
+            and forgid = #{org.id}
         </if>
 	</where>
   </sql>
@@ -76,36 +90,36 @@
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="RoleCriteria" resultMap="RoleResult">
     select
-            	fvalue ,
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fversion,
-            	fid 
-          from t_common_role
+    			r.forgid ,
+            	r.fvalue ,
+            	r.fname ,
+            	r.fdescription ,
+            	r.fcreateuserid ,
+            	r.fcreatedate ,
+            	r.flastupdateuserid ,
+            	r.flastupdatedate ,
+            	r.fversion,
+            	r.fid  ,
+            	rp.fpermissionid
+    from (
+    select * from t_common_role
     <include refid="getCriteriaCondition"/>
-    order by fvalue asc, fid
     <if test="pageDevice!=null">
 	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>
+	) r left join t_common_role_permission rp on r.fid = rp.froleid
+	order by r.forgid, r.fvalue asc, r.fid
   </select>
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="RoleInfo">
-    insert into t_common_role (fvalue,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{value},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
-  </insert>
-  
-  <insert id="insertRolePermission">
-    insert into t_common_role_permission (fid,froleid,fpermissionid) values(sys_guid(),#{role.id},#{permission.id})
+    insert into t_common_role (forgid,fvalue,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{org.id},#{value},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="RoleInfo">
-    update t_common_role set fvalue=#{value},fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},
+    update t_common_role set forgid=#{org.id},fvalue=#{value},fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},
     flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate} ,fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
@@ -114,11 +128,26 @@
     delete from t_common_role where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
   </delete>
   
+  <insert id="insertUserRole">
+    insert into t_common_user_role (fid,fuserid,froleid) values(uuid(),#{user.id},#{role.id})
+  </insert>
+  
+  <insert id="insertRolePermission">
+    insert into t_common_role_permission (fid,froleid,fpermissionid) values(uuid(),#{role.id},#{permission.id})
+  </insert>
+  
   <delete id="deleteRolePermission" parameterType="RoleInfo">
     delete from t_common_role_permission where froleid = #{id}
   </delete>
   
   <delete id="deleteRoleUser" parameterType="RoleInfo">
     delete from t_common_user_role where froleid = #{id}
+  </delete>
+  
+  <delete id="deleteUserRoles">
+    delete from t_common_user_role where fuserid=#{user.id} 
+    <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
+    and froleid in (select fid from t_common_role where forgid=#{org.id})
+    </if>
   </delete>
 </mapper>

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>编辑角色-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑角色<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回公司详情</a></h3>
+    <form role="form" class="form-horizontal" th:action="@{'/admin/roleEdit.html'}" method="post" style="margin-top:20px;">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-md-2 control-label">公司名称：</label>
+        <div class="col-md-6">
+          <p class="form-control-static" th:text="${company.name}"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="name" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;角色名称：</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="name" name="name" placeholder="请输入部门名称" th:value="${role.name}"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="value" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;角色键值：</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="value" name="value" placeholder="请输入角色键值" th:value="${role.value}"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="value" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;包含权限：</label>
+        <div class="col-md-10">
+          <label class="checkbox-inline" th:each="permission : ${avaliablePermissions}">
+          <input type="checkbox" name="permissions" th:id="'permissions_'+${permission.id}" th:value="${permission.id}" th:text="${permission.name}" th:checked="${role.permissions!=null and role.permissions.contains(permission)}"/>
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-6 col-md-offset-2">
+          <button type="submit" class="btn btn-default">提交</button>
+          <button type="reset" class="btn btn-info">重置</button>
+          <input name="org" type="hidden" th:value="${company.id}"/>
+          <input name="roleId" type="hidden" th:value="${role.id}"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>

@@ -27,16 +27,6 @@ public interface UserService extends BaseService<UserInfo, UserCriteria> {
 	void currentUserSwitchOrg(ISystemOrgObject newOrg);
 
 	/**
-	 * 编辑指定企业会员账户并赋予角色
-	 * 
-	 * @param org
-	 * @param targetUser
-	 * @param upperUser
-	 * @param roles
-	 */
-	void editOrgUser(ISystemOrgObject org, UserInfo targetUser, UserInfo upperUser, RoleInfo... roles);
-
-	/**
 	 * 获取指定用户于指定组织架构包含角色
 	 * 
 	 * @param user
@@ -53,14 +43,6 @@ public interface UserService extends BaseService<UserInfo, UserCriteria> {
 	 * @return
 	 */
 	List<PermissionInfo> getUserPermissions(UserInfo user, ISystemOrgObject org);
-
-	/**
-	 * 删除指定组织架构用户
-	 * 
-	 * @param user
-	 * @param org
-	 */
-	void deleteOrgUser(UserInfo user, ISystemOrgObject org);
 
 	/**
 	 * 绑定微信用户
