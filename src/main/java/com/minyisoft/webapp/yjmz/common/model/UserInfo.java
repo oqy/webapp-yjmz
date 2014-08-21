@@ -108,7 +108,7 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 				ShiroDbRealm.hashPassword(plainPassword, userPasswordSalt));
 	}
 
-	private Optional<UserOrgRelationInfo> _getUserOrgEntity(ISystemOrgObject org) {
+	public Optional<UserOrgRelationInfo> getOrgRelation(ISystemOrgObject org) {
 		if (org != null) {
 			for (UserOrgRelationInfo userOrg : orgRelations) {
 				if (userOrg.getOrg().equals(org)) {
@@ -126,7 +126,7 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public boolean isBelongTo(ISystemOrgObject org) {
-		return _getUserOrgEntity(org).isPresent();
+		return getOrgRelation(org).isPresent();
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public String getUserPath(ISystemOrgObject org) {
-		Optional<UserOrgRelationInfo> optionalUserOrgEntity = _getUserOrgEntity(org);
+		Optional<UserOrgRelationInfo> optionalUserOrgEntity = getOrgRelation(org);
 		if (optionalUserOrgEntity.isPresent()) {
 			UserOrgRelationInfo orgRelation = optionalUserOrgEntity.get();
 			if (orgRelation.getUpperUser() != null) {
@@ -155,20 +155,9 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 	 * @return
 	 */
 	public UserInfo getUpperUser(ISystemOrgObject org) {
-		Optional<UserOrgRelationInfo> optionalUserOrgEntity = _getUserOrgEntity(org);
+		Optional<UserOrgRelationInfo> optionalUserOrgEntity = getOrgRelation(org);
 		return optionalUserOrgEntity.isPresent() ? optionalUserOrgEntity.get().getUpperUser() : null;
 	}
-
-	/**
-	 * 获取指定组织架构的用户级次
-	 * 
-	 * @return
-	 * 
-	 *         public int getUserLevel(ISystemOrgObject org) { String userPath =
-	 *         getUserPath(org); if (StringUtils.isBlank(userPath)) { return 99;
-	 *         } else { return StringUtils.split(userPath,
-	 *         SystemConstant.ID_SEPARATOR).length; } }
-	 */
 
 	/**
 	 * 获取用户所在指定类型的组织架构列表

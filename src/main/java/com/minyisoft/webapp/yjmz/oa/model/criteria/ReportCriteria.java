@@ -1,6 +1,14 @@
 package com.minyisoft.webapp.yjmz.oa.model.criteria;
 
-import com.minyisoft.webapp.core.model.criteria.BaseCriteria;
+import lombok.Getter;
+import lombok.Setter;
 
-public class ReportCriteria extends BaseCriteria {
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.criteria.CompanyBaseCriteria;
+
+@Getter
+@Setter
+public class ReportCriteria extends CompanyBaseCriteria {
+	// 报告浏览人
+	private UserInfo viewer;
 }

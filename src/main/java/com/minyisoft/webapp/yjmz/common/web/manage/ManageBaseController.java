@@ -14,5 +14,6 @@ public abstract class ManageBaseController extends BaseController {
 	@ModelAttribute
 	protected void prepareModel(Model model) {
 		model.addAttribute("currentUser", SecurityUtils.getCurrentUser());
+		model.addAttribute("currentCompany", SecurityUtils.getCurrentCompany());
 	}
 }

@@ -55,12 +55,21 @@
 		<if test="excludeIds!=null">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(company)">
+            and fcompanyid = #{company.id}
+        </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(department)">
+            and fdepartmentid = #{department.id}
+        </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(viewer)">
+            and exists(select * from t_common_userorgrelation where fuserid=r.fcreateuserid and forgid=r.fcompanyid and fuserpath like '%'||#{viewer.id}||'%')
+        </if>
 	</where>
   </sql>
   
   <!-- 获取满足指定过滤条件的记录数 -->
   <select id="countEntity" parameterType="ReportCriteria" resultType="int">
-    select count(*) from t_oa_report
+    select count(*) from t_oa_report r
     <include refid="getCriteriaCondition"/>
   </select>
   
@@ -82,8 +91,9 @@
             	flastupdatedate ,
             	fid ,
             	fversion 
-          from t_oa_report
+          from t_oa_report r
     <include refid="getCriteriaCondition"/>
+    order by fcreatedate desc, fid
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
 	</if>

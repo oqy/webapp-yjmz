@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>工作报告列表-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+<link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/index.css'}" th:remove="all"/>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3>工作报告列表<a th:href="@{'/manage/reportEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="glyphicon glyphicon-plus"></span>&nbsp;新增工作报告</a></h3>
+    <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>档案编号</th>
+          <th>文件编号</th>
+          <th>部门</th>
+          <th>报告标题</th>
+          <th>创建人</th>
+          <th>创建时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="report :${reports}">
+          <td th:text="${reportStat.count}"></td>
+          <td th:text="${report.fileNumber}"></td>
+          <td th:text="${report.billNumber}"></td>
+          <td th:text="${report.department!=null}?${report.department.name}:'-'"></td>
+          <td th:text="${company.reportTitle}"></td>
+          <td th:text="${company.createUser.name}"></td>
+          <td th:text="${#dates.format(company.createDate,'yyyy-MM-dd HH:mm')}"></td>
+          <td><a th:href="@{'/manage/reportEdit.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/reportDetail.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">详情</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>
