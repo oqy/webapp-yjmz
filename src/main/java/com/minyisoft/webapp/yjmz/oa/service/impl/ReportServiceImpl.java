@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.google.common.base.Optional;
-import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
+import com.minyisoft.webapp.core.service.impl.BillBaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
@@ -15,7 +15,8 @@ import com.minyisoft.webapp.yjmz.oa.persistence.ReportDao;
 import com.minyisoft.webapp.yjmz.oa.service.ReportService;
 
 @Service("reportService")
-public class ReportServiceImpl extends BaseServiceImpl<ReportInfo, ReportCriteria, ReportDao> implements ReportService {
+public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCriteria, ReportDao> implements
+		ReportService {
 	@Override
 	protected void _validateDataBeforeDelete(ReportInfo info) {
 		Assert.isTrue(info.getCreateUser() != null && info.getCreateUser().equals(SecurityUtils.getCurrentUser()),

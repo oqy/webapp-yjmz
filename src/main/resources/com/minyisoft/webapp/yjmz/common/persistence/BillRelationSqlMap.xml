@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.BillRelationDao">
+  <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
+  <resultMap id="BillRelationResult" type="com.fusung.webapp.core.model.BillRelationInfo">
+      <result property="targetBill" column="ftargetbillid" typeHandler="bizModelHandler" />
+      <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
+      <result property="version" column="fversion" />
+      <result property="id" column="fid" />
+    </resultMap>
+
+  <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
+
+  <!-- 根据目标单查询记录 -->
+  <select id="getRelation" resultMap="BillRelationResult">
+    select
+            	ftargetbillid ,
+            	fsourcebillid ,
+            	fversion ,
+            	fid
+          from t_common_billrelation
+    where ftargetbillid = #{targetBill.id}
+  </select>
+  
+  <!-- 根据源单查询记录 -->
+  <select id="getRelations" resultMap="BillRelationResult">
+    select
+            	ftargetbillid ,
+            	fsourcebillid ,
+            	fversion ,
+            	fid
+          from t_common_billrelation
+    where fsourcebillid = #{sourceBill.id}
+  </select>
+  
+  <!-- 通用记录插入操作 --> 
+  <insert id="insertRelation" parameterType="com.fusung.webapp.core.model.BillRelationInfo">
+    insert into t_common_billrelation (fid,fsourcebillid,ftargetbillid,fsourcebillclasskey,ftargetbillclasskey) 
+    values(sys_guid(),#{sourceBill.id},#{targetBill.id},#{sourceBillClassKey},#{targetBillClassKey})
+  </insert>
+
+  <!-- 通用记录更新操作 --> 
+  <update id="updateRelation" parameterType="com.fusung.webapp.core.model.BillRelationInfo">
+    update t_common_billrelation set fsourcebillid=#{sourceBill.id},ftargetbillid=#{targetBill.id},fsourcebillclasskey=#{sourceBillClassKey},
+    ftargetbillclasskey=#{targetBillClassKey},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
+
+  <!-- 通用记录删除操作 -->
+  <delete id="deleteRelation" parameterType="com.fusung.webapp.core.model.BillRelationInfo">
+    delete from t_common_billrelation where fid=#{id}
+  </delete>
+</mapper>

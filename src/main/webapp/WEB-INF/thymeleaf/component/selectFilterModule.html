@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分页器通用组件</title>
+<link th:href="${resource.cssUrlRoot}+'/app/personalPlatform/myFusung.css'" href="file:///E|/www/rs/css/app/personalPlatform/myFusung.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<form th:if="${filter}" th:inline="text" th:fragment="selectForm" class="selectForm" id="selectForm" name="selectForm" method="get" th:action="${url}" th:style="${filter.hideSelectForm}?'display:none;'">
+  <ul>
+    <li th:each="unit : ${filter.unitContentList}" th:style="${unit.type.equalsIgnoreCase('hidden')}?'display:none;'"> <span th:text="${unit.label}+'：'" th:if="${not unit.type.equalsIgnoreCase('checkBox')} and ${not unit.type.equalsIgnoreCase('hidden')}">过滤项：</span>
+      <select th:if="${unit.type.equalsIgnoreCase('select')}" th:id="${unit.id}" th:name="${unit.name}" class="dataUnit">
+        <option value="">全部</option>
+        <option th:each="obj : ${unit.optionList}" th:value="${unit.getObjectValue(obj)}" th:selected="${unit.isValueMatched(obj)}" th:text="${unit.getDisplayLabel(obj)}">候选值</option>
+      </select>
+      <input th:if="${unit.type.equalsIgnoreCase('text')}" th:name="${unit.name}" th:id="${unit.id}" type="text" th:value="${unit.getObjectValue(unit.value)}"  th:size="${#strings.equalsIgnoreCase(unit.name,'pageDevice.recordsPerPage')}?'2'" class="dataUnit"/>
+      <input th:if="${unit.type.equalsIgnoreCase('date')}" class="selectDate dataUnit" th:name="${unit.name}" th:id="${unit.id}" type="text" th:value="${unit.getObjectValue(unit.value)}" size="10" maxlength="10"/>
+      <input th:if="${unit.type.equalsIgnoreCase('autoComplete')}" class="autoCompleteBox dataUnit" th:name="'label_'+${unit.name}" th:id="'label_'+${unit.id}" type="text" th:value="${unit.value.label}" th:inline="text" th:src="${unit.autoCompleteRequestUrl}"/>
+      <input th:if="${unit.type.equalsIgnoreCase('autoComplete')}" class="autoCompleteHiddenValue" th:name="${unit.name}" th:id="${unit.id}" type="hidden" th:value="${unit.getObjectValue(unit.value)}" />
+      <input th:if="${unit.type.equalsIgnoreCase('checkBox')}" th:name="${unit.name}" th:id="${unit.id}" type="checkbox" value="1" th:checked="${unit.getObjectValue(unit.value)}" class="dataUnit"/>
+      <span th:if="${unit.type.equalsIgnoreCase('checkBox')}" th:text="${unit.label}">checkbox候选值</span>
+      <input th:if="${unit.type.equalsIgnoreCase('hidden')}" th:name="${unit.name}" th:id="${unit.id}" type="hidden" th:value="${unit.getObjectValue(unit.value)}" />
+    </li>
+    <li>
+      <input name="pageDevice.currentPage" type="hidden" value="1" />
+      <input th:if="${autoSubmit==null} or ${not autoSubmit}" name="" type="submit" value="查询" id="selectFilterSubmit"/>
+    </li>
+  </ul>
+  <div class="clearBoth"></div>
+</form>
+</body>
+</html>

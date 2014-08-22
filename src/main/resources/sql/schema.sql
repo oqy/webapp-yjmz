@@ -192,3 +192,14 @@ ALTER TABLE t_oa_maintainreqbill CHANGE fmaintaintypesid  fmaintaintypes VARCHAR
 ALTER TABLE t_oa_maintainreqbill ADD fcompanyid VARCHAR(32) NULL FIRST;
 ALTER TABLE t_oa_purchasereqbill ADD fcompanyid VARCHAR(32) NULL FIRST;
 ALTER TABLE t_oa_report ADD fcompanyid VARCHAR(32) NULL FIRST;
+
+create table T_COMMON_BILLRELATION
+(
+  FID                 varchar(32) not null,
+  FSOURCEBILLID       varchar(32),
+  FTARGETBILLID       varchar(32),
+  FSOURCEBILLCLASSKEY CHAR(11),
+  FTARGETBILLCLASSKEY CHAR(11),
+  FVERSION            int default 1,
+  primary key (fid)
+)

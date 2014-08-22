@@ -3,7 +3,7 @@ package com.minyisoft.webapp.yjmz.oa.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
+import com.minyisoft.webapp.core.service.impl.BillBaseServiceImpl;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqEntryInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.PurchaseReqBillCriteria;
@@ -14,7 +14,7 @@ import com.minyisoft.webapp.yjmz.oa.service.PurchaseReqEntryService;
 
 @Service("purchaseReqBillService")
 public class PurchaseReqBillServiceImpl extends
-		BaseServiceImpl<PurchaseReqBillInfo, PurchaseReqBillCriteria, PurchaseReqBillDao> implements
+		BillBaseServiceImpl<PurchaseReqBillInfo, PurchaseReqBillCriteria, PurchaseReqBillDao> implements
 		PurchaseReqBillService {
 	@Autowired
 	private PurchaseReqEntryDao purchaseReqEntryDao;
