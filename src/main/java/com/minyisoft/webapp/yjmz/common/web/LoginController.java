@@ -54,7 +54,7 @@ public class LoginController extends BaseController {
 				loginOrg = loginUser.getDefaultLoginOrg() != null ? loginUser.getDefaultLoginOrg() : loginOrg;
 				if (loginOrg != null) {
 					userService.currentUserSwitchOrg(loginOrg);
-					return "redirect:welcome.html";
+					return "redirect:manage/reportList.html";
 				} else {
 					redirectAttributes.addFlashAttribute("errorMsg", "抱歉，您尚不隶属系统内任何公司，暂不能使用系统，请首先联系系统管理员添加组织隶属关系");
 				}

@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
+import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
+import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
 import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 import com.minyisoft.webapp.yjmz.oa.model.ReportInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.ReportCriteria;
@@ -37,6 +41,9 @@ public class ReportController extends ManageBaseController {
 		criteria.setViewer(currentUser);
 		criteria.getPageDevice().setTotalRecords(reportService.count(criteria));
 		model.addAttribute("reports", reportService.getCollection(criteria));
+		
+		SelectModuleFilter filter = new SelectModuleFilter(criteria);
+		model.addAttribute("filter", filter);
 		return "manage/reportList";
 	}
 
@@ -62,7 +69,14 @@ public class ReportController extends ManageBaseController {
 	 * 保存编辑信息
 	 */
 	@RequestMapping(value = "reportEdit.html", method = RequestMethod.POST)
-	public String processCompanyEditForm(@ModelAttribute("report") ReportInfo report) {
+	public String processCompanyEditForm(@ModelAttribute("currentUser") UserInfo currentUser,
+			@ModelAttribute("currentCompany") CompanyInfo currentCompany, @ModelAttribute("report") ReportInfo report) {
+		Optional<UserOrgRelationInfo> optionalOrgRelation = currentUser.getOrgRelation(currentCompany);
+		if (!optionalOrgRelation.isPresent()) {
+			return "redirect:reportList.html";
+		}
+		report.setCompany(currentCompany);
+		report.setDepartment(optionalOrgRelation.get().getDepartment());
 		reportService.submit(report);
 		return "redirect:reportList.html";
 	}

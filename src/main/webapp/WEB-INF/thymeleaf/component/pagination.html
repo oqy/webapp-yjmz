@@ -1,47 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>分页器通用组件</title>
-<link th:href="${resource.cssUrlRoot}+'/app/personalPlatform/myFusung.css'" href="file:///E|/www/rs/css/app/personalPlatform/myFusung.css" rel="stylesheet" type="text/css"/>
 </head>
-<body>
-<div th:fragment="pagination">
-  <div class="wns_list_func_page" th:if="${pageDevice} and ${url}" th:with="targetUrl=${url.indexOf('?')}==-1?${url}+'?':${url}+'&amp;'" th:inline="text">
-    <div class="wns_list_pagenum">
-      <div class="wns_list_pagecount">共&nbsp;[[${pageDevice.totalPages}]]&nbsp;页&nbsp;&nbsp;[[${pageDevice.totalRecords}]]&nbsp;条到&nbsp;第&nbsp;</div>
-      <input type="text" class="wns_input_pagetype" id="jumpToPageNum"/>
-      &nbsp;页&nbsp;
-      <input type="button" value="确定" onclick="jumpToPage()"/>
-      &nbsp; </div>
-    <div class="wns_list_nextpage"><a th:href="${pageDevice.nextPage}>0?${targetUrl}+'pageDevice.currentPage='+${pageDevice.nextPage}">下一页</a></div>
-    <div class="wns_list_pages" th:each="i : ${pageDevice.reverseVisiblePageNumbers}"> 
-      <a class="wns_list_pages_current" th:if="${i}==${pageDevice.currentPage}" th:text="${i}">页码</a> 
-      <a class="wns_list_pages_current" th:if="${i}==-1">&nbsp;…&nbsp;</a> 
-      <a th:if="${i}!=${pageDevice.currentPage} and ${i}!=-1" th:href="${targetUrl}+'pageDevice.currentPage='+${i}" th:text="${i}">页码</a> 
-    </div>
-    <div class="wns_list_lastpage"><a th:href="${pageDevice.previewPage}>0?${targetUrl}+'pageDevice.currentPage='+${pageDevice.previewPage}">上一页</a></div>
-  </div>
-  <script type="text/javascript" th:inline="javascript" th:if="${url}" th:with="targetUrl=${url.indexOf('?')}==-1?${url}+'?':${url}+'&amp;'">
-    var url=/*[[${targetUrl}]]*/null;
-    var totalPage=/*[[${pageDevice.totalPages}]]*/0;
-	function jumpToPage(){
-		var pageNum=document.getElementById('jumpToPageNum').value;
-		var re=/^[1-9]+[0-9]*]*$/;
-		if (!re.test(pageNum)){
-			document.getElementById('jumpToPageNum').value='';
-			document.getElementById('jumpToPageNum').focus();
-			return false;
-		}
-		if(Number(pageNum)>totalPage){
-			document.getElementById('jumpToPageNum').value='';
-			document.getElementById('jumpToPageNum').focus();
-			return false;
-		}
-		
-		window.self.location.href=url+'pageDevice.currentPage='+pageNum;
-	}
-  </script>
-</div>
+<body th:fragment="pagination">
+<ul class="pagination" th:if="${pageDevice!=null} and ${!#strings.isEmpty(url)}" th:with="targetUrl=${url.indexOf('?')}==-1?${url}+'?':${url}+'&amp;'">
+  <li th:classappend="${pageDevice.currentPage==1}?'disabled'"><a href="#" th:href="${pageDevice.currentPage==1}?'#':${targetUrl}+'pageDevice.currentPage='+${pageDevice.previewPage}">&laquo;</a></li>
+  <li th:each="i : ${pageDevice.getVisiblePageNumbers(pageDevice.totalPages)}" th:classappend="${pageDevice.currentPage==i}?'active'"><a href="#" th:href="${pageDevice.currentPage==i}?'#':${targetUrl}+'pageDevice.currentPage='+${i}" th:text="${i}">1</a></li>
+  <li th:remove="all"><a href="#">2</a></li>
+  <li th:remove="all"><a href="#">3</a></li>
+  <li th:remove="all"><a href="#">4</a></li>
+  <li th:remove="all"><a href="#">5</a></li>
+  <li th:classappend="${pageDevice.currentPage==pageDevice.totalPages}?'disabled'"><a href="#" th:href="${pageDevice.currentPage==pageDevice.totalPages}?'#':${targetUrl}+'pageDevice.currentPage='+${pageDevice.nextPage}">&raquo;</a></li>
+</ul>
 </body>
 </html>

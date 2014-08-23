@@ -90,7 +90,7 @@
     (select * from t_oa_purchasereqbill
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
-	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
   </select>

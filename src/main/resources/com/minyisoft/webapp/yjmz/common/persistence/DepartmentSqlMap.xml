@@ -55,7 +55,7 @@
           from t_common_department
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
-	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
   </select>
   

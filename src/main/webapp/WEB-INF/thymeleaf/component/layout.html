@@ -1,5 +1,5 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" class="login-bg">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 </head>
 <body>
@@ -59,7 +59,7 @@
     <li class="settings hidden-xs hidden-sm"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-share-alt"></i> </a> </li>
   </ul>
 </header>
-<!-- 左侧主菜单 -->
+<!-- 普通用户左侧主菜单 -->
 <div th:fragment="sidebar" id="sidebar-nav">
   <ul id="dashboard-menu">
     <li class="active">
@@ -67,37 +67,38 @@
         <div class="arrow"></div>
         <div class="arrow_border"></div>
       </div>
-      <a href="index.html"> <i class="icon-home"></i> <span>首页</span> </a> </li>
-    <li> <a href="chart-showcase.html"> <i class="icon-signal"></i> <span>图表</span> </a> </li>
-    <li> <a class="dropdown-toggle" href="#"> <i class="icon-group"></i> <span>用户</span> <i class="icon-chevron-down"></i> </a>
+      <a href="index.html" th:href="@{'/manage/reportList.html'}"> <i class="icon-home"></i> <span>工作报告</span> </a> </li>
+    <li> <a href="chart-showcase.html" th:href="@{'/manage/purchaseReqBillList.html'}"> <i class="icon-signal"></i> <span>采购单</span> </a> </li>
+    <li> <a href="chart-showcase.html" th:href="@{'/manage/maintainReqBillList.html'}"> <i class="icon-signal"></i> <span>工程维修单</span> </a> </li>
+    <li th:remove="all"> <a class="dropdown-toggle" href="#"> <i class="icon-group"></i> <span>用户</span> <i class="icon-chevron-down"></i> </a>
       <ul class="submenu">
         <li><a href="user-list.html">用户列表</a></li>
         <li><a href="new-user.html">新用户</a></li>
         <li><a href="user-profile.html">用户资料</a></li>
       </ul>
     </li>
-    <li> <a class="dropdown-toggle" href="#"> <i class="icon-edit"></i> <span>表单</span> <i class="icon-chevron-down"></i> </a>
+    <li th:remove="all"> <a class="dropdown-toggle" href="#"> <i class="icon-edit"></i> <span>表单</span> <i class="icon-chevron-down"></i> </a>
       <ul class="submenu">
         <li><a href="form-showcase.html">表单应用</a></li>
         <li><a href="form-wizard.html">表单验证</a></li>
       </ul>
     </li>
-    <li> <a href="gallery.html"> <i class="icon-picture"></i> <span>相册</span> </a> </li>
-    <li> <a href="calendar.html"> <i class="icon-calendar-empty"></i> <span>日历</span> </a> </li>
-    <li> <a class="dropdown-toggle" href="tables.html"> <i class="icon-th-large"></i> <span>表格</span> <i class="icon-chevron-down"></i> </a>
+    <li th:remove="all"> <a href="gallery.html"> <i class="icon-picture"></i> <span>相册</span> </a> </li>
+    <li th:remove="all"> <a href="calendar.html"> <i class="icon-calendar-empty"></i> <span>日历</span> </a> </li>
+    <li th:remove="all"> <a class="dropdown-toggle" href="tables.html"> <i class="icon-th-large"></i> <span>表格</span> <i class="icon-chevron-down"></i> </a>
       <ul class="submenu">
         <li><a href="tables.html">常用表格</a></li>
         <li><a href="datatables.html">数据表格</a></li>
       </ul>
     </li>
-    <li> <a class="dropdown-toggle ui-elements" href="#"> <i class="icon-code-fork"></i> <span>UI 组件</span> <i class="icon-chevron-down"></i> </a>
+    <li th:remove="all"> <a class="dropdown-toggle ui-elements" href="#"> <i class="icon-code-fork"></i> <span>UI 组件</span> <i class="icon-chevron-down"></i> </a>
       <ul class="submenu">
         <li><a href="ui-elements.html">UI 组件</a></li>
         <li><a href="icons.html">Icons图标</a></li>
       </ul>
     </li>
-    <li> <a href="personal-info.html"> <i class="icon-cog"></i> <span>我的信息</span> </a> </li>
-    <li> <a class="dropdown-toggle" href="#"> <i class="icon-share-alt"></i> <span>其他</span> <i class="icon-chevron-down"></i> </a>
+    <li th:remove="all"> <a href="personal-info.html"> <i class="icon-cog"></i> <span>我的信息</span> </a> </li>
+    <li th:remove="all"> <a class="dropdown-toggle" href="#"> <i class="icon-share-alt"></i> <span>其他</span> <i class="icon-chevron-down"></i> </a>
       <ul class="submenu">
         <li><a href="code-editor.html">代码编辑器</a></li>
         <li><a href="grids.html">网格</a></li>

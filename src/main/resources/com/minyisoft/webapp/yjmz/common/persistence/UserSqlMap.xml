@@ -102,7 +102,7 @@
     (select * from t_common_user
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
-	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) u left join t_common_userorgrelation r on u.fid=r.fuserid
 	order by hex(u.fname) desc, u.fid

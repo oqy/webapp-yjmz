@@ -69,11 +69,11 @@
           <br/>注：联系电话即为该用户系统初始登录名及登录密码
         </div>
       </div>
-      <div class="selectExistsUser form-group" th:if="${userOrgRelation.user==null and !#lists.isEmpty(users)}" th:style="${userOrgRelation.user==null}?'display:none'">
+      <div class="selectExistsUser form-group" th:if="${userOrgRelation.user==null and !#lists.isEmpty(users)}" style="display:none">
         <label for="existsUser" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;选择用户：</label>
         <div class="col-md-4">
           <select id="existsUser" name="existsUser" class="form-control">
-            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}" th:selected="${userOrgRelation.user!=null} and ${userOrgRelation.user.equals(user)}"></option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}" th:selected="${userOrgRelation.user!=null} and ${userOrgRelation.user.equals(user)}" disabled="disabled"></option>
           </select>
         </div>
       </div>
@@ -121,11 +121,11 @@
 jQuery(document).ready(function() {
 	jQuery('input[name="userSelectType"]').click(function(){
 		if(jQuery(this).val()=='0'){
-			jQuery('.selectExistsUser').hide();
-			jQuery('.addNewUser').show();
+			jQuery('.selectExistsUser').hide().find('input,select').attr('disabled',true);
+			jQuery('.addNewUser').show().find('input,select').attr('disabled',false);
 		}else{
-			jQuery('.selectExistsUser').show();
-			jQuery('.addNewUser').hide();
+			jQuery('.selectExistsUser').show().find('input,select').attr('disabled',false);;
+			jQuery('.addNewUser').hide().find('input,select').attr('disabled',true);;
 		}
 	});
 });

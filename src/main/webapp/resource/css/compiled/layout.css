@@ -1,9 +1,9 @@
 body {
-  font-family: 'Open Sans', sans-serif;
+  /*font-family: 'Open Sans', sans-serif;*/
   background-color: #f7f7f7;
   position: relative;
   margin: 0px;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0px;
   /*-webkit-font-smoothing: antialiased;*/
 }

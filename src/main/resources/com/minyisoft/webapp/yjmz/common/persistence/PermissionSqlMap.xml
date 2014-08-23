@@ -92,7 +92,7 @@
     <include refid="getCriteriaCondition"/>
     order by fmodulecode asc,fgrouplabel asc
 	<if test="pageDevice!=null">
-	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
   </select>
   

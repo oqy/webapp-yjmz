@@ -105,7 +105,7 @@
     select * from t_common_role
     <include refid="getCriteriaCondition"/>
     <if test="pageDevice!=null">
-	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) r left join t_common_role_permission rp on r.fid = rp.froleid
 	order by r.forgid, r.fvalue asc, r.fid

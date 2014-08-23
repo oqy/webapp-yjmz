@@ -108,7 +108,7 @@
     (select * from t_oa_maintainreqbill
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
-	limit #{pageDevice.startRowNumberOfCurrentPage - 1},#{pageDevice.recordsPerPage}
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) m left join t_oa_maintainreqentry e on m.fid = e.freqbillid
   </select>

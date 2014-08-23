@@ -4,7 +4,7 @@
 
 <mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.BillRelationDao">
   <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
-  <resultMap id="BillRelationResult" type="com.fusung.webapp.core.model.BillRelationInfo">
+  <resultMap id="BillRelationResult" type="com.minyisoft.webapp.core.model.BillRelationInfo">
       <result property="targetBill" column="ftargetbillid" typeHandler="bizModelHandler" />
       <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
       <result property="version" column="fversion" />
@@ -36,19 +36,19 @@
   </select>
   
   <!-- 通用记录插入操作 --> 
-  <insert id="insertRelation" parameterType="com.fusung.webapp.core.model.BillRelationInfo">
+  <insert id="insertRelation" parameterType="com.minyisoft.webapp.core.model.BillRelationInfo">
     insert into t_common_billrelation (fid,fsourcebillid,ftargetbillid,fsourcebillclasskey,ftargetbillclasskey) 
     values(sys_guid(),#{sourceBill.id},#{targetBill.id},#{sourceBillClassKey},#{targetBillClassKey})
   </insert>
 
   <!-- 通用记录更新操作 --> 
-  <update id="updateRelation" parameterType="com.fusung.webapp.core.model.BillRelationInfo">
+  <update id="updateRelation" parameterType="com.minyisoft.webapp.core.model.BillRelationInfo">
     update t_common_billrelation set fsourcebillid=#{sourceBill.id},ftargetbillid=#{targetBill.id},fsourcebillclasskey=#{sourceBillClassKey},
     ftargetbillclasskey=#{targetBillClassKey},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->
-  <delete id="deleteRelation" parameterType="com.fusung.webapp.core.model.BillRelationInfo">
+  <delete id="deleteRelation" parameterType="com.minyisoft.webapp.core.model.BillRelationInfo">
     delete from t_common_billrelation where fid=#{id}
   </delete>
 </mapper>

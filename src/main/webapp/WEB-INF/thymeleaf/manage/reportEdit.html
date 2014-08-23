@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>编辑工作报告-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css"></style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑工作报告<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/reportList.html'}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回工作报告列表</a></h3>
+    <form role="form" class="form-horizontal" th:action="@{'/manage/reportEdit.html'}" method="post" style="margin-top:20px;">
+      <div class="form-group">
+        <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;档案编号：</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="fileNumber" name="fileNumber" placeholder="请输入档案编号" th:value="${report.fileNumber}"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;文件编号：</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="billNumber" name="billNumber" placeholder="请输入文件编号" th:value="${report.billNumber}"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;报告标题：</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="reportTitle" name="reportTitle" placeholder="请输入报告标题" th:value="${report.reportTitle}"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;报告内容：</label>
+        <div class="col-md-6">
+          <textarea class="form-control" rows="3" id="description" name="description" placeholder="请输入报告内容" th:text="${report.description}">
+          </textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+          <button type="submit" class="btn btn-default">提交</button>
+          <button type="reset" class="btn btn-info">重置</button>
+          <input name="reportId" type="hidden" th:value="${report.id}"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>

@@ -69,9 +69,6 @@
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="WorkFlowConfigCriteria" resultMap="WorkFlowConfigResult">
-  	<if test="pageDevice!=null">
-  	select * from( select A.*, rownum rn from ( 
-  	</if>
     select
             	fprocessdefinitionid ,
             	fworkflowstatus ,
@@ -89,7 +86,7 @@
     <include refid="getCriteriaCondition"/>
     order by fcreatedate desc
 	<if test="pageDevice!=null">
-	) A where (#{pageDevice.endRowNumberOfCurrentPage})>=rownum) WHERE rn >= #{pageDevice.startRowNumberOfCurrentPage}
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
   </select>
   
