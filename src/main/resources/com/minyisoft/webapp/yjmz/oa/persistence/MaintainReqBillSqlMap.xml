@@ -73,12 +73,15 @@
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(department)">
             and fdepartmentid = #{department.id}
         </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(viewer)">
+            and exists(select * from t_common_userorgrelation where fuserid=m.fcreateuserid and forgid=m.fcompanyid and fuserpath like concat('%',#{viewer.id},'%'))
+        </if>
 	</where>
   </sql>
   
   <!-- 获取满足指定过滤条件的记录数 -->
   <select id="countEntity" parameterType="MaintainReqBillCriteria" resultType="int">
-    select count(*) from t_oa_maintainreqbill
+    select count(*) from t_oa_maintainreqbill m
     <include refid="getCriteriaCondition"/>
   </select>
   
@@ -105,7 +108,7 @@
             	m.fversion ,
             	e.fid as fmaintainreqentryid
     from 
-    (select * from t_oa_maintainreqbill
+    (select * from t_oa_maintainreqbill m
     <include refid="getCriteriaCondition"/>
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}

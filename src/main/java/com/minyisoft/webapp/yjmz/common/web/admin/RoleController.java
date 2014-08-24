@@ -26,7 +26,7 @@ public class RoleController extends BaseController {
 	private PermissionService permissionService;
 
 	@ModelAttribute("role")
-	public RoleInfo populateDepartment(@RequestParam(value = "roleId", required = false) RoleInfo role) {
+	public RoleInfo populateRole(@RequestParam(value = "roleId", required = false) RoleInfo role) {
 		return role != null ? role : new RoleInfo();
 	}
 
@@ -59,7 +59,7 @@ public class RoleController extends BaseController {
 	 * 删除角色
 	 */
 	@RequestMapping(value = "roleDelete.html", method = RequestMethod.GET)
-	public String userOrgRelationDelete(@ModelAttribute("role") RoleInfo role) {
+	public String deleteRole(@ModelAttribute("role") RoleInfo role) {
 		roleService.delete(role);
 		return "redirect:companyDetail.html?companyId=" + role.getOrg().getId();
 	}

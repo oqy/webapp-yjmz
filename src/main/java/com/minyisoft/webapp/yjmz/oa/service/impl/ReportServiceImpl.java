@@ -1,6 +1,5 @@
 package com.minyisoft.webapp.yjmz.oa.service.impl;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -20,8 +19,8 @@ public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCri
 	@Override
 	protected void _validateDataBeforeDelete(ReportInfo info) {
 		Assert.isTrue(info.getCreateUser() != null && info.getCreateUser().equals(SecurityUtils.getCurrentUser()),
-				"非报告创建者不允许删除工作报告");
-		Assert.isTrue(StringUtils.isBlank(info.getProcessInstanceId()), "不允许删除已提交审批流程的工作报告");
+				"当前用户并非工作报告创建者，不允许删除报告");
+		Assert.isTrue(info.isProcessUnStarted(), "不允许删除已提交审批流程的工作报告");
 	}
 
 	@Override

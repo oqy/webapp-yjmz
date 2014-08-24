@@ -116,8 +116,8 @@
 			value="classpath*:com/minyisoft/webapp/yjmz/**/security/permission/*.permission" />
 		<property name="describableEnumDescriptionBaseNames">
 			<list>
-				<value>com.minyisoft.webapp.yjmz.common.model.enumField.enumDescription
-				</value>
+				<value>com.minyisoft.webapp.yjmz.common.model.enumField.enumDescription</value>
+				<value>com.minyisoft.webapp.yjmz.oa.model.enumField.enumDescription</value>
 			</list>
 		</property>
 	</bean>

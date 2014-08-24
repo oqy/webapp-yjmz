@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>工程维修单列表-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css"></style>
+<link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/index.css'}" th:remove="all"/>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3>工程维修单列表<a th:href="@{'/manage/maintainReqBillEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="glyphicon glyphicon-plus"></span>&nbsp;新增工程维修单</a></h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>申请部门</th>
+            <th>日期</th>
+            <th>申请人</th>
+            <th>位置</th>
+            <th>类型</th>
+            <th>维修技师</th>
+            <th>完成日期</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody th:if="${!#lists.isEmpty(maintainReqBills)}">
+          <tr th:each="maintainReqBill :${maintainReqBills}" th:with="editable = ${currentUser.equals(maintainReqBill.createUser) and maintainReqBill.processUnStarted}">
+            <td th:text="${maintainReqBill.department!=null}?${maintainReqBill.department.name}:'-'"></td>
+            <td th:text="${#dates.format(maintainReqBill.createDate,'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${maintainReqBill.createUser.name}"></td>
+            <td th:text="${maintainReqBill.location}"></td>
+            <td><span th:each="type : ${maintainReqBill.maintainTypes}" th:text="${type.description}+(${!typeStat.last}?'&nbsp;':'')" th:remove="tag"></span></td>
+            <td th:text="${maintainReqBill.maintenanceMan!=null}?${maintainReqBill.maintenanceMan.name}"></td>
+            <td th:text="${maintainReqBill.finishDate!=null}?${#dates.format(maintainReqBill.finishDate,'yyyy-MM-dd HH:mm')}"></td>
+            <td><a th:if="${editable}" th:href="@{'/manage/maintainReqBillEdit.html?maintainReqBillId='+${maintainReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/maintainReqBillDetail.html?maintainReqBillId='+${maintainReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/maintainReqBillDelete.html?maintainReqBillId='+${maintainReqBill.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+          </tr>
+        </tbody>
+        <tbody th:if="${#lists.isEmpty(maintainReqBills)}">
+          <tr>
+            <td colspan="8">暂没有可供您浏览的工程维修单</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div th:if="${!#lists.isEmpty(maintainReqBills)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='maintainReqBillList.html'"></div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>

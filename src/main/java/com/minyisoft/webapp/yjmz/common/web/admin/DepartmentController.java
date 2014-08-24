@@ -56,7 +56,7 @@ public class DepartmentController extends BaseController {
 	 * 删除部门
 	 */
 	@RequestMapping(value = "departmentDelete.html", method = RequestMethod.GET)
-	public String userOrgRelationDelete(@ModelAttribute("department") DepartmentInfo department) {
+	public String deleteDepartment(@ModelAttribute("department") DepartmentInfo department) {
 		departmentService.delete(department);
 		return "redirect:companyDetail.html?companyId=" + department.getOrg().getId();
 	}

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.Min;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,11 +28,16 @@ public class PurchaseReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private String processInstanceId;
 
 	@Override
-	public String getName() {
+	public String getProcessInstanceName() {
 		StringBuffer sb = new StringBuffer(getCompany().getName());
 		if (getDepartment() != null) {
 			sb.append(getDepartment().getName());
 		}
 		return sb.append("采购单[").append(getBillNumber()).append("]").toString();
+	}
+
+	@Override
+	public boolean isProcessUnStarted() {
+		return StringUtils.isBlank(processInstanceId);
 	}
 }
