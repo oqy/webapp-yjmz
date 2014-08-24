@@ -3,6 +3,7 @@ package com.minyisoft.webapp.yjmz.oa.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.minyisoft.webapp.core.annotation.Label;
@@ -28,11 +29,16 @@ public class ReportInfo extends CompanyBillBaseInfo implements WorkFlowBusinessM
 	private String processInstanceId;
 
 	@Override
-	public String getName() {
+	public String getProcessInstanceName() {
 		StringBuffer sb = new StringBuffer(getCompany().getName());
 		if (getDepartment() != null) {
 			sb.append(getDepartment().getName());
 		}
 		return sb.append("工作报告[").append(getBillNumber()).append("]").toString();
+	}
+
+	@Override
+	public boolean isProcessUnStarted() {
+		return StringUtils.isBlank(processInstanceId);
 	}
 }

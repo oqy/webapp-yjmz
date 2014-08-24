@@ -37,7 +37,7 @@ public class UserController extends BaseController {
 	}
 
 	@ModelAttribute("user")
-	public UserInfo populateCompany(@RequestParam(value = "userId", required = false) UserInfo user) {
+	public UserInfo populateUser(@RequestParam(value = "userId", required = false) UserInfo user) {
 		return user != null ? user : new UserInfo();
 	}
 
@@ -56,7 +56,7 @@ public class UserController extends BaseController {
 	 * 保存编辑信息
 	 */
 	@RequestMapping(value = "userEdit.html", method = RequestMethod.POST)
-	public String processCompanyEditForm(@ModelAttribute("user") UserInfo user) {
+	public String processUserEditForm(@ModelAttribute("user") UserInfo user) {
 		userService.submit(user);
 		return "redirect:userList.html";
 	}

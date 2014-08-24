@@ -31,20 +31,25 @@
             <th>操作</th>
           </tr>
         </thead>
-        <tbody>
-          <tr th:each="report :${reports}">
+        <tbody th:if="${!#lists.isEmpty(reports)}">
+          <tr th:each="report :${reports}" th:with="editable = ${currentUser.equals(report.createUser) and report.processUnStarted}">
             <td th:text="${#dates.format(report.createDate,'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${report.fileNumber}"></td>
             <td th:text="${report.billNumber}"></td>
             <td th:text="${report.department!=null}?${report.department.name}:'-'"></td>
             <td th:text="${report.reportTitle}"></td>
             <td th:text="${report.createUser.name}"></td>
-            <td><a th:href="@{'/manage/reportEdit.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/reportDetail.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">详情</a></td>
+            <td><a th:if="${editable}" th:href="@{'/manage/reportEdit.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/reportDetail.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/reportDelete.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+          </tr>
+        </tbody>
+        <tbody th:if="${#lists.isEmpty(reports)}">
+          <tr>
+            <td colspan="7">暂没有可供您浏览的工作报告</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='reportList.html'"></div>
+    <div th:if="${!#lists.isEmpty(reports)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='reportList.html'"></div>
   </div>
 </div>
 <!-- end main container -->

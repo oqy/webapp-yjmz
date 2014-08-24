@@ -44,7 +44,7 @@ public class UserOrgRelationController extends BaseController {
 	 * 获取用户组织关系编辑界面
 	 */
 	@RequestMapping(value = "userOrgRelationEdit.html", method = RequestMethod.GET)
-	public String getDepartmentEditForm(@RequestParam(value = "companyId", required = false) CompanyInfo company,
+	public String getUserOrgRelationEditForm(@RequestParam(value = "companyId", required = false) CompanyInfo company,
 			@ModelAttribute("userOrgRelation") UserOrgRelationInfo userOrgRelation, Model model) {
 		company = company == null ? (CompanyInfo) userOrgRelation.getOrg() : company;
 		if (company == null) {
@@ -77,7 +77,8 @@ public class UserOrgRelationController extends BaseController {
 	 * 保存编辑信息
 	 */
 	@RequestMapping(value = "userOrgRelationEdit.html", method = RequestMethod.POST)
-	public String processDepartmentEditForm(@ModelAttribute("userOrgRelation") UserOrgRelationInfo userOrgRelation,
+	public String processUserOrgRelationEditForm(
+			@ModelAttribute("userOrgRelation") UserOrgRelationInfo userOrgRelation,
 			@RequestParam(value = "existsUser", required = false) UserInfo existsUser,
 			@RequestParam(value = "roles", required = false) RoleInfo[] roles) {
 		if (existsUser != null) {
@@ -91,7 +92,7 @@ public class UserOrgRelationController extends BaseController {
 	 * 删除用户组织关系
 	 */
 	@RequestMapping(value = "userOrgRelationDelete.html", method = RequestMethod.GET)
-	public String userOrgRelationDelete(@ModelAttribute("userOrgRelation") UserOrgRelationInfo userOrgRelation) {
+	public String deleteUserOrgRelation(@ModelAttribute("userOrgRelation") UserOrgRelationInfo userOrgRelation) {
 		userOrgRelationService.delete(userOrgRelation);
 		return "redirect:companyDetail.html?companyId=" + userOrgRelation.getOrg().getId();
 	}

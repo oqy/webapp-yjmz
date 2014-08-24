@@ -26,7 +26,7 @@ public class UserTaskCreateListener implements TaskListener {
 			IModelObject model = ServiceUtils.getModel(task.getProcessInstance().getProcessBusinessKey());
 			StringBuffer sb = new StringBuffer("您有一条新的{0}工作流任务，");
 			if (model instanceof WorkFlowBusinessModel) {
-				sb.append("任务名称[").append(((WorkFlowBusinessModel) model).getName()).append("]，");
+				sb.append("任务名称[").append(((WorkFlowBusinessModel) model).getProcessInstanceName()).append("]，");
 			}
 			sb.append("当前任务节点[").append(delegateTask.getName()).append("]");
 

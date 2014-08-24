@@ -11,14 +11,14 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	 * 
 	 * @return
 	 */
-	String getBillNumber();
+	// String getBillNumber();
 
 	/**
-	 * 名称
+	 * 流程实例名称
 	 * 
 	 * @return
 	 */
-	String getName();
+	String getProcessInstanceName();
 
 	/**
 	 * 对应工作流程实例ID
@@ -26,4 +26,18 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	 * @return
 	 */
 	String getProcessInstanceId();
+
+	/**
+	 * 获取当前任务节点名称
+	 * 
+	 * @return
+	 */
+	// String getCurrentTaskName();
+
+	/**
+	 * 是否尚未启动工作流
+	 * 
+	 * @return
+	 */
+	boolean isProcessUnStarted();
 }

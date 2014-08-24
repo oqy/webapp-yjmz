@@ -3,11 +3,12 @@ package com.minyisoft.webapp.yjmz.oa.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
@@ -33,8 +34,7 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private UserInfo maintenanceMan;
 	// 完成日期
 	private Date finishDate;
-	@Label("维修材料分录")
-	@Min(1)
+	// 维修材料分录
 	private List<MaintainReqEntryInfo> entry;
 	// 接单人
 	private UserInfo receiver;
@@ -44,11 +44,16 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private String processInstanceId;
 
 	@Override
-	public String getName() {
+	public String getProcessInstanceName() {
 		StringBuffer sb = new StringBuffer(getCompany().getName());
 		if (getDepartment() != null) {
 			sb.append(getDepartment().getName());
 		}
 		return sb.append("工程维修单[").append(getBillNumber()).append("]").toString();
+	}
+
+	@Override
+	public boolean isProcessUnStarted() {
+		return StringUtils.isBlank(processInstanceId);
 	}
 }

@@ -62,7 +62,7 @@
             and fdepartmentid = #{department.id}
         </if>
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(viewer)">
-            and exists(select * from t_common_userorgrelation where fuserid=r.fcreateuserid and forgid=r.fcompanyid and fuserpath like '%'||#{viewer.id}||'%')
+            and exists(select * from t_common_userorgrelation where fuserid=r.fcreateuserid and forgid=r.fcompanyid and fuserpath like concat('%',#{viewer.id},'%'))
         </if>
 	</where>
   </sql>

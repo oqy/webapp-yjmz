@@ -104,7 +104,7 @@
 	<aop:config expose-proxy="true">
 		<!-- com.fusung.webapp.yjmz.*.service.impl内所有类方法均实现事务支持 -->
 		<aop:pointcut id="programmeServicePointCut"
-			expression="execution(* com.minyisoft.webapp.yjmz.service.impl..*(..))" />
+			expression="execution(* com.minyisoft.webapp.yjmz.**.service.impl..*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="programmeServicePointCut"
 			order="10" />
 	</aop:config>
@@ -116,8 +116,8 @@
 			value="classpath*:com/minyisoft/webapp/yjmz/**/security/permission/*.permission" />
 		<property name="describableEnumDescriptionBaseNames">
 			<list>
-				<value>com.minyisoft.webapp.yjmz.common.model.enumField.enumDescription
-				</value>
+				<value>com.minyisoft.webapp.yjmz.common.model.enumField.enumDescription</value>
+				<value>com.minyisoft.webapp.yjmz.oa.model.enumField.enumDescription</value>
 			</list>
 		</property>
 	</bean>

@@ -1,6 +1,7 @@
 package com.minyisoft.webapp.yjmz.oa.web;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,15 +34,17 @@ public class ReportController extends ManageBaseController {
 	 * 获取报告列表
 	 */
 	@RequestMapping(value = "reportList.html", method = RequestMethod.GET)
-	public String getReportList(@ModelAttribute("currentUser") UserInfo currentUser, ReportCriteria criteria,
-			Model model) {
+	public String getReportList(@ModelAttribute("currentUser") UserInfo currentUser,
+			@ModelAttribute("currentCompany") CompanyInfo currentCompany, ReportCriteria criteria, Model model) {
 		if (criteria.getPageDevice() == null) {
 			criteria.setPageDevice(new PageDevice());
 		}
+		criteria.setCompany(currentCompany);
 		criteria.setViewer(currentUser);
 		criteria.getPageDevice().setTotalRecords(reportService.count(criteria));
-		model.addAttribute("reports", reportService.getCollection(criteria));
-		
+		model.addAttribute("reports", criteria.getPageDevice().getTotalRecords() == 0 ? Collections.emptyList()
+				: reportService.getCollection(criteria));
+
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
 		model.addAttribute("filter", filter);
 		return "manage/reportList";
@@ -53,12 +56,21 @@ public class ReportController extends ManageBaseController {
 	}
 
 	/**
+	 * 删除报告
+	 */
+	@RequestMapping(value = "reportDelete.html", method = RequestMethod.GET)
+	public String deleteReport(@ModelAttribute("report") ReportInfo report) {
+		reportService.delete(report);
+		return "redirect:reportList.html";
+	}
+
+	/**
 	 * 获取工作报告编辑界面
 	 */
 	@RequestMapping(value = "reportEdit.html", method = RequestMethod.GET)
 	public String getReportEditForm(@ModelAttribute("report") ReportInfo report, Model model) {
 		// 工作报告已进入工作流程，不允许编辑
-		if (report.isIdPresented() && StringUtils.isNotBlank(report.getProcessInstanceId())) {
+		if (!report.isProcessUnStarted()) {
 			return "redirect:reportList.html";
 		}
 		model.addAttribute("report", report);
@@ -69,7 +81,7 @@ public class ReportController extends ManageBaseController {
 	 * 保存编辑信息
 	 */
 	@RequestMapping(value = "reportEdit.html", method = RequestMethod.POST)
-	public String processCompanyEditForm(@ModelAttribute("currentUser") UserInfo currentUser,
+	public String processReportEditForm(@ModelAttribute("currentUser") UserInfo currentUser,
 			@ModelAttribute("currentCompany") CompanyInfo currentCompany, @ModelAttribute("report") ReportInfo report) {
 		Optional<UserOrgRelationInfo> optionalOrgRelation = currentUser.getOrgRelation(currentCompany);
 		if (!optionalOrgRelation.isPresent()) {

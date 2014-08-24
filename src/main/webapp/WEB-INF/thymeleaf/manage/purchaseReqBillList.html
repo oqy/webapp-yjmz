@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>采购单列表-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css"></style>
+<link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/index.css'}" th:remove="all"/>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3>采购单列表<a th:href="@{'/manage/purchaseReqBillEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="glyphicon glyphicon-plus"></span>&nbsp;新增采购单</a></h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>申请部门</th>
+            <th>日期</th>
+            <th>品名</th>
+            <th>规格</th>
+            <th>数量</th>
+            <th>单价</th>
+            <th>备注</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody th:if="${!#lists.isEmpty(purchaseReqBills)}">
+          <tr th:each="purchaseReqBill :${purchaseReqBills}" th:with="editable = ${currentUser.equals(purchaseReqBill.createUser) and purchaseReqBill.processUnStarted}">
+            <td th:text="${purchaseReqBill.department!=null}?${purchaseReqBill.department.name}:'-'"></td>
+            <td th:text="${#dates.format(purchaseReqBill.createDate,'yyyy-MM-dd HH:mm')}"></td>
+            <td colspan="5"><table>
+                <tbody>
+                  <tr th:each="entry : ${purchaseReqBill.entry}">
+                    <td th:text="${entry.name}"></td>
+                    <td th:text="${entry.standard}"></td>
+                    <td th:text="${entry.quantity}"></td>
+                    <td th:text="${entry.unitPrice}"></td>
+                    <td th:text="${entry.remark}"></td>
+                  </tr>
+                </tbody>
+              </table></td>
+            <td><a th:if="${editable}" th:href="@{'/manage/purchaseReqBillEdit.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/purchaseReqBillDetail.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/purchaseReqBillDelete.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+          </tr>
+        </tbody>
+        <tbody th:if="${#lists.isEmpty(purchaseReqBills)}">
+          <tr>
+            <td colspan="8">暂没有可供您浏览的采购单</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div th:if="${!#lists.isEmpty(purchaseReqBills)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='purchaseReqBillList.html'"></div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>
