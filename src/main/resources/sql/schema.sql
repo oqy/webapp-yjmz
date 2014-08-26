@@ -202,4 +202,22 @@ create table T_COMMON_BILLRELATION
   FTARGETBILLCLASSKEY CHAR(11),
   FVERSION            int default 1,
   primary key (fid)
-)
+);
+
+create table t_common_workflowconfig
+(
+  fprocessdefinitionid varchar(32),
+  fworkflowstatus int default 0,
+  fdefineorgid varchar(32),
+  fworkflowtype char(11),
+  ftriggerexpression varchar(200),
+  fname varchar(32),
+  fdescription varchar(200),
+  fcreateuserid varchar(32),
+  fcreatedate datetime,
+  flastupdateuserid varchar(32),
+  flastupdatedate datetime,
+  fid varchar(32),
+  fversion int default 1,
+  primary key (fid)
+);

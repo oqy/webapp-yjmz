@@ -57,6 +57,9 @@
 		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(status)">
+            and fstatus = #{status}
+        </if>
 	</where>
   </sql>
   

@@ -20,6 +20,7 @@ import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 /**
  * @author qingyong_ou 工程维修单
  */
+@Label("工程维修单")
 @Getter
 @Setter
 @ModelKey(0x147E24CEB79L)

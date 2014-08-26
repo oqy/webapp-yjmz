@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>工作流程列表-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3>工作流程列表<a th:href="@{'/admin/workFlowConfigEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="glyphicon glyphicon-plus"></span>&nbsp;新增工作流程</a></h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>所属组织</th>
+            <th>流程名称</th>
+            <th>流程类型</th>
+            <th>触发条件</th>
+            <th>备注</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody th:if="${!#lists.isEmpty(workFlowConfigs)}">
+          <tr th:each="workFlowConfig :${workFlowConfigs}">
+            <td th:text="${workFlowConfigStat.count}"></td>
+            <td th:text="${workFlowConfig.defineOrg.name}"></td>
+            <td th:text="${workFlowConfig.name}"></td>
+            <td th:text="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassLabel(workFlowConfig.workFlowType)}"></td>
+            <td th:text="${#strings.isEmpty(workFlowConfig.triggerExpression)}?'-':${workFlowConfig.triggerExpression}"></td>
+            <td th:text="${workFlowConfig.description}"></td>
+            <td><a th:href="@{'/admin/workFlowConfigEdit.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">编辑</a> <a th:if="${workFlowConfig.workFlowStatus.value==0}" th:href="@{'/admin/workFlowConfigSuspend.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">挂起</a> <a th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigActive.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">激活</a> <a th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigDelete.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+          </tr>
+        </tbody>
+        <tbody th:if="${#lists.isEmpty(workFlowConfigs)}">
+          <tr>
+            <td colspan="7">暂没有工作流程定义</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div th:if="${!#lists.isEmpty(workFlowConfigs)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='workFlowConfigList.html'"></div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>

@@ -2,8 +2,10 @@ package com.minyisoft.webapp.yjmz.common.service.impl;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -11,12 +13,20 @@ import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.google.common.base.Optional;
+import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.WorkFlowConfigCriteria;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowStatusEnum;
@@ -31,8 +41,8 @@ public class WorkFlowConfigServiceImpl extends
 	private RepositoryService repositoryService;
 	@Autowired
 	private RuntimeService runtimeService;
-	//@Autowired
-	//private IdentityService identityService;
+	@Autowired
+	private IdentityService identityService;
 	@Autowired
 	private HistoryService historyService;
 
@@ -109,29 +119,36 @@ public class WorkFlowConfigServiceImpl extends
 		}
 	}
 
-	/*@Override
-	public Optional<String> startProcess(SupportedWorkFlowTypeEnum workFlowType, ISystemOrgObject owner,
-			IWorkFlowBusinessModel businessKey, Map<String, Object> processVariables) {
-		Assert.notNull(workFlowType);
+	@Override
+	public Optional<String> startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessKey,
+			Map<String, Object> processVariables) {
 		Assert.notNull(owner);
+		Assert.notNull(businessKey);
 		WorkFlowConfigCriteria criteria = new WorkFlowConfigCriteria();
 		criteria.setWorkFlowStatus(WorkFlowStatusEnum.NORMAL);
 		criteria.setDefineOrg(owner);
-		criteria.setWorkFlowType(workFlowType);
-		WorkFlowConfigInfo config = find(criteria);
-		if (config != null && StringUtils.isNotBlank(config.getProcessDefinitionId())) {
-			// 启动工作流
-			try {
-				identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getId());
-				ProcessInstance instance = runtimeService.startProcessInstanceById(config.getProcessDefinitionId(),
-						businessKey != null ? businessKey.getId() : null, processVariables);
-				return Optional.of(instance.getId());
-			} finally {
-				identityService.setAuthenticatedUserId(null);
+		criteria.setWorkFlowType(businessKey.getClass());
+		List<WorkFlowConfigInfo> configs = getCollection(criteria);
+
+		StandardEvaluationContext context = new StandardEvaluationContext(businessKey);
+		ExpressionParser parser = new SpelExpressionParser();
+		for (WorkFlowConfigInfo config : configs) {
+			if (StringUtils.isNotBlank(config.getProcessDefinitionId())
+					&& (StringUtils.isBlank(config.getTriggerExpression()) || parser.parseExpression(
+							config.getTriggerExpression()).getValue(context, Boolean.class))) {
+				// 启动工作流
+				try {
+					identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getId());
+					ProcessInstance instance = runtimeService.startProcessInstanceById(config.getProcessDefinitionId(),
+							businessKey.getId(), processVariables);
+					return Optional.of(instance.getId());
+				} finally {
+					identityService.setAuthenticatedUserId(null);
+				}
 			}
 		}
 		return Optional.absent();
-	}*/
+	}
 
 	@Override
 	public void deleteRunningProcess(String processInstanceId) {

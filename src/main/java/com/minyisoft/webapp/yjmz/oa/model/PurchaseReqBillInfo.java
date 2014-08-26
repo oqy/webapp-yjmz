@@ -17,6 +17,7 @@ import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 /**
  * @author qingyong_ou 采购单
  */
+@Label("采购单")
 @Getter
 @Setter
 @ModelKey(0x147E349704CL)

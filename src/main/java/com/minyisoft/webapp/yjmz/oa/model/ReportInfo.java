@@ -14,6 +14,7 @@ import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 /**
  * @author qingyong_ou 工作报告
  */
+@Label("工作报告")
 @Getter
 @Setter
 @ModelKey(0x147E1C6843FL)

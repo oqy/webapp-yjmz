@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>编辑工作流程-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑工作流程<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/workFlowConfigList.html'}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回工作流程列表</a></h3>
+    <form role="form" class="form-horizontal" th:action="@{'/admin/workFlowConfigEdit.html'}" method="post" enctype="multipart/form-data" style="margin-top:20px;">
+      <div class="form-group" th:if="${workFlowConfig.idPresented}">
+        <label for="name" class="col-md-2 control-label">流程名称：</label>
+        <div class="col-md-6">
+          <p class="form-control-static" th:text="${workFlowConfig.name}"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="defineOrg" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;所属组织：</label>
+        <div class="col-md-6">
+          <select id="defineOrg" name="defineOrg" class="form-control" th:if="${!workFlowConfig.idPresented}">
+            <option th:each="company : ${companies}" th:value="${company.id}" th:text="${company.name}"></option>
+          </select>
+          <p class="form-control-static" th:if="${workFlowConfig.idPresented}" th:text="${workFlowConfig.defineOrg.name}"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="workFlowType" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;流程类型：</label>
+        <div class="col-md-6">
+          <select id="workFlowType" name="workFlowTypeKey" class="form-control" th:if="${!workFlowConfig.idPresented}">
+            <option th:each="type : ${workFlowTypes}" th:value="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(type)}" th:text="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassLabel(type)}"></option>
+          </select>
+          <p class="form-control-static" th:if="${workFlowConfig.idPresented}" th:text="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassLabel(workFlowConfig.workFlowType)}"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="triggerExpression" class="col-md-2 control-label">触发条件：</label>
+        <div class="col-md-6">
+          <input class="form-control" type="text" id="triggerExpression" name="triggerExpression" placeholder="请输入触发条件" th:value="${workFlowConfig.triggerExpression}" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="triggerExpression" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;流程定义：</label>
+        <div class="col-md-6">
+          <input class="form-control" id="uploadFile" name="uploadFile" type="file" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description" class="col-md-2 control-label">备注信息：</label>
+        <div class="col-md-6">
+          <textarea class="form-control" rows="3" id="description" name="description" placeholder="请输入备注信息" th:text="${workFlowConfig.description}">
+          </textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+          <button type="submit" class="btn btn-default">提交</button>
+          <button type="reset" class="btn btn-info">重置</button>
+          <input name="workFlowConfigId" type="hidden" th:value="${workFlowConfig.id}"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>

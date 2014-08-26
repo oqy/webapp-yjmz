@@ -8,7 +8,8 @@
       <result property="processDefinitionId" column="fprocessdefinitionid" />
       <result property="workFlowStatus" column="fworkflowstatus" />
       <result property="defineOrg" column="fdefineorgid" typeHandler="bizModelHandler" />
-      <result property="workFlowType" column="fworkflowtype" />
+      <result property="workFlowType" column="fworkflowtype" typeHandler="modelClassHandler" />
+      <result property="triggerExpression" column="ftriggerexpression" />
       <result property="name" column="fname" />
       <result property="description" column="fdescription" />
       <result property="createUser" column="fcreateuserid" typeHandler="bizModelHandler" />
@@ -28,6 +29,7 @@
             	fworkflowstatus ,
             	fdefineorgid ,
             	fworkflowtype ,
+            	ftriggerexpression ,
             	fname ,
             	fdescription ,
             	fcreateuserid ,
@@ -43,20 +45,20 @@
   <!-- 查询条件SQL -->
   <sql id="getCriteriaCondition">
   	<where>
-		<if test="ids!=null">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
             fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
-		<if test="excludeIds!=null">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
-        <if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(workFlowStatus)">
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(workFlowStatus)">
 			and fworkflowstatus=#{workFlowStatus}
 		</if>
-		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(defineOrg)">
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(defineOrg)">
 			and fdefineorgid=#{defineOrg.id}
 		</if>
-		<if test="@com.fusung.webapp.core.utils.mybatis.Ognl@isNotEmpty(workFlowType)">
-			and fworkflowtype=#{workFlowType}
+		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(workFlowType)">
+			and fworkflowtype=#{workFlowType,typeHandler=modelClassHandler}
 		</if>
 	</where>
   </sql>
@@ -74,6 +76,7 @@
             	fworkflowstatus ,
             	fdefineorgid ,
             	fworkflowtype ,
+            	ftriggerexpression ,
             	fname ,
             	fdescription ,
             	fcreateuserid ,
@@ -92,14 +95,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="WorkFlowConfigInfo">
-    insert into t_common_workflowconfig (fprocessdefinitionid,fworkflowstatus,fdefineorgid,fworkflowtype,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{processDefinitionId},#{workFlowStatus},#{defineOrg.id},#{workFlowType},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_common_workflowconfig (fprocessdefinitionid,fworkflowstatus,fdefineorgid,fworkflowtype,ftriggerexpression,fname,fdescription,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{processDefinitionId},#{workFlowStatus},#{defineOrg.id},#{workFlowType,typeHandler=modelClassHandler},#{triggerExpression},#{name},#{description},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="WorkFlowConfigInfo">
-    update t_common_workflowconfig set fprocessdefinitionid=#{processDefinitionId},fworkflowstatus=#{workFlowStatus},fdefineorgid=#{defineOrg.id},fworkflowtype=#{workFlowType},fname=#{name},fdescription=#{description},
-    fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_common_workflowconfig set fprocessdefinitionid=#{processDefinitionId},fworkflowstatus=#{workFlowStatus},fdefineorgid=#{defineOrg.id},fworkflowtype=#{workFlowType,typeHandler=modelClassHandler},ftriggerexpression=#{triggerExpression},
+    fname=#{name},fdescription=#{description},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

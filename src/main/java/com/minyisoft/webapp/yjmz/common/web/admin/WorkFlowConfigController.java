@@ -2,6 +2,7 @@ package com.minyisoft.webapp.yjmz.common.web.admin;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,13 +17,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
+import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
+import com.minyisoft.webapp.yjmz.common.model.criteria.CompanyCriteria;
 import com.minyisoft.webapp.yjmz.common.model.criteria.WorkFlowConfigCriteria;
-import com.minyisoft.webapp.yjmz.common.model.enumField.SupportedWorkFlowTypeEnum;
+import com.minyisoft.webapp.yjmz.common.model.enumField.CompanyStatusEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowStatusEnum;
-import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
+import com.minyisoft.webapp.yjmz.common.service.CompanyService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper.ProcessResourceType;
@@ -35,89 +39,94 @@ import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper.ProcessReso
 public class WorkFlowConfigController extends BaseController {
 	@Autowired
 	private WorkFlowConfigService workFlowConfigService;
+	@Autowired
+	private CompanyService companyService;
 
 	/**
 	 * 获取工作流流程定义配置信息
 	 */
-	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET)
+	@RequestMapping(value = "workFlowConfigList.html", method = RequestMethod.GET)
 	public String getWorkFlowConfigList(WorkFlowConfigCriteria criteria, Model model) throws Exception {
-		SecurityUtils.checkIsCurrentUserAdministrator();
 		if (criteria.getPageDevice() == null) {
 			criteria.setPageDevice(new PageDevice());
 		}
 		criteria.getPageDevice().setTotalRecords(workFlowConfigService.count(criteria));
-		model.addAttribute("workFlowConfigs", workFlowConfigService.getCollection(criteria));
+		model.addAttribute("workFlowConfigs", criteria.getPageDevice().getTotalRecords() == 0 ? Collections.emptyList()
+				: workFlowConfigService.getCollection(criteria));
 
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
 		filter.addField("workFlowStatus", Arrays.asList(WorkFlowStatusEnum.values()));
 		model.addAttribute("filter", filter);
-		return "admin/system/workFlowConfigList";
+		return "admin/workFlowConfigList";
+	}
+
+	@ModelAttribute("workFlowConfig")
+	public WorkFlowConfigInfo populateWorkFlowConfig(
+			@RequestParam(value = "workFlowConfigId", required = false) WorkFlowConfigInfo config) {
+		return config != null ? config : new WorkFlowConfigInfo();
 	}
 
 	/**
 	 * 删除工作流定义
 	 */
-	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "deleteId")
-	public String deleteWorkFlowConfig(@RequestParam("deleteId") WorkFlowConfigInfo workFlowConfig) {
+	@RequestMapping(value = "workFlowConfigDelete.html", method = RequestMethod.GET, params = "workFlowConfigId")
+	public String deleteWorkFlowConfig(@ModelAttribute("workFlowConfig") WorkFlowConfigInfo workFlowConfig) {
 		workFlowConfigService.delete(workFlowConfig);
-		return "redirect:workFlowConfigList.do?workFlowStatus=" + WorkFlowStatusEnum.SUSPEND.getValue();
+		return "redirect:workFlowConfigList.html?workFlowStatus=" + WorkFlowStatusEnum.SUSPEND.getValue();
 	}
 
 	/**
 	 * 挂起工作流定义
 	 */
-	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "suspendId")
-	public String suspendWorkFlowConfig(@RequestParam("suspendId") WorkFlowConfigInfo workFlowConfig) {
+	@RequestMapping(value = "workFlowConfigSuspend.html", method = RequestMethod.GET, params = "workFlowConfigId")
+	public String suspendWorkFlowConfig(@ModelAttribute("workFlowConfig") WorkFlowConfigInfo workFlowConfig) {
 		workFlowConfigService.suspendProcessDefinition(workFlowConfig);
-		return "redirect:workFlowConfigList.do?workFlowStatus=" + WorkFlowStatusEnum.SUSPEND.getValue();
+		return "redirect:workFlowConfigList.html?workFlowStatus=" + WorkFlowStatusEnum.SUSPEND.getValue();
 	}
 
 	/**
 	 * 激活工作流定义
 	 */
-	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "activateId")
-	public String activateWorkFlowConfig(@RequestParam("activateId") WorkFlowConfigInfo workFlowConfig) {
+	@RequestMapping(value = "workFlowConfigActive.html", method = RequestMethod.GET, params = "workFlowConfigId")
+	public String activateWorkFlowConfig(@ModelAttribute("workFlowConfig") WorkFlowConfigInfo workFlowConfig) {
 		workFlowConfigService.activateProcessDefinition(workFlowConfig);
-		return "redirect:workFlowConfigList.do?workFlowStatus=" + WorkFlowStatusEnum.NORMAL.getValue();
+		return "redirect:workFlowConfigList.html?workFlowStatus=" + WorkFlowStatusEnum.NORMAL.getValue();
 	}
 
 	/**
 	 * 获取编辑工作流界面
 	 */
-	@RequestMapping(value = "workFlowConfigEdit.do", method = RequestMethod.GET)
-	public String getWorkFlowConfigEditForm(@RequestParam(required = false) WorkFlowConfigInfo workFlowConfig,
+	@RequestMapping(value = "workFlowConfigEdit.html", method = RequestMethod.GET)
+	public String getWorkFlowConfigEditForm(@ModelAttribute("workFlowConfig") WorkFlowConfigInfo workFlowConfig,
 			Model model) {
 		model.addAttribute("workFlowConfig", workFlowConfig);
-		if (workFlowConfig == null) {
-			model.addAttribute("workFlowTypes", SupportedWorkFlowTypeEnum.values());
+		if (!workFlowConfig.isIdPresented()) {
+			model.addAttribute("workFlowTypes", ObjectUuidUtils.getSubclasses(WorkFlowBusinessModel.class));
+			
+			CompanyCriteria criteria = new CompanyCriteria();
+			criteria.setStatus(CompanyStatusEnum.NORMAL);
+			model.addAttribute("companies", companyService.getCollection(criteria));
 		}
-		return "admin/system/workFlowConfigEdit";
-	}
-
-	@ModelAttribute
-	public WorkFlowConfigInfo getExistWorkFlowConfig(
-			@RequestParam(value = "id", required = false) WorkFlowConfigInfo config) {
-		return config != null ? config : null;
+		return "admin/workFlowConfigEdit";
 	}
 
 	/**
 	 * 处理编辑信息
 	 */
-	@RequestMapping(value = "workFlowConfigEdit.do", method = RequestMethod.POST)
+	@RequestMapping(value = "workFlowConfigEdit.html", method = RequestMethod.POST)
 	public String processWorkFlowConfigEditForm(@RequestParam MultipartFile uploadFile,
-			@ModelAttribute("id") WorkFlowConfigInfo workFlowConfig, Model model) throws Exception {
+			@ModelAttribute("workFlowConfig") WorkFlowConfigInfo workFlowConfig, Model model) throws Exception {
 		if (!uploadFile.isEmpty()) {
-			workFlowConfig.setWorkFlowStatus(WorkFlowStatusEnum.NORMAL);
 			workFlowConfigService.deployWorkFlow(workFlowConfig, uploadFile.getOriginalFilename(),
 					uploadFile.getInputStream());
 		}
-		return "redirect:workFlowConfigList.do?workFlowStatus=" + workFlowConfig.getWorkFlowStatus().getValue();
+		return "redirect:workFlowConfigList.html?workFlowStatus=" + workFlowConfig.getWorkFlowStatus().getValue();
 	}
 
 	/**
 	 * 获取工作流程定义图
 	 */
-	@RequestMapping(value = "workFlowConfigList.do", method = RequestMethod.GET, params = "processDefinitionId")
+	@RequestMapping(value = "workFlowConfigList.html", method = RequestMethod.GET, params = "processDefinitionId")
 	public String getProcessDefinitionDiagram(@RequestParam String processDefinitionId, HttpServletResponse response)
 			throws Exception {
 		Optional<InputStream> resourceAsStream = ActivitiHelper.getProcessDefinitionResource(processDefinitionId,
@@ -131,20 +140,20 @@ public class WorkFlowConfigController extends BaseController {
 			}
 			return null;
 		} else {
-			return "redirect:workFlowConfigList.do";
+			return "redirect:workFlowConfigList.html";
 		}
 	}
 
 	/**
 	 * 获取工作流程实例列表
 	 */
-	@RequestMapping(value = "processInstanceList.do", method = RequestMethod.GET, params = "workFlowConfigId")
-	public String getProcessInstanceList(@RequestParam("workFlowConfigId") WorkFlowConfigInfo workFlowConfig,
+	@RequestMapping(value = "processInstanceList.html", method = RequestMethod.GET, params = "workFlowConfigId")
+	public String getProcessInstanceList(@ModelAttribute("workFlowConfig") WorkFlowConfigInfo workFlowConfig,
 			PageDevice pageDevice, Model model) {
 		model.addAttribute("workFlowConfig", workFlowConfig);
 		model.addAttribute("processInstances",
 				workFlowConfigService.getProcessInstances(workFlowConfig.getProcessDefinitionId(), pageDevice));
 		model.addAttribute("pageDevice", pageDevice);
-		return "admin/system/processInstanceList";
+		return "admin/processInstanceList";
 	}
 }
