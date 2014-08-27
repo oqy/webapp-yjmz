@@ -42,4 +42,11 @@ public class ReportInfo extends CompanyBillBaseInfo implements WorkFlowBusinessM
 	public boolean isProcessUnStarted() {
 		return StringUtils.isBlank(processInstanceId);
 	}
+
+	private static final String PROCESS_VARIABLE_NAME = "report";
+
+	@Override
+	public String getBusinessModelProcessVariableName() {
+		return PROCESS_VARIABLE_NAME;
+	}
 }

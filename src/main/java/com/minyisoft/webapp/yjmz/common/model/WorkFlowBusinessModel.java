@@ -7,13 +7,6 @@ import com.minyisoft.webapp.core.model.IModelObject;
  */
 public interface WorkFlowBusinessModel extends IModelObject {
 	/**
-	 * 业务单号
-	 * 
-	 * @return
-	 */
-	// String getBillNumber();
-
-	/**
 	 * 流程实例名称
 	 * 
 	 * @return
@@ -28,11 +21,11 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	String getProcessInstanceId();
 
 	/**
-	 * 获取当前任务节点名称
+	 * 获取业务对象对应的工作流程变量名
 	 * 
 	 * @return
 	 */
-	// String getCurrentTaskName();
+	String getBusinessModelProcessVariableName();
 
 	/**
 	 * 是否尚未启动工作流

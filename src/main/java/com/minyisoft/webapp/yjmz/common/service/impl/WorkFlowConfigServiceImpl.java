@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
@@ -120,17 +121,16 @@ public class WorkFlowConfigServiceImpl extends
 	}
 
 	@Override
-	public Optional<String> startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessKey,
-			Map<String, Object> processVariables) {
+	public Optional<String> startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessModel) {
 		Assert.notNull(owner);
-		Assert.notNull(businessKey);
+		Assert.notNull(businessModel);
 		WorkFlowConfigCriteria criteria = new WorkFlowConfigCriteria();
 		criteria.setWorkFlowStatus(WorkFlowStatusEnum.NORMAL);
 		criteria.setDefineOrg(owner);
-		criteria.setWorkFlowType(businessKey.getClass());
+		criteria.setWorkFlowType(businessModel.getClass());
 		List<WorkFlowConfigInfo> configs = getCollection(criteria);
 
-		StandardEvaluationContext context = new StandardEvaluationContext(businessKey);
+		StandardEvaluationContext context = new StandardEvaluationContext(businessModel);
 		ExpressionParser parser = new SpelExpressionParser();
 		for (WorkFlowConfigInfo config : configs) {
 			if (StringUtils.isNotBlank(config.getProcessDefinitionId())
@@ -138,9 +138,11 @@ public class WorkFlowConfigServiceImpl extends
 							config.getTriggerExpression()).getValue(context, Boolean.class))) {
 				// 启动工作流
 				try {
+					Map<String, Object> processVariables = Maps.newHashMap();
+					processVariables.put(businessModel.getBusinessModelProcessVariableName(), businessModel);
 					identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getId());
 					ProcessInstance instance = runtimeService.startProcessInstanceById(config.getProcessDefinitionId(),
-							businessKey.getId(), processVariables);
+							businessModel.getId(), processVariables);
 					return Optional.of(instance.getId());
 				} finally {
 					identityService.setAuthenticatedUserId(null);

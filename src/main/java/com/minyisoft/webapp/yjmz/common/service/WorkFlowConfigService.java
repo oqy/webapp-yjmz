@@ -2,7 +2,6 @@ package com.minyisoft.webapp.yjmz.common.service;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import org.activiti.engine.history.HistoricProcessInstance;
 
@@ -42,12 +41,10 @@ public interface WorkFlowConfigService extends BaseService<WorkFlowConfigInfo, W
 	 * 启动工作流流程
 	 * 
 	 * @param owner
-	 * @param businessKey
-	 * @param processVariables
+	 * @param businessModel
 	 * @return 若存在匹配流程且成功启动，返回流程id
 	 */
-	Optional<String> startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessKey,
-			Map<String, Object> processVariables);
+	Optional<String> startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessModel);
 
 	/**
 	 * 删除运行中的工作流实例

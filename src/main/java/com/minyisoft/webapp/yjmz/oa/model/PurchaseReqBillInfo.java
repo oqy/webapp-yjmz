@@ -41,4 +41,11 @@ public class PurchaseReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	public boolean isProcessUnStarted() {
 		return StringUtils.isBlank(processInstanceId);
 	}
+
+	private static final String PROCESS_VARIABLE_NAME = "purchaseReqBill";
+
+	@Override
+	public String getBusinessModelProcessVariableName() {
+		return PROCESS_VARIABLE_NAME;
+	}
 }
