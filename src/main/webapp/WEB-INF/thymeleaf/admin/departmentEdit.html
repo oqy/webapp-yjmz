@@ -18,7 +18,7 @@
 <div class="content">
   <div id="pad-wrapper">
     <h3 style="border-bottom:#ccc solid 1px;">编辑部门<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回公司详情</a></h3>
-    <form role="form" class="form-horizontal" th:action="@{'/admin/departmentEdit.html'}" method="post" style="margin-top:20px;">
+    <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/admin/departmentEdit.html'}" method="post" style="margin-top:20px;">
       <div class="form-group">
         <label for="inputEmail3" class="col-md-2 control-label">公司名称：</label>
         <div class="col-md-6">
@@ -28,13 +28,13 @@
       <div class="form-group">
         <label for="name" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;部门名称：</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="name" name="name" placeholder="请输入部门名称" th:value="${department.name}"/>
+          <input type="text" class="form-control required" id="name" name="name" placeholder="请输入部门名称" th:value="${department.name}"/>
         </div>
       </div>
       <div class="form-group">
         <label for="seq" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;部门序号：</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="seq" name="seq" placeholder="请输入部门序号" th:value="${department.seq}"/>
+          <input type="text" class="form-control required" id="seq" name="seq" placeholder="请输入部门序号" th:value="${department.seq}"/>
         </div>
       </div>
       <div class="form-group">
@@ -50,5 +50,15 @@
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:substituteby="component/resource::js"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('#form1').validate({
+		errorPlacement : function(error, element) {
+			element.parents('div.form-group').addClass('has-error');  
+        }
+	});
+});
+</script>
 </body>
 </html>
