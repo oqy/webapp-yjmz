@@ -1,4 +1,4 @@
-package com.minyisoft.webapp.yjmz.common.web.admin;
+package com.minyisoft.webapp.yjmz.common.web.manage;
 
 import java.io.InputStream;
 import java.util.List;
@@ -28,10 +28,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
-import com.minyisoft.webapp.core.web.BaseController;
+import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
+import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.UserFormType;
@@ -40,8 +42,10 @@ import com.minyisoft.webapp.yjmz.common.util.workflow.UserFormType;
  * @author qingyong_ou 工作流任务中心controller
  */
 @Controller
-@RequestMapping("/admin")
-public class WorkFlowTaskController extends BaseController {
+@RequestMapping("/manage")
+public class WorkFlowController extends ManageBaseController {
+	@Autowired
+	private WorkFlowConfigService workFlowConfigService;
 	@Autowired
 	private WorkFlowTaskService workFlowTaskService;
 	@Autowired
@@ -52,30 +56,47 @@ public class WorkFlowTaskController extends BaseController {
 	private UserService userService;
 
 	/**
+	 * 启动工作流
+	 */
+	@RequestMapping(value = "startWorkFlow.html", method = RequestMethod.GET, params = "workFlowModelId")
+	public String startWorkFlow(@ModelAttribute("currentCompany") CompanyInfo currentCompany,
+			@RequestParam(value = "workFlowModelId", required = false) WorkFlowBusinessModel businessModel) {
+		workFlowConfigService.startProcess(currentCompany, businessModel);
+		return "redirect:workFlowDetail.html?workFlowModelId=" + businessModel.getId();
+	}
+
+	@RequestMapping(value = "workFlowDetail.html", method = RequestMethod.GET, params = "workFlowModelId")
+	public String viewWorkFlowDetail(
+			@RequestParam(value = "workFlowModelId", required = false) WorkFlowBusinessModel businessModel, Model model) {
+		model.addAttribute("businessModel", businessModel);
+		return "manage/workFlowDetail";
+	}
+
+	/**
 	 * 获取我参与的主任务列表
 	 */
-	@RequestMapping(value = "myInvolvedProcessInstances.do", method = RequestMethod.GET)
+	@RequestMapping(value = "myInvolvedProcessInstances.html", method = RequestMethod.GET)
 	public String getMyInvolvedProcessInstances(@ModelAttribute("currentUser") UserInfo currentUser, Model model,
 			PageDevice pageDevice) {
 		model.addAttribute("involvedProcessInstances",
 				workFlowTaskService.getInvolvedProcessInstance(currentUser, pageDevice));
 		model.addAttribute("pageDevice", pageDevice);
-		return "admin/common/myInvolvedProcessInstances";
+		return "manage/myInvolvedProcessInstances";
 	}
 
 	/**
 	 * 获取我的待处理任务列表
 	 */
-	@RequestMapping(value = "myTodoTasks.do", method = RequestMethod.GET)
+	@RequestMapping(value = "myTodoTasks.html", method = RequestMethod.GET)
 	public String getMyTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model) {
 		model.addAttribute("todoTasks", workFlowTaskService.getTodoTasks(currentUser));
-		return "admin/common/myTodoTasks";
+		return "manage/myTodoTasks";
 	}
 
 	/**
 	 * 查看待处理任务详细信息
 	 */
-	@RequestMapping(value = "processTodoTask.do", method = RequestMethod.GET, params = "taskId")
+	@RequestMapping(value = "processTodoTask.html", method = RequestMethod.GET, params = "taskId")
 	public String viewTodoTask(@ModelAttribute("currentUser") UserInfo currentUser, @RequestParam String taskId,
 			Model model) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -94,22 +115,22 @@ public class WorkFlowTaskController extends BaseController {
 		}
 		model.addAttribute("formProperties", formProperties);
 		_prepareProcessInstanceDetailData(task.getProcessInstanceId(), model);
-		return "admin/common/myTodoTaskProcess";
+		return "manage/myTodoTaskProcess";
 	}
 
 	/**
 	 * 签收任务
 	 */
-	@RequestMapping(value = "claimTodoTask.do", method = RequestMethod.GET, params = "taskId")
+	@RequestMapping(value = "claimTodoTask.html", method = RequestMethod.GET, params = "taskId")
 	public String claimTodoTask(@ModelAttribute("currentUser") UserInfo currentUser, @RequestParam String taskId) {
 		taskService.claim(taskId, currentUser.getId());
-		return "redirect:myTodoTasks.do";
+		return "redirect:myTodoTasks.html";
 	}
 
 	/**
 	 * 处理任务
 	 */
-	@RequestMapping(value = "processTodoTask.do", method = RequestMethod.POST, params = "taskId")
+	@RequestMapping(value = "processTodoTask.html", method = RequestMethod.POST, params = "taskId")
 	public String processTodoTask(@RequestParam String taskId, HttpServletRequest request,
 			@RequestParam(required = false) String description) throws Exception {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -137,24 +158,24 @@ public class WorkFlowTaskController extends BaseController {
 			variablesLocal.put("处理备注", description);
 		}
 		workFlowTaskService.completeTask(task, variables, variablesLocal);
-		return "redirect:myTodoTasks.do";
+		return "redirect:myTodoTasks.html";
 	}
 
 	/**
 	 * 获取我的已处理任务列表
 	 */
-	@RequestMapping(value = "myDoneTasks.do", method = RequestMethod.GET)
+	@RequestMapping(value = "myDoneTasks.html", method = RequestMethod.GET)
 	public String getMyDoneTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model,
 			PageDevice pageDevice) {
 		model.addAttribute("doneTasks", workFlowTaskService.getDoneTask(currentUser, pageDevice));
 		model.addAttribute("pageDevice", pageDevice);
-		return "admin/common/myDoneTasks";
+		return "manage/myDoneTasks";
 	}
 
 	/**
 	 * 获取流程实例运行图
 	 */
-	@RequestMapping(value = "processInstanceDiagram.do", method = RequestMethod.GET, params = "processInstanceId")
+	@RequestMapping(value = "processInstanceDiagram.html", method = RequestMethod.GET, params = "processInstanceId")
 	public void getProcessInstanceDiagram(@RequestParam String processInstanceId, HttpServletResponse response)
 			throws Exception {
 		Optional<InputStream> imageStream = ActivitiHelper.getProcessInstanceDiagram(processInstanceId);
@@ -170,10 +191,10 @@ public class WorkFlowTaskController extends BaseController {
 	/**
 	 * 获取流程实例详细信息
 	 */
-	@RequestMapping(value = "processInstanceDetail.do", method = RequestMethod.GET, params = "processInstanceId")
+	@RequestMapping(value = "processInstanceDetail.html", method = RequestMethod.GET, params = "processInstanceId")
 	public String getProcessInstanceDetail(@RequestParam String processInstanceId, Model model) {
 		_prepareProcessInstanceDetailData(processInstanceId, model);
-		return "admin/common/processInstanceDetail";
+		return "manage/processInstanceDetail";
 	}
 
 	/**

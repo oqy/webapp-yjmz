@@ -22,11 +22,13 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
+import com.minyisoft.webapp.core.service.utils.ServiceUtils;
+import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.WorkFlowConfigCriteria;
@@ -76,7 +78,7 @@ public class WorkFlowConfigServiceImpl extends
 	public void deployWorkFlow(WorkFlowConfigInfo config, String processDefinitionFileName,
 			InputStream processDefinitionFile) {
 		DeploymentBuilder deploymentBuilder = repositoryService.createDeployment()
-				.category(config.getDefineOrg().getId()).enableDuplicateFiltering().name("Tex100SystemDeployment");
+				.category(config.getDefineOrg().getId()).enableDuplicateFiltering().name("minyisoftWorkFlowDeployment");
 		deploymentBuilder.addInputStream(processDefinitionFileName, processDefinitionFile);
 		Deployment deploy = deploymentBuilder.deploy();
 		ProcessDefinition pd = repositoryService.createProcessDefinitionQuery().deploymentId(deploy.getId())
@@ -121,9 +123,11 @@ public class WorkFlowConfigServiceImpl extends
 	}
 
 	@Override
-	public Optional<String> startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessModel) {
-		Assert.notNull(owner);
-		Assert.notNull(businessModel);
+	public void startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessModel) {
+		Assert.notNull(owner, "未指定工作流程定义所属组织");
+		Assert.notNull(businessModel, "不存在指定的待启动工作流业务对象");
+		Assert.isTrue(businessModel.isProcessUnStarted(), "指定业务对象已启动工作流，无需重复启动");
+		
 		WorkFlowConfigCriteria criteria = new WorkFlowConfigCriteria();
 		criteria.setWorkFlowStatus(WorkFlowStatusEnum.NORMAL);
 		criteria.setDefineOrg(owner);
@@ -143,13 +147,18 @@ public class WorkFlowConfigServiceImpl extends
 					identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getId());
 					ProcessInstance instance = runtimeService.startProcessInstanceById(config.getProcessDefinitionId(),
 							businessModel.getId(), processVariables);
-					return Optional.of(instance.getId());
+
+					// 保存工作流程实例id
+					businessModel.setProcessInstanceId(instance.getId());
+					ServiceUtils.getService(businessModel.getClass()).save(businessModel);
+					return;
 				} finally {
 					identityService.setAuthenticatedUserId(null);
 				}
 			}
 		}
-		return Optional.absent();
+		throw new ServiceException(owner.getName() + "并没有为指定的"
+				+ ObjectUuidUtils.getClassLabel(businessModel.getClass()) + "设置满足启动条件的工作流程");
 	}
 
 	@Override

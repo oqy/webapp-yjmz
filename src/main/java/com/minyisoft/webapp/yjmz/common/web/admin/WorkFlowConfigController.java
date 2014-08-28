@@ -41,7 +41,7 @@ public class WorkFlowConfigController extends BaseController {
 	private WorkFlowConfigService workFlowConfigService;
 	@Autowired
 	private CompanyService companyService;
-
+	
 	/**
 	 * 获取工作流流程定义配置信息
 	 */

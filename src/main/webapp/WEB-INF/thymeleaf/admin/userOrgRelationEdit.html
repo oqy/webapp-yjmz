@@ -17,8 +17,8 @@
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
-    <h3 style="border-bottom:#ccc solid 1px;">编辑用户<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回公司详情</a></h3>
-    <form role="form" class="form-horizontal" th:action="@{'/admin/userOrgRelationEdit.html'}" method="post" style="margin-top:20px;">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑用户<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}"><span class="icon-share-alt"></span>&nbsp;返回公司详情</a></h3>
+    <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/admin/userOrgRelationEdit.html'}" method="post" style="margin-top:20px;">
       <div class="form-group">
         <label for="inputEmail3" class="col-md-2 control-label">公司名称：</label>
         <div class="col-md-4">
@@ -53,9 +53,11 @@
       <div class="addNewUser form-group" th:if="${userOrgRelation.user==null}">
         <label for="userName" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;用户姓名：</label>
         <div class="col-md-4">
-          <input type="text" class="form-control" id="userName" name="user.name" placeholder="请输入员工姓名"/>
+          <input type="text" class="form-control required" id="userName" name="user.name" placeholder="请输入员工姓名"/>
         </div>
-        <label for="userName" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;性别：</label>
+      </div>
+      <div class="addNewUser form-group" th:if="${userOrgRelation.user==null}">
+        <label for="userMale" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;性别：</label>
         <div class="col-md-4">
           <select id="userMale" name="user.userMale" class="form-control">
             <option th:each="userMale : ${userMales}" th:value="${userMale.value}" th:text="${userMale.description}"></option>
@@ -65,7 +67,7 @@
       <div class="addNewUser form-group" th:if="${userOrgRelation.user==null}">
         <label for="userCellPhoneNumber" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;联系手机：</label>
         <div class="col-md-4">
-          <input type="text" class="form-control" id="userCellPhoneNumber" name="user.cellPhoneNumber" placeholder="请输入员工联系手机" />
+          <input type="text" class="form-control required" id="userCellPhoneNumber" name="user.cellPhoneNumber" placeholder="请输入员工联系手机" />
           <br/>注：联系电话即为该用户系统初始登录名及登录密码
         </div>
       </div>
@@ -73,7 +75,7 @@
         <label for="existsUser" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;选择用户：</label>
         <div class="col-md-4">
           <select id="existsUser" name="existsUser" class="form-control">
-            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}" th:selected="${userOrgRelation.user!=null} and ${userOrgRelation.user.equals(user)}" disabled="disabled"></option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}" th:selected="${userOrgRelation.user!=null} and ${userOrgRelation.user.equals(user)}"></option>
           </select>
         </div>
       </div>
@@ -82,6 +84,8 @@
         <div class="col-md-4">
           <input type="text" class="form-control" id="jobNumber" name="jobNumber" placeholder="请输入员工工号" th:value="${userOrgRelation.jobNumber}"/>
         </div>
+      </div>
+      <div class="form-group">
         <label for="title" class="col-md-2 control-label">职衔：</label>
         <div class="col-md-4">
           <input type="text" class="form-control" id="title" name="title" placeholder="请输入员工职衔" th:value="${userOrgRelation.title}"/>
@@ -117,6 +121,7 @@
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:substituteby="component/resource::js"></script>
+<script type="text/javascript" th:include="component/resource::formValidateJs" th:with="formId=form1" th:remove="tag"></script>
 <script type="text/javascript">
 jQuery(document).ready(function() {
 	jQuery('input[name="userSelectType"]').click(function(){
@@ -124,8 +129,8 @@ jQuery(document).ready(function() {
 			jQuery('.selectExistsUser').hide().find('input,select').attr('disabled',true);
 			jQuery('.addNewUser').show().find('input,select').attr('disabled',false);
 		}else{
-			jQuery('.selectExistsUser').show().find('input,select').attr('disabled',false);;
-			jQuery('.addNewUser').hide().find('input,select').attr('disabled',true);;
+			jQuery('.selectExistsUser').show().find('input,select').attr('disabled',false);
+			jQuery('.addNewUser').hide().find('input,select').attr('disabled',true);
 		}
 	});
 });

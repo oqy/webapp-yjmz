@@ -17,12 +17,12 @@
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
-    <h3 style="border-bottom:#ccc solid 1px;">编辑公司<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyList.html'}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回公司列表</a></h3>
-    <form role="form" class="form-horizontal" th:action="@{'/admin/companyEdit.html'}" method="post" style="margin-top:20px;">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑公司<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/companyList.html'}"><span class="icon-share-alt"></span>&nbsp;返回公司列表</a></h3>
+    <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/admin/companyEdit.html'}" method="post" style="margin-top:20px;">
       <div class="form-group">
         <label for="name" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;公司名称：</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="name" name="name" placeholder="请输入公司名称" th:value="${company.name}"/>
+          <input type="text" class="form-control required" id="name" name="name" placeholder="请输入公司名称" th:value="${company.name}"/>
         </div>
       </div>
       <div class="form-group">
@@ -51,5 +51,6 @@
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:substituteby="component/resource::js"></script>
+<script type="text/javascript" th:include="component/resource::formValidateJs" th:with="formId=form1" th:remove="tag"></script>
 </body>
 </html>

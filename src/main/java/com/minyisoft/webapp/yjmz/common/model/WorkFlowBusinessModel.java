@@ -21,6 +21,13 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	String getProcessInstanceId();
 
 	/**
+	 * 设置对应流程实例ID
+	 * 
+	 * @return
+	 */
+	void setProcessInstanceId(String processInstanceId);
+
+	/**
 	 * 获取业务对象对应的工作流程变量名
 	 * 
 	 * @return

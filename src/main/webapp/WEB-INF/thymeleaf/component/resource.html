@@ -9,11 +9,33 @@
 <link rel="stylesheet" type="text/css" href="css/compiled/elements.css" th:href="@{'/resource/css/compiled/elements.css'}"/>
 <link rel="stylesheet" type="text/css" href="css/compiled/icons.css" th:href="@{'/resource/css/compiled/icons.css'}"/>
 <!-- libraries -->
-<link rel="stylesheet" type="text/css" href="css/lib/font-awesome.css" th:href="@{'/resource/css/lib/font-awesome.css'}"/>
+<link href="http://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet"/>
 </head>
 <body th:fragment="js" th:remove="tag">
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="js/theme.js" th:src="@{'/resource/js/theme.js'}"></script>
+</body>
+<body th:fragment="formValidateJs" th:remove="tag">
+<script src="http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js"></script>
+<script src="js/validate-message-cn.js" th:src="@{'/resource/js/validate-message-cn.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+var formId=/*[[${formId}]]*/null;
+jQuery(document).ready(function() {
+	jQuery('#'+formId).validate({
+		errorElement : 'span',  
+        errorClass : 'help-block',
+		highlight: function(element) {
+    		jQuery(element).closest('.form-group').addClass('has-error');
+  		},
+  		success: function(element) {
+    		element.closest('.form-group').removeClass('has-error');
+  		},
+  		errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        }
+	});
+});
+</script>
 </body>
 </html>

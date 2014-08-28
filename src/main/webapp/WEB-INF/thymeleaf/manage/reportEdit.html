@@ -11,35 +11,35 @@
 <div th:substituteby="component/layout::header"></div>
 <!-- end navbar -->
 <!-- sidebar -->
-<div th:substituteby="component/layout::adminSidebar"></div>
+<div th:substituteby="component/layout::sidebar"></div>
 <!-- end sidebar -->
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
-    <h3 style="border-bottom:#ccc solid 1px;">编辑工作报告<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/reportList.html'}"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;返回工作报告列表</a></h3>
-    <form role="form" class="form-horizontal" th:action="@{'/manage/reportEdit.html'}" method="post" style="margin-top:20px;">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑工作报告<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/reportList.html'}"><span class="icon-share-alt"></span>&nbsp;返回工作报告列表</a></h3>
+    <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/reportEdit.html'}" method="post" style="margin-top:20px;">
       <div class="form-group">
         <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;档案编号：</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="fileNumber" name="fileNumber" placeholder="请输入档案编号" th:value="${report.fileNumber}"/>
+          <input type="text" class="form-control required" id="fileNumber" name="fileNumber" placeholder="请输入档案编号" th:value="${report.fileNumber}"/>
         </div>
       </div>
       <div class="form-group">
         <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;文件编号：</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="billNumber" name="billNumber" placeholder="请输入文件编号" th:value="${report.billNumber}"/>
+          <input type="text" class="form-control required" id="billNumber" name="billNumber" placeholder="请输入文件编号" th:value="${report.billNumber}"/>
         </div>
       </div>
       <div class="form-group">
         <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;报告标题：</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="reportTitle" name="reportTitle" placeholder="请输入报告标题" th:value="${report.reportTitle}"/>
+          <input type="text" class="form-control required" id="reportTitle" name="reportTitle" placeholder="请输入报告标题" th:value="${report.reportTitle}"/>
         </div>
       </div>
       <div class="form-group">
         <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;报告内容：</label>
         <div class="col-md-6">
-          <textarea class="form-control" rows="3" id="description" name="description" placeholder="请输入报告内容" th:text="${report.description}">
+          <textarea class="form-control required" rows="3" id="description" name="description" placeholder="请输入报告内容" th:text="${report.description}">
           </textarea>
         </div>
       </div>
@@ -55,5 +55,6 @@
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:substituteby="component/resource::js"></script>
+<script type="text/javascript" th:include="component/resource::formValidateJs" th:with="formId=form1" th:remove="tag"></script>
 </body>
 </html>

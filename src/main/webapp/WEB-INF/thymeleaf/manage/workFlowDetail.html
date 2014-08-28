@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:with="classLabel=${businessModel.classLabel}">
+<head>
+<title th:text="${classLabel}+'详情-在线OA系统'">编辑工作报告-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3><span th:text="${classLabel}" th:remove="tag"></span>详情
+      <button class="btn btn-success btn-sm pull-right" onclick="window.history.back()"><span class="icon-share-alt"></span>&nbsp;返回</button>
+    </h3>
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="active"><a href="#businessModelDetail" role="tab" data-toggle="tab" th:text="${classLabel}">部门列表</a></li>
+      <li><a href="#workFlowDetail" role="tab" data-toggle="tab">任务流程</a></li>
+    </ul>
+    <div class="tab-content mt10">
+      <div class="tab-pane active" id="businessModelDetail"> </div>
+      <div class="tab-pane" id="workFlowDetail">
+        <div class="alert alert-warning" style="font-size:14px;" role="alert" th:if="${businessModel.processUnStarted}">当前<span th:text="${classLabel}"></span>尚未进入工作流程，暂无相关可供查阅的流程信息</div>
+        <img alt="" class="img-responsive" th:if="${!businessModel.processUnStarted}" th:src="@{'/manage/processInstanceDiagram.html?processInstanceId='+${businessModel.processInstanceId}}"/> </div>
+    </div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:substituteby="component/resource::js"></script>
+</body>
+</html>
