@@ -17,7 +17,6 @@ import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.util.Assert;
 
 import com.google.common.base.Optional;
@@ -127,9 +126,14 @@ public final class ActivitiHelper {
 						.getDeployedProcessDefinition(processDefinitionId));
 
 		Context.setProcessEngineConfiguration(((ProcessEngineImpl) processEngine).getProcessEngineConfiguration());
-		return new DefaultProcessDiagramGenerator().generateDiagram(
-				processEngine.getRepositoryService().getBpmnModel(processDefinitionId), "png", highLightedActivities,
-				highLightedFlows);
+		return processEngine
+				.getProcessEngineConfiguration()
+				.getProcessDiagramGenerator()
+				.generateDiagram(processEngine.getRepositoryService().getBpmnModel(processDefinitionId), "png",
+						highLightedActivities, highLightedFlows,
+						processEngine.getProcessEngineConfiguration().getActivityFontName(),
+						processEngine.getProcessEngineConfiguration().getLabelFontName(),
+						processEngine.getProcessEngineConfiguration().getClassLoader(), 1.0);
 	}
 
 	private static List<String> getHighLightedFlows(List<String> highLightedActivities,

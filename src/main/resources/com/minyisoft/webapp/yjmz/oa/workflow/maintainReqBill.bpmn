@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="myProcess" name="My process" isExecutable="true">
-    <startEvent id="startevent1" name="Start"></startEvent>
-    <userTask id="usertask1" name="工程部接任务后开始维修"></userTask>
+  <process id="maintainProcess" name="工程维修单流程" isExecutable="true">
+    <startEvent id="startevent1" name="Start" activiti:initiator="applyUserId"></startEvent>
+    <userTask id="usertask1" name="工程部接任务后开始维修" activiti:assignee="13630150260"></userTask>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
-    <userTask id="usertask2" name="工程部维修完毕，申请验收"></userTask>
+    <userTask id="usertask2" name="工程部维修完毕，申请验收" activiti:assignee="13630150260"></userTask>
     <sequenceFlow id="flow2" sourceRef="usertask1" targetRef="usertask2"></sequenceFlow>
-    <userTask id="usertask3" name="申请部门验收"></userTask>
+    <userTask id="usertask3" name="申请部门验收" activiti:assignee="13630150260">
+      <extensionElements>
+        <activiti:formProperty id="examPass" name="验收通过" type="boolean"></activiti:formProperty>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow3" sourceRef="usertask2" targetRef="usertask3"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow4" sourceRef="usertask3" targetRef="exclusivegateway1"></sequenceFlow>
-    <userTask id="usertask4" name="工程部重新安排维修工作"></userTask>
-    <sequenceFlow id="flow6" name="验收不通过" sourceRef="exclusivegateway1" targetRef="usertask4"></sequenceFlow>
+    <userTask id="usertask4" name="工程部重新安排维修工作" activiti:assignee="13630150260"></userTask>
+    <sequenceFlow id="flow6" name="验收不通过" sourceRef="exclusivegateway1" targetRef="usertask4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!examPass}]]></conditionExpression>
+    </sequenceFlow>
     <sequenceFlow id="flow7" sourceRef="usertask4" targetRef="usertask2"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
-    <sequenceFlow id="flow8" name="验收通过" sourceRef="exclusivegateway1" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow8" name="验收通过" sourceRef="exclusivegateway1" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${examPass}]]></conditionExpression>
+    </sequenceFlow>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_myProcess">
-    <bpmndi:BPMNPlane bpmnElement="myProcess" id="BPMNPlane_myProcess">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_maintainProcess">
+    <bpmndi:BPMNPlane bpmnElement="maintainProcess" id="BPMNPlane_maintainProcess">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="190.0" y="180.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>

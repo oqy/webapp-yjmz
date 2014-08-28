@@ -114,6 +114,7 @@
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) m left join t_oa_maintainreqentry e on m.fid = e.freqbillid
+	order by m.fcreatedate desc, m.fid
   </select>
   
   <!-- 通用记录插入操作 --> 

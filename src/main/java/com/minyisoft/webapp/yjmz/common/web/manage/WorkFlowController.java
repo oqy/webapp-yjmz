@@ -37,6 +37,8 @@ import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.UserFormType;
+import com.minyisoft.webapp.yjmz.oa.model.MaintainReqBillInfo;
+import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 
 /**
  * @author qingyong_ou 工作流任务中心controller
@@ -65,10 +67,16 @@ public class WorkFlowController extends ManageBaseController {
 		return "redirect:workFlowDetail.html?workFlowModelId=" + businessModel.getId();
 	}
 
+	/**
+	 * 查看单据详情
+	 */
 	@RequestMapping(value = "workFlowDetail.html", method = RequestMethod.GET, params = "workFlowModelId")
 	public String viewWorkFlowDetail(
 			@RequestParam(value = "workFlowModelId", required = false) WorkFlowBusinessModel businessModel, Model model) {
 		model.addAttribute("businessModel", businessModel);
+		if (businessModel instanceof MaintainReqBillInfo) {
+			model.addAttribute("maintainTypes", MaintainTypeEnum.values());
+		}
 		return "manage/workFlowDetail";
 	}
 

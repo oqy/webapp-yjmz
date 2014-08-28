@@ -46,7 +46,7 @@
                   </tr>
                 </tbody>
               </table></td>
-            <td><a th:if="${editable}" th:href="@{'/manage/purchaseReqBillEdit.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/purchaseReqBillDetail.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a onclick="return window.confirm('确定删除所选采购单?')" th:if="${editable}" th:href="@{'/manage/purchaseReqBillDelete.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+            <td><a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/purchaseReqBillEdit.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a onclick="return window.confirm('确定删除所选采购单?')" th:if="${editable}" th:href="@{'/manage/purchaseReqBillDelete.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
           </tr>
         </tbody>
         <tbody th:if="${#lists.isEmpty(purchaseReqBills)}">

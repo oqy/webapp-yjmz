@@ -96,6 +96,7 @@
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
+	order by p.fcreatedate desc, p.fid
   </select>
   
   <!-- 通用记录插入操作 --> 
