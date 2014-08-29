@@ -6,8 +6,6 @@
 <link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-overrides.css" th:href="@{'/resource/css/bootstrap/bootstrap-overrides.css'}"/>
 <!-- global styles -->
 <link rel="stylesheet" type="text/css" href="css/compiled/layout.css" th:href="@{'/resource/css/compiled/layout.css'}"/>
-<link rel="stylesheet" type="text/css" href="css/compiled/elements.css" th:href="@{'/resource/css/compiled/elements.css'}"/>
-<link rel="stylesheet" type="text/css" href="css/compiled/icons.css" th:href="@{'/resource/css/compiled/icons.css'}"/>
 <!-- libraries -->
 <link href="http://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet"/>
 </head>
@@ -15,6 +13,16 @@
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="js/theme.js" th:src="@{'/resource/js/theme.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+var selected_menu_id=/*[[${menu}]]*/null;
+jQuery(document).ready(function() {
+	if(selected_menu_id!=null){
+		jQuery('#sidebar-nav #'+selected_menu_id).addClass('active').append('<div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>');
+	} else {
+		jQuery('#sidebar-nav li:first').addClass('active').append('<div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>');
+	}
+});
+</script>
 </body>
 <body th:fragment="formValidateJs" th:remove="tag">
 <script src="http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js"></script>

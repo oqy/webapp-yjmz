@@ -21,6 +21,8 @@ import org.springframework.util.Assert;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 
 /**
  * @author qingyong_ou Activiti工具类
@@ -157,11 +159,12 @@ public final class ActivitiHelper {
 	 * @param task
 	 * @return
 	 */
-	public static String getBusinessKey(Task task) {
+	public static WorkFlowBusinessModel getBusinessModel(Task task) {
 		Assert.notNull(task);
 		ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery()
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
-		return processInstance != null ? processInstance.getBusinessKey() : null;
+		return processInstance != null ? (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
+				.getBusinessKey()) : null;
 	}
 
 	/**
@@ -170,11 +173,12 @@ public final class ActivitiHelper {
 	 * @param task
 	 * @return
 	 */
-	public static String getBusinessKey(HistoricTaskInstance task) {
+	public static WorkFlowBusinessModel getBusinessModel(HistoricTaskInstance task) {
 		Assert.notNull(task);
 		HistoricProcessInstance processInstance = processEngine.getHistoryService()
 				.createHistoricProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
-		return processInstance != null ? processInstance.getBusinessKey() : null;
+		return processInstance != null ? (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
+				.getBusinessKey()) : null;
 	}
 
 	/**

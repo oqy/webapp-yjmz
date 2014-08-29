@@ -25,7 +25,7 @@
     </ul>
     <div class="tab-content mt10">
       <div class="tab-pane active" id="department">
-        <table class="table table-hover">
+        <table class="table table-hover table-striped">
           <thead style="border-top:none;">
             <tr>
               <th>序号</th>
@@ -48,7 +48,7 @@
         </table>
         <a th:if="${company.status.value eq 0}" role="button" class="btn btn-default pull-right" th:href="@{'/admin/departmentEdit.html?companyId='+${company.id}}">新增部门</a> </div>
       <div class="tab-pane" id="role"> 
-      	<table class="table table-hover">
+      	<table class="table table-hover table-striped">
           <thead style="border-top:none;">
             <tr>
               <th>序号</th>
@@ -73,7 +73,7 @@
         </table>
       	<a th:if="${company.status.value eq 0}" role="button" class="btn btn-default pull-right" th:href="@{'/admin/roleEdit.html?companyId='+${company.id}}">新增角色</a> </div>
       <div class="tab-pane table-responsive" id="user">
-        <table class="table table-hover">
+        <table class="table table-hover table-striped">
           <thead style="border-top:none;">
             <tr>
               <th>序号</th>
@@ -111,6 +111,6 @@
   </div>
 </div>
 <!-- end main container -->
-<script type="text/javascript" th:substituteby="component/resource::js"></script>
+<script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_company'" th:remove="tag"></script>
 </body>
 </html>

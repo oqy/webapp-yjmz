@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>已处理任务-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3>任务中心</h3>
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="active"><a th:href="@{'/manage/myTodoTasks.html'}">待处理任务</a></li>
+      <li><a th:href="@{'/manage/myDoneTasks.html'}">已处理任务</a></li>
+    </ul>
+    <table class="table table-hover table-striped mt10">
+      <tr>
+        <th>序号</th>
+        <th>流程名称</th>
+        <th>节点名称</th>
+        <th>开始时间</th>
+        <th>备注</th>
+      </tr>
+      <tr th:each="task : ${todoTasks}" th:with="businessModel=${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).getBusinessModel(task)}">
+        <td th:text="${taskStat.count}"></td>
+        <td th:text="${businessModel.processInstanceName}"></td>
+        <td th:text="${task.name}"></td>
+        <td th:text="${#dates.format(task.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-primary btn-sm" role="button">处理任务</a></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_workflow_center'" th:remove="tag"></script>
+</body>
+</html>

@@ -14,7 +14,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		if (!SecurityUtils.isCurrentUserAdministrator()) {
-			response.sendRedirect(request.getContextPath() + "/welcome.html");
+			response.sendRedirect(request.getContextPath() + "/manage/welcome.html");
 			return false;
 		}
 		return true;

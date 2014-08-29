@@ -18,7 +18,7 @@
   <div id="pad-wrapper">
     <h3>编辑采购单<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/purchaseReqBillList.html'}"><span class="icon-share-alt"></span>&nbsp;返回采购单列表</a></h3>
     <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/purchaseReqBillEdit.html'}" method="post">
-      <table class="table table-hover">
+      <table class="table table-hover table-striped">
         <thead>
           <tr>
             <th>品名</th>
@@ -66,6 +66,6 @@
 <script type="text/javascript" th:inline="javascript">
 var entryIndex=/*[[${#lists.isEmpty(purchaseReqBill.entry)}?0:${purchaseReqBill.entry.size()}]]*/;
 </script>
-<script src="js/theme.js" th:src="@{'/resource/js/manage/purchaseReqBillEdit.js'}"></script>
+<script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_purchaseReqBill'" th:remove="tag"></script>
 </body>
 </html>

@@ -5,8 +5,6 @@ import java.util.Map;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.task.Task;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.google.common.collect.Lists;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
@@ -22,31 +19,31 @@ import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 
 @Service("workFlowTaskService")
 public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
-	@Autowired(required = false)
+	@Autowired
 	private TaskService taskService;
-	@Autowired(required = false)
+	@Autowired
 	private HistoryService historyService;
+
+	@Override
+	public long countTodoTasks(UserInfo user) {
+		Assert.notNull(user, "没有指定待查询的用户信息");
+		// 根据当前人的ID查询
+		return taskService.createTaskQuery().taskCandidateOrAssigned(user.getCellPhoneNumber()).active().count();
+	}
 
 	@Override
 	public List<Task> getTodoTasks(UserInfo user) {
 		Assert.notNull(user, "没有指定待查询的用户信息");
-		List<Task> tasks = Lists.newArrayList();
-
 		// 根据当前人的ID查询
-		tasks.addAll(taskService.createTaskQuery().taskAssignee(user.getId()).active().orderByTaskId().desc()
-				.orderByTaskCreateTime().desc().list());
-
-		// 根据当前人未签收的任务
-		tasks.addAll(taskService.createTaskQuery().taskCandidateUser(user.getId()).active().orderByTaskId().desc()
-				.orderByTaskCreateTime().desc().list());
-		return tasks;
+		return taskService.createTaskQuery().taskCandidateOrAssigned(user.getCellPhoneNumber()).active()
+				.orderByTaskCreateTime().desc().orderByTaskId().desc().list();
 	}
 
 	@Override
 	public List<HistoricTaskInstance> getDoneTask(UserInfo user, PageDevice pageDevice) {
 		Assert.notNull(user, "没有指定待查询的用户信息");
-		HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery().taskAssignee(user.getId())
-				.finished();
+		HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery()
+				.taskAssignee(user.getCellPhoneNumber()).finished();
 		if (pageDevice != null) {
 			pageDevice.setTotalRecords((int) query.count());
 			return query.includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().desc()
@@ -63,24 +60,9 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 		HistoricTaskInstance historicTask = historyService.createHistoricTaskInstanceQuery().taskId(task.getId())
 				.singleResult();
 		if (historicTask == null || historicTask.getClaimTime() == null) {
-			taskService.claim(task.getId(), SecurityUtils.getCurrentUser().getId());
+			taskService.claim(task.getId(), SecurityUtils.getCurrentUser().getCellPhoneNumber());
 		}
 		taskService.setVariablesLocal(task.getId(), variablesLocal);
 		taskService.complete(task.getId(), variables);
 	}
-
-	@Override
-	public List<HistoricProcessInstance> getInvolvedProcessInstance(UserInfo user, PageDevice pageDevice) {
-		Assert.notNull(user, "没有指定待查询的用户信息");
-		HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery().involvedUser(
-				user.getId());
-		if (pageDevice != null) {
-			pageDevice.setTotalRecords((int) query.count());
-			return query.orderByProcessInstanceStartTime().desc()
-					.listPage(pageDevice.getStartRowNumberOfCurrentPage() - 1, pageDevice.getRecordsPerPage());
-		} else {
-			return query.orderByProcessInstanceStartTime().desc().list();
-		}
-	}
-
 }
