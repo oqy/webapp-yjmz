@@ -29,8 +29,9 @@ jQuery(document).ready(function() {
 <script src="js/validate-message-cn.js" th:src="@{'/resource/js/validate-message-cn.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
 var formId=/*[[${formId}]]*/null;
+var extendOption=/*[[${extendOption}]]*/null;
 jQuery(document).ready(function() {
-	jQuery('#'+formId).validate({
+	jQuery('#'+formId).validate(jQuery.extend({
 		errorElement : 'span',  
         errorClass : 'help-block',
 		highlight: function(element) {
@@ -42,7 +43,7 @@ jQuery(document).ready(function() {
   		errorPlacement : function(error, element) {  
             element.parent('div').append(error);  
         }
-	});
+	},extendOption!=null?eval('('+extendOption+')'):null));
 });
 </script>
 </body>
