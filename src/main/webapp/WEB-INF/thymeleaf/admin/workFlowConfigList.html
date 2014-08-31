@@ -4,8 +4,7 @@
 <title>工作流程列表-在线OA系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css">
-</style>
+<style type="text/css" th:substituteby="component/resource::css"></style>
 </head>
 <body>
 <!-- navbar -->
@@ -39,7 +38,8 @@
             <td th:text="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassLabel(workFlowConfig.workFlowType)}"></td>
             <td th:text="${#strings.isEmpty(workFlowConfig.triggerExpression)}?'-':${workFlowConfig.triggerExpression}"></td>
             <td th:text="${workFlowConfig.description}"></td>
-            <td><a th:href="@{'/admin/workFlowConfigEdit.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">编辑</a> <a onclick="return window.confirm('确定挂起指定工作流程定义?')" th:if="${workFlowConfig.workFlowStatus.value==0}" th:href="@{'/admin/workFlowConfigSuspend.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">挂起</a> <a th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigActive.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">激活</a> <a onclick="return window.confirm('确定删除指定工作流程定义?')" th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigDelete.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">删除</a></td>
+            <td><a th:href="@{'/admin/workFlowConfigEdit.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">编辑</a> <a onclick="return window.confirm('确定挂起指定工作流程定义?')" th:if="${workFlowConfig.workFlowStatus.value==0}" th:href="@{'/admin/workFlowConfigSuspend.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-warning btn-sm" role="button">挂起</a> <a th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigActive.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-success btn-sm" role="button">激活</a> <a onclick="return window.confirm('确定删除指定工作流程定义?')" th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigDelete.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-danger btn-sm" role="button">删除</a>
+              <button class="workflow-config-diagram btn btn-default btn-sm" th:attr="data-config-id=${workFlowConfig.processDefinitionId},data-config-title=${workFlowConfig.name}">流程定义</button></td>
           </tr>
         </tbody>
         <tbody th:if="${#lists.isEmpty(workFlowConfigs)}">
@@ -52,7 +52,21 @@
     <div th:if="${!#lists.isEmpty(workFlowConfigs)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='workFlowConfigList.html'"></div>
   </div>
 </div>
+<!-- 流程图模态框 begin -->
+<div class="modal fade" id="diagramModal" tabindex="-1" role="dialog" aria-labelledby="diagramModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="diagramModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body"> ... </div>
+    </div>
+  </div>
+</div>
+<!-- 流程图模态框 end -->
 <!-- end main container -->
 <script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_workflow_config'" th:remove="tag"></script>
+<script type="text/javascript" th:src="@{'/resource/js/admin/workFlowConfigList.js'}"></script>
 </body>
 </html>

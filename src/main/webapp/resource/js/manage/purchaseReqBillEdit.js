@@ -7,7 +7,9 @@ jQuery(document).ready(function() {
 	});
 	
 	jQuery('tbody').on("click",'a.rm-entry', function() {
-  		jQuery(this).parent().parent().remove();
+		if(jQuery('tbody tr').length()>1){
+  			jQuery(this).parent().parent().remove();
+  		}
 		return false;
 	});
 });

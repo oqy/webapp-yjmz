@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="reportProcess" name="工作报告审批流程" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="applyUserId"></startEvent>
     <userTask id="usertask1" name="总经理审批" activiti:assignee="13630150260">
@@ -16,7 +16,7 @@
     </sequenceFlow>
     <userTask id="usertask3" name="财务总监签名" activiti:assignee="13630150260"></userTask>
     <endEvent id="endevent1" name="End"></endEvent>
-    <userTask id="usertask4" name="报告提交人修改报告"></userTask>
+    <userTask id="usertask4" name="报告提交人修改报告" activiti:assignee="${applyUserId}" activiti:formKey="reportModify"></userTask>
     <sequenceFlow id="flow7" name="总经理审批不通过" sourceRef="exclusivegateway1" targetRef="usertask4">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!auditPass}]]></conditionExpression>
     </sequenceFlow>
@@ -59,7 +59,7 @@
         <omgdi:waypoint x="440.0" y="198.0"></omgdi:waypoint>
         <omgdi:waypoint x="539.0" y="198.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="439.0" y="205.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="84.0" x="439.0" y="205.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
@@ -67,7 +67,7 @@
         <omgdi:waypoint x="420.0" y="327.0"></omgdi:waypoint>
         <omgdi:waypoint x="420.0" y="340.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="42.0" width="100.0" x="440.0" y="299.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="96.0" x="440.0" y="299.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">

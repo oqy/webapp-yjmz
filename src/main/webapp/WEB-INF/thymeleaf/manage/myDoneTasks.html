@@ -34,7 +34,7 @@
         <th>操作</th>
       </tr>
       <tr th:each="task : ${doneTasks}" th:with="businessModel=${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).getBusinessModel(task)}">
-        <td th:text="${taskStat.count + (pageDevice.totalPages - 1) * pageDevice.recordsPerPage}"></td>
+        <td th:text="${taskStat.count + (pageDevice.currentPage - 1) * pageDevice.recordsPerPage}"></td>
         <td th:text="${businessModel.processInstanceName}"></td>
         <td th:text="${task.name}"></td>
         <td th:text="${#dates.format(task.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
@@ -44,7 +44,7 @@
         <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-primary btn-sm" role="button">详情</a></td>
       </tr>
     </table>
-    <div th:if="${!#lists.isEmpty(doneTasks)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${pageDevice},url='myDoneTasks.html'"></div>
+    <div th:if="${!#lists.isEmpty(doneTasks)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${pageDevice},url='myDoneTasks.html',pageNumberVariableName='currentPage'"></div>
   </div>
 </div>
 <!-- end main container -->

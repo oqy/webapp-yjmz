@@ -8,6 +8,7 @@ import org.activiti.engine.task.Task;
 
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 
 public interface WorkFlowTaskService {
 	/**
@@ -45,4 +46,12 @@ public interface WorkFlowTaskService {
 	 *            任务本地变量
 	 */
 	void completeTask(Task task, Map<String, Object> variables, Map<String, Object> variablesLocal);
+	
+	/**
+	 * 完成任务并更新业务对象
+	 * 
+	 * @param task
+	 * @param businessModel
+	 */
+	void completeTask(Task task, WorkFlowBusinessModel businessModel);
 }

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
+import com.minyisoft.webapp.core.service.utils.ServiceUtils;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 
@@ -64,5 +66,22 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 		}
 		taskService.setVariablesLocal(task.getId(), variablesLocal);
 		taskService.complete(task.getId(), variables);
+	}
+
+	@Override
+	public void completeTask(Task task, WorkFlowBusinessModel businessModel) {
+		Assert.notNull(task);
+		// 若任务未签收，先进行任务签收操作
+		HistoricTaskInstance historicTask = historyService.createHistoricTaskInstanceQuery().taskId(task.getId())
+				.singleResult();
+		if (historicTask == null || historicTask.getClaimTime() == null) {
+			taskService.claim(task.getId(), SecurityUtils.getCurrentUser().getCellPhoneNumber());
+		}
+		taskService.complete(task.getId());
+
+		// 更新业务对象
+		if (businessModel != null) {
+			ServiceUtils.getService(businessModel.getClass()).save(businessModel);
+		}
 	}
 }

@@ -3,14 +3,14 @@
 <head>
 </head>
 <body th:fragment="pagination">
-<ul class="pull-right pagination" th:if="${pageDevice!=null} and ${!#strings.isEmpty(url)}" th:with="targetUrl=${url.indexOf('?')}==-1?${url}+'?':${url}+'&amp;'">
-  <li th:classappend="${pageDevice.currentPage==1}?'disabled'"><a href="#" th:href="${pageDevice.currentPage==1}?'#':${targetUrl}+'pageDevice.currentPage='+${pageDevice.previewPage}">&laquo;</a></li>
-  <li th:each="i : ${pageDevice.visiblePageNumbers}" th:classappend="${pageDevice.currentPage==i}?'active'"><a href="#" th:href="${pageDevice.currentPage==i}?'#':${targetUrl}+'pageDevice.currentPage='+${i}" th:text="${i}">1</a></li>
+<ul class="pull-right pagination" th:if="${pageDevice!=null} and ${!#strings.isEmpty(url)}" th:with="targetUrl=(${url.indexOf('?')}==-1?${url}+'?':${url}+'&amp;')+(${#strings.isEmpty(pageNumberVariableName)}?'pageDevice.currentPage=':${pageNumberVariableName}+'=')">
+  <li th:classappend="${pageDevice.currentPage==1}?'disabled'"><a href="#" th:href="${pageDevice.currentPage==1}?'#':${targetUrl}+${pageDevice.previewPage}">&laquo;</a></li>
+  <li th:each="i : ${pageDevice.visiblePageNumbers}" th:classappend="${pageDevice.currentPage==i}?'active'"><a href="#" th:href="${pageDevice.currentPage==i}?'#':${targetUrl}+${i}" th:text="${i}">1</a></li>
   <li th:remove="all"><a href="#">2</a></li>
   <li th:remove="all"><a href="#">3</a></li>
   <li th:remove="all"><a href="#">4</a></li>
   <li th:remove="all"><a href="#">5</a></li>
-  <li th:classappend="${pageDevice.currentPage==pageDevice.totalPages}?'disabled'"><a href="#" th:href="${pageDevice.currentPage==pageDevice.totalPages}?'#':${targetUrl}+'pageDevice.currentPage='+${pageDevice.nextPage}">&raquo;</a></li>
+  <li th:classappend="${pageDevice.currentPage==pageDevice.totalPages}?'disabled'"><a href="#" th:href="${pageDevice.currentPage==pageDevice.totalPages}?'#':${targetUrl}+${pageDevice.nextPage}">&raquo;</a></li>
 </ul>
 </body>
 </html>

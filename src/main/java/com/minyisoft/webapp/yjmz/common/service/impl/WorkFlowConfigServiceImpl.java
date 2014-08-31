@@ -144,7 +144,7 @@ public class WorkFlowConfigServiceImpl extends
 				try {
 					Map<String, Object> processVariables = Maps.newHashMap();
 					processVariables.put(businessModel.getBusinessModelProcessVariableName(), businessModel);
-					identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getId());
+					identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getCellPhoneNumber());
 					ProcessInstance instance = runtimeService.startProcessInstanceById(config.getProcessDefinitionId(),
 							businessModel.getId(), processVariables);
 

@@ -11,6 +11,8 @@ import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.FormProperty;
+import org.activiti.engine.form.TaskFormData;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.form.BooleanFormType;
 import org.activiti.engine.impl.form.DateFormType;
 import org.activiti.engine.task.Task;
@@ -78,8 +80,9 @@ public class WorkFlowController extends ManageBaseController {
 			model.addAttribute("maintainTypes", MaintainTypeEnum.values());
 		}
 		if (!businessModel.isProcessUnStarted()) {
-			model.addAttribute("processInstance", historyService.createHistoricProcessInstanceQuery()
-					.processInstanceId(businessModel.getProcessInstanceId()).singleResult());
+			HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
+					.processInstanceId(businessModel.getProcessInstanceId()).singleResult();
+			model.addAttribute("processInstance", processInstance);
 			model.addAttribute("historicTaskInstances",
 					ActivitiHelper.getHistoricTaskInstances(businessModel.getProcessInstanceId()));
 
@@ -87,23 +90,11 @@ public class WorkFlowController extends ManageBaseController {
 					.processInstanceId(businessModel.getProcessInstanceId())
 					.taskCandidateOrAssigned(currentUser.getCellPhoneNumber()).active().list();
 			if (!activeTasks.isEmpty()) {
-				Task task = activeTasks.get(0);
-				model.addAttribute("task", task);
-				/*
-				 * List<FormProperty> formProperties =
-				 * formService.getTaskFormData
-				 * (task.getId()).getFormProperties(); for (FormProperty
-				 * property : formProperties) { if (property.getType()
-				 * instanceof UserFormType &&
-				 * !model.containsAttribute("optionUsers")) { List<UserInfo>
-				 * optionUsers = Lists.newArrayList();
-				 * optionUsers.add(currentUser); UserCriteria criteria = new
-				 * UserCriteria(); criteria.setOrg(DefaultOrgEnum.ADMIN_ORG);
-				 * criteria.setUpperUser(currentUser);
-				 * optionUsers.addAll(userService.getCollection(criteria));
-				 * model.addAttribute("optionUsers", optionUsers); } }
-				 */
-				model.addAttribute("formProperties", formService.getTaskFormData(task.getId()).getFormProperties());
+				TaskFormData taskFormData = formService.getTaskFormData(activeTasks.get(0).getId());
+				if (StringUtils.isNotBlank(taskFormData.getFormKey())) {
+					model.addAttribute(businessModel.getBusinessModelProcessVariableName(), businessModel);
+				}
+				model.addAttribute("taskFormData", taskFormData);
 			}
 		}
 		return "manage/workFlowDetail";
@@ -154,37 +145,54 @@ public class WorkFlowController extends ManageBaseController {
 		return "redirect:myTodoTasks.html";
 	}
 
+	@ModelAttribute("workFlowBusinessModel")
+	protected WorkFlowBusinessModel populateBusinessModel(
+			@RequestParam(value = "workFlowBusinessModelId", required = false) WorkFlowBusinessModel workFlowBusinessModel) {
+		return workFlowBusinessModel;
+	}
+
 	/**
 	 * 处理任务
 	 */
 	@RequestMapping(value = "processTodoTask.html", method = RequestMethod.POST, params = "taskId")
-	public String processTodoTask(@RequestParam String taskId, HttpServletRequest request,
-			@RequestParam(required = false) String description) throws Exception {
+	public String processTodoTask(@ModelAttribute("workFlowBusinessModel") WorkFlowBusinessModel workFlowBusinessModel,
+			@RequestParam String taskId, HttpServletRequest request, @RequestParam(required = false) String description)
+			throws Exception {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		TaskFormData taskFormData = formService.getTaskFormData(task.getId());
+
 		Map<String, Object> variables = Maps.newLinkedHashMap();
-		Map<String, Object> variablesLocal = Maps.newLinkedHashMap();
-		for (FormProperty property : formService.getTaskFormData(task.getId()).getFormProperties()) {
-			String propertyVal = request.getParameter(property.getId());
-			if (StringUtils.isNotBlank(propertyVal)) {
-				if (property.getType() instanceof BooleanFormType) {
-					variables.put(property.getId(), Boolean.parseBoolean(propertyVal));
-					variablesLocal.put(property.getName(), Boolean.parseBoolean(propertyVal) ? "是" : "否");
-				} else if (property.getType() instanceof UserFormType) {
-					UserInfo user = userService.getValue(propertyVal);
-					variables.put(property.getId(), user);
-					if (user != null) {
-						variablesLocal.put(property.getName(), user.getName());
+		// 根据formProperties获取对应值
+		if (StringUtils.isBlank(taskFormData.getFormKey())) {
+			Map<String, Object> variablesLocal = Maps.newLinkedHashMap();
+			for (FormProperty property : taskFormData.getFormProperties()) {
+				String propertyVal = request.getParameter(property.getId());
+				if (StringUtils.isNotBlank(propertyVal)) {
+					if (property.getType() instanceof BooleanFormType) {
+						variables.put(property.getId(), Boolean.parseBoolean(propertyVal));
+						variablesLocal.put(property.getName(), Boolean.parseBoolean(propertyVal) ? "是" : "否");
+					} else if (property.getType() instanceof UserFormType) {
+						UserInfo user = userService.getValue(propertyVal);
+						variables.put(property.getId(), user);
+						if (user != null) {
+							variablesLocal.put(property.getName(), user.getName());
+						}
+					} else if (property.getType() instanceof DateFormType) {
+						variables
+								.put(property.getId(), DateUtils.parseDate(propertyVal, new String[] { "yyyy-MM-dd" }));
+						variablesLocal.put(property.getName(), propertyVal);
 					}
-				} else if (property.getType() instanceof DateFormType) {
-					variables.put(property.getId(), DateUtils.parseDate(propertyVal, new String[] { "yyyy-MM-dd" }));
-					variablesLocal.put(property.getName(), propertyVal);
 				}
 			}
+			if (StringUtils.isNotBlank(description)) {
+				variablesLocal.put("处理备注", description);
+			}
+			workFlowTaskService.completeTask(task, variables, variablesLocal);
 		}
-		if (StringUtils.isNotBlank(description)) {
-			variablesLocal.put("处理备注", description);
+		// 根据fromKey获取对应值
+		else {
+			workFlowTaskService.completeTask(task, workFlowBusinessModel);
 		}
-		workFlowTaskService.completeTask(task, variables, variablesLocal);
 		return "redirect:myTodoTasks.html";
 	}
 }

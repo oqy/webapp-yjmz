@@ -34,7 +34,7 @@ div.tab-pane h2{ text-align:center;}
       <div class="tab-pane" id="workFlowDetail">
         <div class="alert alert-warning" style="font-size:14px;" role="alert" th:if="${businessModel.processUnStarted}">当前<span th:text="${classLabel}"></span>尚未进入工作流程，暂无相关可供查阅的流程信息</div>
         <img alt="" class="img-responsive" th:if="${!businessModel.processUnStarted}" th:src="@{'/manage/processInstanceDiagram.html?processInstanceId='+${businessModel.processInstanceId}}"/>
-        <div class="table-responsive">
+        <div class="table-responsive" th:if="${!businessModel.processUnStarted}">
           <table class="table table-hover table-striped">
             <tr>
               <th>任务节点</th>
@@ -67,8 +67,8 @@ div.tab-pane h2{ text-align:center;}
         </div>
       </div>
     </div>
-    <form th:if="${task!=null}" id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/processTodoTask.html'}" method="post" style="margin-top:20px;">
-      <div class="form-group" th:each="formProperty : ${formProperties}">
+    <form th:if="${taskFormData!=null}" id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/processTodoTask.html'}" method="post" style="margin-top:20px;">
+      <div class="form-group" th:each="formProperty : ${taskFormData.formProperties}">
         <label class="col-md-2 control-label"><span class="text-danger" th:if="${formProperty.required}">*</span>&nbsp;<span th:text="${formProperty.name}">角色名称</span>：</label>
         <div class="col-md-6" th:if="${formProperty.type.name.equalsIgnoreCase('boolean')}">
           <label class="radio-inline">
@@ -79,17 +79,21 @@ div.tab-pane h2{ text-align:center;}
           否 </label>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" th:if="${#strings.isEmpty(taskFormData.formKey)}">
         <label for="description" class="col-md-2 control-label">处理备注：</label>
         <div class="col-md-6">
           <textarea class="form-control" rows="3" id="description" name="description" placeholder="请输入处理备注"></textarea>
         </div>
       </div>
+      <div th:if="${!#strings.isEmpty(taskFormData.formKey)}" th:remove="tag">
+      	<div th:replace="manage/workFlowForm::${taskFormData.formKey}"></div>
+      </div>
       <div class="form-group">
-        <div class="col-md-6 col-md-offset-2"> <a role="buuton" class="btn btn-default" th:href="@{'/manage/claimTodoTask.html?taskId='+${task.id}}">签收任务</a>
+        <div class="col-md-6 col-md-offset-2"> <a role="buuton" class="btn btn-default" th:href="@{'/manage/claimTodoTask.html?taskId='+${taskFormData.task.id}}">签收任务</a>
           <button type="submit" class="btn btn-primary">处理完毕</button>
           <button type="reset" class="btn btn-info">重置</button>
-          <input type="hidden" name="taskId" id="taskId" th:value="${task.id}"/>
+          <input type="hidden" name="taskId" id="taskId" th:value="${taskFormData.task.id}"/>
+          <input type="hidden" name="workFlowBusinessModelId" id="workFlowBusinessModelId" th:value="${businessModel.id}" th:if="${!#strings.isEmpty(taskFormData.formKey)}"/>
         </div>
       </div>
     </form>
