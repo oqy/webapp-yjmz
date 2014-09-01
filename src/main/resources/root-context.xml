@@ -102,7 +102,7 @@
 		</tx:attributes>
 	</tx:advice>
 	<aop:config expose-proxy="true">
-		<!-- com.fusung.webapp.yjmz.*.service.impl内所有类方法均实现事务支持 -->
+		<!-- com.minyisoft.webapp.yjmz.*.service.impl内所有类方法均实现事务支持 -->
 		<aop:pointcut id="programmeServicePointCut"
 			expression="execution(* com.minyisoft.webapp.yjmz.*.service.impl..*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="programmeServicePointCut"
