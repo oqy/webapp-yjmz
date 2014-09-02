@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
@@ -34,6 +35,7 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	// 维修技师
 	private UserInfo maintenanceMan;
 	// 完成日期
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date finishDate;
 	// 维修材料分录
 	private List<MaintainReqEntryInfo> entry;
