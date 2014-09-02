@@ -17,6 +17,9 @@ import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.joda.time.Duration;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.util.Assert;
 
 import com.google.common.base.Optional;
@@ -191,5 +194,14 @@ public final class ActivitiHelper {
 		Assert.hasLength(processInstanceId);
 		return processEngine.getHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processInstanceId)
 				.includeTaskLocalVariables().orderByHistoricTaskInstanceStartTime().asc().list();
+	}
+
+	// 毫秒格式化
+	private static PeriodFormatter formatter = new PeriodFormatterBuilder().appendDays().appendSuffix("d")
+			.appendHours().appendSuffix("h").appendMinutes().appendSuffix("m").appendSeconds().appendSuffix("s")
+			.toFormatter();
+
+	public static String formatDuration(long durationInMillis) {
+		return formatter.print(new Duration(durationInMillis).toPeriod());
 	}
 }

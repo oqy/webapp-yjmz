@@ -11,6 +11,7 @@
       <result property="quantity" column="fquantity" />
       <result property="unitPrice" column="funitprice" />
       <result property="remark" column="fremark" />
+      <result property="depotAmount" column="fdepotamount" />
       <result property="seq" column="fseq" />
       <result property="id" column="fid" />
       <result property="version" column="fversion" />
@@ -27,6 +28,7 @@
             	fquantity ,
             	funitprice ,
             	fremark ,
+            	fdepotamount ,
             	fseq ,
             	fid ,
             	fversion 
@@ -61,6 +63,7 @@
             	fquantity ,
             	funitprice ,
             	fremark ,
+            	fdepotamount ,
             	fseq ,
             	fid ,
             	fversion 
@@ -73,12 +76,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="PurchaseReqEntryInfo">
-    insert into t_oa_purchasereqentry (freqbillid,fname,fstandard,fquantity,funitprice,fremark,fseq,fid) values(#{reqBill.id},#{name},#{standard},#{quantity},#{unitPrice},#{remark},#{seq},#{id})
+    insert into t_oa_purchasereqentry (freqbillid,fname,fstandard,fquantity,funitprice,fremark,fdepotamount,fseq,fid) 
+    values(#{reqBill.id},#{name},#{standard},#{quantity},#{unitPrice},#{remark},#{depotAmount},#{seq},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="PurchaseReqEntryInfo">
-    update t_oa_purchasereqentry set freqbillid=#{reqBill.id},fname=#{name},fstandard=#{standard},fquantity=#{quantity},funitprice=#{unitPrice},fremark=#{remark},fseq=#{seq},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_oa_purchasereqentry set freqbillid=#{reqBill.id},fname=#{name},fstandard=#{standard},fquantity=#{quantity},
+    funitprice=#{unitPrice},fremark=#{remark},fdepotamount=#{depotAmount},fseq=#{seq},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

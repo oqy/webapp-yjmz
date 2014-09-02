@@ -21,7 +21,7 @@
   <div id="main-stats">
     <div class="row stats-row">
       <div class="col-md-4 col-sm-3 stat">
-        <div class="data"> <span class="number" th:text="${todoTaskCount}">2457</span> 条 </div>
+        <div class="data"> <a class="number" th:href="@{'/manage/myTodoTasks.html'}" th:text="${todoTaskCount}">2457</a> 条 </div>
         <span class="date">待处理任务</span> </div>
       <div class="col-md-4 col-sm-3 stat">
         <div class="data"> <span class="number" th:text="${currentUser.loginCount}">3240</span> 次 </div>
@@ -29,6 +29,40 @@
       <div class="col-md-4 col-sm-3 stat last">
         <div class="data"> <span class="number">322</span> 订单 </div>
         <span class="date">本周</span> </div>
+    </div>
+  </div>
+  <div id="pad-wrapper">
+    <div class="panel panel-default table-responsive">
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+        <h4 style="font-style:normal;"><strong class="text-primary" th:text="${currentCompany.name}"></strong>·企业通讯录</h4>
+      </div>
+      <div class="panel-body"> <strong class="text-primary" th:text="${currentUser.name}"></strong>您好，欢迎使用在线OA系统。今天是<span th:text="${#dates.format(#dates.createToday(),'yyyy年M月d日')}"></span>。 </div>
+      <!-- Table -->
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>部门</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>工号</th>
+            <th>职衔</th>
+            <th>联系手机</th>
+          </tr>
+        </thead>
+        <tbody th:if="${!#lists.isEmpty(currentCompany.userOrgRelations)}">
+          <tr th:each="userOrgRelation :${currentCompany.userOrgRelations}">
+            <td th:text="${userOrgRelationStat.count}"></td>
+            <td th:text="${userOrgRelation.department!=null}?${userOrgRelation.department.name}"></td>
+            <td th:text="${userOrgRelation.user.name}"></td>
+            <td th:text="${userOrgRelation.user.userMale.description}"></td>
+            <td th:text="${userOrgRelation.jobNumber}"></td>
+            <td th:text="${userOrgRelation.title}"></td>
+            <td th:text="${userOrgRelation.user.cellPhoneNumber}"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

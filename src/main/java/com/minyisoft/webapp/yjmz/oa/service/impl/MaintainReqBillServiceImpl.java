@@ -1,5 +1,6 @@
 package com.minyisoft.webapp.yjmz.oa.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -41,6 +42,10 @@ public class MaintainReqBillServiceImpl extends
 		super.save(info);
 		maintainReqEntryDao.deleteByMaintainReqBill(info);
 		for (MaintainReqEntryInfo entry : info.getEntry()) {
+			if (StringUtils.isEmpty(entry.getName())) {
+				continue;
+			}
+			entry.setReqBill(info);
 			maintainReqEntryService.addNew(entry);
 		}
 	}

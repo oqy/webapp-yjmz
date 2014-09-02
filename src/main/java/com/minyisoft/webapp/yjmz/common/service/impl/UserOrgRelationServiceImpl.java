@@ -1,13 +1,21 @@
 package com.minyisoft.webapp.yjmz.common.service.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.service.CUDPostProcessor;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
+import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserOrgRelationCriteria;
 import com.minyisoft.webapp.yjmz.common.persistence.RoleDao;
@@ -53,10 +61,37 @@ public class UserOrgRelationServiceImpl extends
 			}
 		}
 	}
+	
+	@Override
+	public List<UserInfo> getSubordinateness(ISystemOrgObject org, UserInfo upperUser) {
+		Assert.notNull(org, "所属组织不能为空");
+		Assert.notNull(upperUser, "上级用户不能为空");
+		UserOrgRelationCriteria criteria = new UserOrgRelationCriteria();
+		criteria.setOrg(org);
+		criteria.setUpperUser(upperUser);
+		List<UserOrgRelationInfo> orgRelations = getCollection(criteria);
+		List<UserInfo> subordinateness = Lists.newArrayList();
+		for (UserOrgRelationInfo orgRelation : orgRelations) {
+			subordinateness.add(orgRelation.getUser());
+		}
+		return subordinateness;
+	}
 
 	@Override
 	protected boolean useModelCache() {
 		return true;
+	}
+	
+	@Override
+	public Optional<UserInfo> getDepartmentLeader(DepartmentInfo department) {
+		Assert.notNull(department, "部门不能为空");
+		UserOrgRelationCriteria criteria = new UserOrgRelationCriteria();
+		criteria.setDepartment(department);
+		UserOrgRelationInfo userOrgRelation = find(criteria);
+		if (userOrgRelation != null) {
+			return Optional.of(userOrgRelation.getUser());
+		}
+		return Optional.absent();
 	}
 
 	private class UserOrgRelationCUDPostProcessor implements CUDPostProcessor<UserOrgRelationInfo> {

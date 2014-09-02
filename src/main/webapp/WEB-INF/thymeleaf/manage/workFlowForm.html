@@ -17,5 +17,91 @@
     </div>
   </div>
 </div>
+<div th:fragment="maintainExecute">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>维修材料</th>
+        <th>数量</th>
+        <th>金额</th>
+      </tr>
+    </thead>
+    <tbody th:with="startIndex = ${maintainReqBill.entry.size()}">
+      <tr th:each="entry:${maintainReqBill.entry}">
+        <td class="col-md-4"><span th:text="${entry.name}" th:remove="tag"></span>
+          <input type="hidden" th:id="'name'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].name'" th:value="${entry.name}"/></td>
+        <td class="col-md-4"><span th:text="${entry.quantity}" th:remove="tag"></span>
+          <input type="hidden" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" th:value="${entry.quantity}"/></td>
+        <td class="col-md-4"><span th:text="${entry.price}" th:remove="tag"></span>
+          <input type="hidden" th:id="'price'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].price'" th:value="${entry.price}"/></td>
+      </tr>
+      <tr>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'"/></td>
+      </tr>
+      <tr th:with="startIndex=${startIndex+1}">
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'"/></td>
+      </tr>
+      <tr th:with="startIndex=${startIndex+2}">
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'"/></td>
+      </tr>
+      <tr th:with="startIndex=${startIndex+3}">
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'"/></td>
+        <td class="col-md-4"><input type="text" class="form-control" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'"/></td>
+      </tr>
+    </tbody>
+  </table>
+  <input type="hidden" id="examiner" name="examiner" th:with="departmentLeader=${maintainReqBill.department!=null}?${@userOrgRelationService.getDepartmentLeader(maintainReqBill.department)}" th:value="${departmentLeader!=null and departmentLeader.present}?${departmentLeader.get().id}:${maintainReqBill.createUser.id}"/>
+  <input type="hidden" id="finishDate" name="finishDate" th:value="${#dates.format(#dates.createToday(),'yyyy-MM-dd')}"/>
+</div>
+<div th:fragment="maintainAssign">
+  <div class="form-group">
+    <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;维修技师：</label>
+    <div class="col-md-6">
+      <select id="maintenanceMan" name="maintenanceMan" class="form-control">
+        <option th:value="${currentUser.id}" th:text="${currentUser.name}"></option>
+        <option th:each="user : ${@userOrgRelationService.getSubordinateness(currentCompany,currentUser)}" th:value="${user.id}" th:text="${user.name}"></option>
+      </select>
+      <input type="hidden" id="receiver" name="receiver" th:value="${currentUser.id}"/>
+    </div>
+  </div>
+</div>
+<div th:fragment="purchaseReqDepotCheck">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>品名</th>
+        <th>规格</th>
+        <th>数量</th>
+        <th>单价</th>
+        <th>已有仓储量</th>
+        <th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="entry:${purchaseReqBill.entry}">
+        <td th:text="${entryStat.count}"></td>
+        <td class="col-md-2"><span th:text="${entry.name}" th:remove="tag"></span>
+          <input type="hidden" th:id="'name'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].name'" th:value="${entry.name}"/></td>
+        <td class="col-md-2"><span th:text="${entry.standard}" th:remove="tag"></span>
+          <input type="hidden" th:id="'standard'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].standard'" th:value="${entry.standard}"/></td>
+        <td class="col-md-2"><span th:text="${entry.quantity}" th:remove="tag"></span>
+          <input type="hidden" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" th:value="${entry.quantity}"/></td>
+        <td class="col-md-2"><span th:text="${entry.unitPrice}" th:remove="tag"></span>
+          <input type="hidden" th:id="'price'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" th:value="${entry.unitPrice}"/></td>
+        <td class="col-md-2"><input type="text" class="form-control" th:id="'depotAmount'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].depotAmount'" th:value="${entry.depotAmount}"/></td>
+        <td class="col-md-2"><span th:text="${entry.remark}" th:remove="tag"></span>
+          <input type="hidden" th:id="'remark'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].remark'" th:value="${entry.remark}"/></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 </body>
 </html>

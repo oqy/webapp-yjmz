@@ -1,5 +1,6 @@
 package com.minyisoft.webapp.yjmz.oa.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.CollectionUtils;
 
+import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
@@ -34,6 +38,7 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	// 维修技师
 	private UserInfo maintenanceMan;
 	// 完成日期
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date finishDate;
 	// 维修材料分录
 	private List<MaintainReqEntryInfo> entry;
@@ -43,6 +48,38 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private UserInfo examiner;
 	// 工作流流程实例id
 	private String processInstanceId;
+
+	/**
+	 * 获取维修材料总数量
+	 * 
+	 * @return
+	 */
+	public Optional<BigDecimal> getMaterialsTotalQuantity() {
+		if (!CollectionUtils.isEmpty(entry)) {
+			BigDecimal total = BigDecimal.ZERO;
+			for (MaintainReqEntryInfo e : entry) {
+				total = total.add(e.getQuantity());
+			}
+			return Optional.of(total);
+		}
+		return Optional.absent();
+	}
+
+	/**
+	 * 获取维修材料总金额
+	 * 
+	 * @return
+	 */
+	public Optional<BigDecimal> getMaterialsTotalPrice() {
+		if (!CollectionUtils.isEmpty(entry)) {
+			BigDecimal total = BigDecimal.ZERO;
+			for (MaintainReqEntryInfo e : entry) {
+				total = total.add(e.getQuantity());
+			}
+			return Optional.of(total);
+		}
+		return Optional.absent();
+	}
 
 	@Override
 	public String getProcessInstanceName() {

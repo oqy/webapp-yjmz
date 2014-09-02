@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
@@ -34,4 +34,15 @@ public class PurchaseReqEntryInfo extends EntryBaseInfo {
 	private BigDecimal unitPrice = BigDecimal.ZERO;
 	// 备注
 	private String remark;
+	// 已有仓储量
+	private BigDecimal depotAmount = BigDecimal.ZERO;
+
+	/**
+	 * 获取实际采购量
+	 * 
+	 * @return
+	 */
+	public BigDecimal getActualQuantity() {
+		return quantity.compareTo(depotAmount) > 0 ? quantity.subtract(depotAmount) : BigDecimal.ZERO;
+	}
 }

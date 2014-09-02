@@ -221,3 +221,4 @@ create table t_common_workflowconfig
   fversion int default 1,
   primary key (fid)
 );
+ALTER TABLE t_oa_purchasereqentry ADD fdepotamount DECIMAL(13, 2) NULL DEFAULT 0 AFTER fremark;

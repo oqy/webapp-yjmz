@@ -43,6 +43,15 @@
 		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
+            and forgid = #{org.id}
+        </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(upperUser)">
+            and fupperuserid = #{upperUser.id}
+        </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(department)">
+            and fdepartmentid = #{department.id}
+        </if>
 	</where>
   </sql>
   
@@ -66,6 +75,7 @@
             	fversion 
           from t_common_userorgrelation
     <include refid="getCriteriaCondition"/>
+    order by fuserpath asc
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>

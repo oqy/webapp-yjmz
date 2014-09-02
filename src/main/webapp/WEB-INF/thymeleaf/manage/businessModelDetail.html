@@ -9,49 +9,48 @@
   <div class="col-md-4">
     <table class="table table-bordered pull-right">
       <tr>
-        <td>档案编号</td>
+        <th>档案编号</th>
         <td th:text="${report.fileNumber}">&nbsp;</td>
       </tr>
       <tr>
-        <td>文件编号</td>
+        <th>文件编号</th>
         <td th:text="${report.billNumber}">&nbsp;</td>
       </tr>
     </table>
   </div>
-    <table class="table table-bordered">
-      <tr>
-        <td>由：</td>
-        <td th:text="${report.department!=null}?${report.department.name}+'&nbsp;'+${report.createUser.name}:${report.createUser.name}">&nbsp;</td>
-        <td>日期：</td>
-        <td th:text="${#dates.format(report.createDate,'yyyy年MM月dd日')}">&nbsp;</td>
-      </tr>
-      <tr>
-        <td>事由：</td>
-        <td colspan="3" th:text="${report.reportTitle}">&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="4" th:text="${report.description}"></td>
-      </tr>
-    </table>
-</div>
-<div th:fragment="maintainReqBill">
-  <h2 th:text="${maintainReqBill.company.name}+'工程维修通知单'">工程维修通知单</h2>
   <table class="table table-bordered">
     <tr>
-      <td>申请部门</td>
+      <th>由：</th>
+      <td th:text="${report.department!=null}?${report.department.name}+'&nbsp;'+${report.createUser.name}:${report.createUser.name}">&nbsp;</td>
+      <th>日期：</th>
+      <td th:text="${#dates.format(report.createDate,'yyyy年MM月dd日')}">&nbsp;</td>
+    </tr>
+    <tr>
+      <th>事由：</th>
+      <td colspan="3" th:text="${report.reportTitle}">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="4" th:text="${report.description}"></td>
+    </tr>
+  </table>
+</div>
+<div th:fragment="maintainReqBill">
+  <table class="table table-bordered">
+    <tr>
+      <th>申请部门</th>
       <td th:text="${maintainReqBill.department!=null}?${maintainReqBill.department.name}">&nbsp;</td>
-      <td>日期</td>
+      <th>日期</th>
       <td th:text="${#dates.format(maintainReqBill.createDate,'yyyy年MM月dd日')}">&nbsp;</td>
     </tr>
     <tr>
-      <td>申请人</td>
+      <th>申请人</th>
       <td th:text="${maintainReqBill.createUser.name}">&nbsp;</td>
-      <td>位置</td>
+      <th>位置</th>
       <td th:text="${maintainReqBill.location}">&nbsp;</td>
     </tr>
     <tr>
       <td colspan="4"><label th:each="type : ${maintainTypes}" class="checkbox-inline">
-        <input type="checkbox" th:checked="${#arrays.contains(maintainReqBill.maintainTypes, type)}" th:text="${type.description}"/>
+        <input type="checkbox" disabled="disabled" th:checked="${#arrays.contains(maintainReqBill.maintainTypes, type)}" th:text="${type.description}"/>
         1 </label>
       </td>
     </tr>
@@ -59,15 +58,15 @@
       <td colspan="4" th:text="${maintainReqBill.description}"></td>
     </tr>
     <tr>
-      <td>维修技师</td>
+      <th>维修技师</th>
       <td th:text="${maintainReqBill.maintenanceMan}?${maintainReqBill.maintenanceMan.name}">&nbsp;</td>
-      <td>完成日期</td>
+      <th>完成日期</th>
       <td th:text="${maintainReqBill.finishDate}?${#dates.format(maintainReqBill.finishDate,'yyyy年MM月dd日')}">&nbsp;</td>
     </tr>
     <tr>
-      <td colspan="2">维修材料清单</td>
-      <td>数量</td>
-      <td>金额</td>
+      <th colspan="2">维修材料清单</th>
+      <th>数量</th>
+      <th>金额</th>
     </tr>
     <tr th:each="entry:${maintainReqBill.entry}">
       <td colspan="2" th:text="${entry.name}"></td>
@@ -85,22 +84,23 @@
       <td>&nbsp;</td>
     </tr>
     <tr>
-      <td colspan="3">合计</td>
-      <td></td>
+      <th colspan="2">合计</th>
+      <td th:text="${maintainReqBill.materialsTotalQuantity.orNull()}"></td>
+      <td th:text="${maintainReqBill.materialsTotalPrice.orNull()}"></td>
     </tr>
     <tr>
-      <td>接单人</td>
+      <th>接单人</th>
       <td th:text="${maintainReqBill.receiver!=null}?${maintainReqBill.receiver.name}">&nbsp;</td>
-      <td>验收人</td>
+      <th>验收人</th>
       <td th:text="${maintainReqBill.examiner!=null}?${maintainReqBill.examiner.name}">&nbsp;</td>
     </tr>
   </table>
 </div>
 <div th:fragment="purchaseReqBill">
-  <h2 th:text="${purchaseReqBill.company.name}+'采购单'">采购单</h2>
   <table style="width:100%; margin:10px 0px;">
     <tr>
-      <td width="50%">部门：<span th:text="${purchaseReqBill.department!=null}?${purchaseReqBill.department.name}"></span></td>
+      <td width="33%">部门：<span th:text="${purchaseReqBill.department!=null}?${purchaseReqBill.department.name}"></span></td>
+      <td width="33%">申请人：<span th:text="${purchaseReqBill.createUser.name}"></span></td>
       <td>日期：<span th:text="${#dates.format(purchaseReqBill.createDate,'yyyy年MM月dd日')}"></span></td>
     </tr>
   </table>
@@ -109,7 +109,9 @@
       <th>品名</th>
       <th>规格</th>
       <th>数量</th>
-      <th>单据</th>
+      <th>单价</th>
+      <th>已有仓储量</th>
+      <th>实际采购量</th>
       <th>备注</th>
     </tr>
     <tr th:each="entry:${purchaseReqBill.entry}">
@@ -117,6 +119,8 @@
       <td th:text="${entry.standard}">&nbsp;</td>
       <td th:text="${entry.quantity}">&nbsp;</td>
       <td th:text="${entry.unitPrice}">&nbsp;</td>
+      <td th:text="${entry.depotAmount}">&nbsp;</td>
+      <td th:text="${entry.actualQuantity}">&nbsp;</td>
       <td th:text="${entry.remark}">&nbsp;</td>
     </tr>
   </table>

@@ -27,7 +27,7 @@ div.tab-pane h2{ text-align:center;}
       <li class="active"><a href="#businessModelDetail" role="tab" data-toggle="tab" th:text="${classLabel}">部门列表</a></li>
       <li><a href="#workFlowDetail" role="tab" data-toggle="tab">处理明细</a></li>
     </ul>
-    <div class="tab-content mt10">
+    <div class="tab-content mt10 table-responsive">
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::report" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E1C6843F')}" th:with="report=${businessModel}"> </div>
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::maintainReqBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E24CEB79')}" th:with="maintainReqBill=${businessModel}"> </div>
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::purchaseReqBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E349704C')}" th:with="purchaseReqBill=${businessModel}"> </div>
@@ -37,6 +37,7 @@ div.tab-pane h2{ text-align:center;}
         <div class="table-responsive" th:if="${!businessModel.processUnStarted}">
           <table class="table table-hover table-striped">
             <tr>
+              <th>序号</th>
               <th>任务节点</th>
               <th>执行人</th>
               <th>创建时间</th>
@@ -46,6 +47,7 @@ div.tab-pane h2{ text-align:center;}
               <th>备注</th>
             </tr>
             <tr>
+              <td>1</td>
               <td>发起流程</td>
               <td th:text="${@userService.getValue(processInstance.startUserId).name}"></td>
               <td th:text="${#dates.format(processInstance.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
@@ -55,6 +57,7 @@ div.tab-pane h2{ text-align:center;}
               <td>----</td>
             </tr>
             <tr th:each="task : ${historicTaskInstances}">
+              <td th:text="${taskStat.count+1}"></td>
               <td th:text="${task.name}"></td>
               <td th:text="${!#strings.isEmpty(task.assignee)}?${@userService.getValue(task.assignee).name}"></td>
               <td th:text="${task.startTime!=null}?${#dates.format(task.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
@@ -67,6 +70,7 @@ div.tab-pane h2{ text-align:center;}
         </div>
       </div>
     </div>
+    <h4 th:if="${taskFormData!=null}">处理任务：<span th:text="${taskFormData.task.name}"></span></h4>
     <form th:if="${taskFormData!=null}" id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/processTodoTask.html'}" method="post" style="margin-top:20px;">
       <div class="form-group" th:each="formProperty : ${taskFormData.formProperties}">
         <label class="col-md-2 control-label"><span class="text-danger" th:if="${formProperty.required}">*</span>&nbsp;<span th:text="${formProperty.name}">角色名称</span>：</label>
@@ -78,6 +82,12 @@ div.tab-pane h2{ text-align:center;}
           <input type="radio" th:name="${formProperty.id}" id="inlineRadio2" value="false"/>
           否 </label>
         </div>
+        <div class="col-md-6" th:if="${formProperty.type.name.equalsIgnoreCase('user')}">
+          <select th:name="${formProperty.id}" id="inlineRadio1" class="form-control">
+            <option th:value="${currentUser.id}" th:text="${currentUser.name}"></option>
+            <option th:each="user : ${@userOrgRelationService.getSubordinateness(currentCompany,currentUser)}" th:value="${user.id}" th:text="${user.name}"></option>
+          </select>
+        </div>
       </div>
       <div class="form-group" th:if="${#strings.isEmpty(taskFormData.formKey)}">
         <label for="description" class="col-md-2 control-label">处理备注：</label>
@@ -86,7 +96,7 @@ div.tab-pane h2{ text-align:center;}
         </div>
       </div>
       <div th:if="${!#strings.isEmpty(taskFormData.formKey)}" th:remove="tag">
-      	<div th:replace="manage/workFlowForm::${taskFormData.formKey}"></div>
+        <div th:replace="manage/workFlowForm::${taskFormData.formKey}"></div>
       </div>
       <div class="form-group">
         <div class="col-md-6 col-md-offset-2"> <a role="buuton" class="btn btn-default" th:href="@{'/manage/claimTodoTask.html?taskId='+${taskFormData.task.id}}">签收任务</a>
@@ -101,5 +111,6 @@ div.tab-pane h2{ text-align:center;}
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_workflow_center'" th:remove="tag"></script>
+<script type="text/javascript" th:include="component/resource::formValidateJs" th:with="formId=form1" th:remove="tag"></script>
 </body>
 </html>
