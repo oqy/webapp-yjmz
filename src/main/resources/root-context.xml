@@ -104,7 +104,7 @@
 	<aop:config expose-proxy="true">
 		<!-- com.minyisoft.webapp.yjmz.*.service.impl内所有类方法均实现事务支持 -->
 		<aop:pointcut id="programmeServicePointCut"
-			expression="execution(* com.minyisoft.webapp.yjmz.*.service.impl..*(..))" />
+			expression="execution(* com.minyisoft.webapp.**.service.*.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="programmeServicePointCut"
 			order="10" />
 	</aop:config>
@@ -121,6 +121,27 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!-- 缓存配置 -->
+	<!-- <cache:annotation-driven/> -->
+	<bean id="annotationCacheOperationSource"
+		class="org.springframework.cache.annotation.AnnotationCacheOperationSource">
+		<constructor-arg name="annotationParser">
+			<bean
+				class="com.minyisoft.webapp.core.utils.spring.cache.annotation.ModelCacheAnnotationParser" />
+		</constructor-arg>
+	</bean>
+	<bean id="cacheInterceptor" class="org.springframework.cache.interceptor.CacheInterceptor">
+		<property name="cacheOperationSources" ref="annotationCacheOperationSource" />
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+	<bean id="beanFactoryCacheOperationSourceAdvisor"
+		class="org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor">
+		<property name="cacheOperationSource" ref="annotationCacheOperationSource" />
+		<property name="adviceBeanName" value="cacheInterceptor" />
+	</bean>
+	<bean id="cacheManager"
+		class="com.minyisoft.webapp.core.utils.spring.cache.ehcache.EhCacheCacheManager" />
 	
 	<!-- RestTemplate配置  -->
 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">

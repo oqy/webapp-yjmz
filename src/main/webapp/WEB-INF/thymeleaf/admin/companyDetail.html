@@ -97,7 +97,7 @@
               <td th:text="${userOrgRelation.title}"></td>
               <td th:text="${userOrgRelation.user.cellPhoneNumber}"></td>
               <td th:text="${userOrgRelation.upperUser!=null}?${userOrgRelation.upperUser.name}"></td>
-              <td><a th:href="@{'/admin/userOrgRelationEdit.html?userOrgRelationId='+${userOrgRelation.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/userOrgRelationDelete.htmll?userOrgRelationId='+${company.id}}" class="btn btn-default btn-sm" role="button" onclick="return window.confirm('是否确定从本公司删除指定用户？')">删除</a></td>
+              <td><a th:href="@{'/admin/userOrgRelationEdit.html?userOrgRelationId='+${userOrgRelation.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/userOrgRelationDelete.html?userOrgRelationId='+${userOrgRelation.id}}" class="btn btn-default btn-sm" role="button" onclick="return window.confirm('是否确定从本公司删除指定用户？')">删除</a></td>
             </tr>
           </tbody>
           <tbody th:if="${#lists.isEmpty(company.userOrgRelations)}">

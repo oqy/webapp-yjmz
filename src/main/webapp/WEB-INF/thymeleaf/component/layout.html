@@ -71,26 +71,21 @@
       <a th:href="@{'/manage/reportList.html'}"> <i class="icon-file-text"></i> <span>工作报告</span> </a> </li>
     <li id="menu_purchaseReqBill"> <a th:href="@{'/manage/purchaseReqBillList.html'}"> <i class="icon-shopping-cart"></i> <span>采购单</span> </a> </li>
     <li id="menu_maintainReqBill"> <a th:href="@{'/manage/maintainReqBillList.html'}"> <i class="icon-wrench"></i> <span>工程维修单</span> </a> </li>
-    <li th:remove="all"> <a class="dropdown-toggle" href="#"> <i class="icon-group"></i> <span>用户</span> <i class="icon-chevron-down"></i> </a>
-      <ul class="submenu">
-        <li><a href="user-list.html">用户列表</a></li>
-        <li><a href="new-user.html">新用户</a></li>
-        <li><a href="user-profile.html">用户资料</a></li>
-      </ul>
-    </li>
   </ul>
 </div>
 <!-- 系统管理员页面左侧主菜单 -->
 <div th:fragment="adminSidebar" id="sidebar-nav">
   <ul id="dashboard-menu">
-    <li id="menu_company">
-      <div class="pointer" th:remove="all">
-        <div class="arrow"></div>
-        <div class="arrow_border"></div>
-      </div>
-      <a th:href="@{'/admin/companyList.html'}"> <i class="icon-building"></i> <span>公司信息</span> </a> </li>
+    <li id="menu_company"> <a th:href="@{'/admin/companyList.html'}"> <i class="icon-building"></i> <span>公司信息</span> </a> </li>
     <li id="menu_user"> <a th:href="@{'/admin/userList.html'}"> <i class="icon-user"></i> <span>系统用户信息</span> </a> </li>
     <li id="menu_workflow_config"> <a th:href="@{'/admin/workFlowConfigList.html'}"> <i class="icon-gears"></i> <span>工作流程管理</span> </a> </li>
+    <li id="menu_system_tool"> <a class="dropdown-toggle" href="#"> <i class="icon-group"></i> <span>系统工具</span> <i class="icon-chevron-down"></i> </a>
+      <ul class="submenu" th:remove="all-but-first">
+        <li><a href="user-list.html" th:href="@{'/admin/cacheClear.html'}">清理缓存</a></li>
+        <li><a href="new-user.html">新用户</a></li>
+        <li><a href="user-profile.html">用户资料</a></li>
+      </ul>
+    </li>
   </ul>
 </div>
 </body>

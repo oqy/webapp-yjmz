@@ -4,6 +4,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.persistence.BaseDao;
+import com.minyisoft.webapp.core.utils.spring.cache.annotation.ModelCacheEvict;
+import com.minyisoft.webapp.core.utils.spring.cache.annotation.ModelCachesEvict;
+import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
@@ -17,6 +20,8 @@ public interface UserOrgRelationDao extends BaseDao<UserOrgRelationInfo, UserOrg
 	 * @param org
 	 * @return
 	 */
+	@ModelCachesEvict(value = { @ModelCacheEvict(modelType = UserInfo.class, allEntries = true),
+			@ModelCacheEvict(modelType = CompanyInfo.class, allEntries = true) })
 	int deleteRelation(@Param("user") UserInfo user, @Param("org") ISystemOrgObject org);
 
 	/**
@@ -26,6 +31,8 @@ public interface UserOrgRelationDao extends BaseDao<UserOrgRelationInfo, UserOrg
 	 * @param newDepartment
 	 * @return
 	 */
+	@ModelCachesEvict(value = { @ModelCacheEvict(modelType = UserInfo.class, allEntries = true),
+			@ModelCacheEvict(modelType = CompanyInfo.class, allEntries = true) })
 	int replaceDepartment(@Param("oldDepartment") DepartmentInfo oldDepartment,
 			@Param("newDepartment") DepartmentInfo newDepartment);
 }

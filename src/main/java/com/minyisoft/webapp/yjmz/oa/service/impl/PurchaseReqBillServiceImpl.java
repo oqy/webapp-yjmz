@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.service.impl.BillBaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo;
@@ -53,12 +54,17 @@ public class PurchaseReqBillServiceImpl extends
 	private void _addEntry(PurchaseReqBillInfo info) {
 		purchaseReqEntryDao.deleteByPurchaseReqBill(info);
 		Assert.isTrue(!CollectionUtils.isEmpty(info.getEntry()), "采购单采购分录不能为空");
+		int entryCount = 0;
 		for (PurchaseReqEntryInfo entry : info.getEntry()) {
 			if (StringUtils.isBlank(entry.getName())) {
 				continue;
 			}
 			entry.setReqBill(info);
 			purchaseReqEntryService.addNew(entry);
+			entryCount++;
+		}
+		if (entryCount == 0) {
+			throw new ServiceException("采购单分类不能为空");
 		}
 	}
 }

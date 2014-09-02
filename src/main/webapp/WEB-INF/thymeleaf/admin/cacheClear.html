@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>清理缓存-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">清理缓存</h3>
+    <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/admin/cacheClear.html'}" method="post" style="margin-top:20px;">
+      <div class="form-group">
+        <div class="col-md-6">
+          <div class="alert alert-success" role="alert" th:text="${msg}" th:if="${!#strings.isEmpty(msg)}"></div>
+          <button type="submit" class="btn btn-default">缓存清理</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_system_tool'" th:remove="tag"></script>
+</body>
+</html>

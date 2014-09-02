@@ -126,4 +126,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		user.setWeixinOpenId(weixinOpenId);
 		save(user);
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }

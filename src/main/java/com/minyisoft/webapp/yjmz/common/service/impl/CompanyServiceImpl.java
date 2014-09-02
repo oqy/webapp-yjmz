@@ -15,4 +15,9 @@ public class CompanyServiceImpl extends BaseServiceImpl<CompanyInfo,CompanyCrite
 	public void delete(CompanyInfo info) {
 		throw new ServiceException("不允许删除公司信息");
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }
