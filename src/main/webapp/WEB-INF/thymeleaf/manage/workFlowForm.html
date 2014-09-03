@@ -18,6 +18,7 @@
   </div>
 </div>
 <div th:fragment="maintainExecute">
+<<<<<<< HEAD
   <table class="table table-hover table-bordered">
     <thead>
       <tr>
@@ -102,6 +103,58 @@
       </tr>
     </tbody>
   </table>
+=======
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+      <th>维修材料</th>
+      <th>数量</th>
+      <th>金额</th>
+    </tr>
+    </thead>
+    <tbody th:with="startIndex = ${maintainReqBill.entry.size()}, departmentLeader=${maintainReqBill.department!=null}?${@userOrgRelationService.getDepartmentLeader(maintainReqBill.department).orNull()}">
+      <tr th:each="entry:${maintainReqBill.entry}">
+        <td class="col-md-4"><span th:text="${entry.name}" th:remove="tag"></span><input type="hidden" th:id="'name'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].name'" th:value="${entry.name}"/></td>
+        <td class="col-md-4"><span th:text="${entry.quantity}" th:remove="tag"></span><input type="hidden" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" th:value="${entry.quantity}"/></td>
+        <td class="col-md-4"><span th:text="${entry.price}" th:remove="tag"></span><input type="hidden" th:id="'price'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].price'" th:value="${entry.price}"/></td>
+      </tr>
+      <tr>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'" placeholder="请输入维修材料"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'" placeholder="请输入数量"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'" placeholder="请输入金额"/></td>
+      </tr>
+      <tr th:with="startIndex=${startIndex+1}">
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'" placeholder="请输入维修材料"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'" placeholder="请输入数量"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'" placeholder="请输入金额"/></td>
+      </tr>
+      <tr th:with="startIndex=${startIndex+2}">
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'" placeholder="请输入维修材料"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'" placeholder="请输入数量"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'" placeholder="请输入金额"/></td>
+      </tr>
+      <tr th:with="startIndex=${startIndex+3}">
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'name'+${startIndex}" th:name="'entry['+${startIndex}+'].name'" placeholder="请输入维修材料"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'quantity'+${startIndex}" th:name="'entry['+${startIndex}+'].quantity'" placeholder="请输入数量"/></td>
+        <td class="col-md-4"><input type="text" class="form-control required" th:id="'price'+${startIndex}" th:name="'entry['+${startIndex}+'].price'" placeholder="请输入金额"/></td>
+      </tr>
+    </tbody>
+  </table>
+  <input type="hidden" id="examiner" name="examiner" th:value="${departmentLeader!=null}?${departmentLeader.id}:${maintainReqBill.createUser.id}"/>
+  <input type="hidden" id="finishDate" name="finishDate" th:value="${#dates.format(#dates.createToday(),'yyyy-MM-dd')}"/>
+</div>
+<div th:fragment="maintainAssign">
+  <div class="form-group">
+    <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;维修技师：</label>
+    <div class="col-md-6">
+      <select id="maintenanceMan" name="maintenanceMan" class="form-control">
+        <option th:value="${currentUser.id}" th:text="${currentUser.name}"></option>
+        <option th:each="user : ${@userOrgRelationService.getSubordinateness(currentCompany,currentUser)}" th:value="${user.id}" th:text="${user.name}"></option>
+      </select>
+      <input type="hidden" id="receiver" name="receiver" th:value="${currentUser.id}"/>
+    </div>
+  </div>
+>>>>>>> branch 'master' of https://github.com/oqy/webapp-yjmz.git
 </div>
 </body>
 </html>
