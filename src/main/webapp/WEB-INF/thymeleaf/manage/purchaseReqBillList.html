@@ -49,14 +49,10 @@
             <td><a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/purchaseReqBillEdit.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a onclick="return window.confirm('确定删除所选采购单?')" th:if="${editable}" th:href="@{'/manage/purchaseReqBillDelete.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
           </tr>
         </tbody>
-        <tbody th:if="${#lists.isEmpty(purchaseReqBills)}">
-          <tr>
-            <td colspan="8">暂没有可供您浏览的采购单</td>
-          </tr>
-        </tbody>
       </table>
     </div>
     <div th:if="${!#lists.isEmpty(purchaseReqBills)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='purchaseReqBillList.html'"></div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(purchaseReqBills)}">暂没有可供您浏览的采购单</div>
   </div>
 </div>
 <!-- end main container -->

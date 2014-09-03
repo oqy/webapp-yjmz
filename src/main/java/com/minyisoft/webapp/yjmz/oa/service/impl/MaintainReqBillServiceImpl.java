@@ -40,13 +40,13 @@ public class MaintainReqBillServiceImpl extends
 	@Override
 	public void save(MaintainReqBillInfo info) {
 		super.save(info);
-		maintainReqEntryDao.deleteByMaintainReqBill(info);
 		for (MaintainReqEntryInfo entry : info.getEntry()) {
 			if (StringUtils.isEmpty(entry.getName())) {
 				continue;
 			}
 			entry.setReqBill(info);
-			maintainReqEntryService.addNew(entry);
+			maintainReqEntryService.submit(entry);
 		}
+		maintainReqEntryDao.deleteInvalidEntryByMaintainReqBill(info);
 	}
 }

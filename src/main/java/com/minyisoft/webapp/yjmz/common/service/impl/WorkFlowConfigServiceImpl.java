@@ -127,7 +127,7 @@ public class WorkFlowConfigServiceImpl extends
 		Assert.notNull(owner, "未指定工作流程定义所属组织");
 		Assert.notNull(businessModel, "不存在指定的待启动工作流业务对象");
 		Assert.isTrue(businessModel.isProcessUnStarted(), "指定业务对象已启动工作流，无需重复启动");
-		
+
 		WorkFlowConfigCriteria criteria = new WorkFlowConfigCriteria();
 		criteria.setWorkFlowStatus(WorkFlowStatusEnum.NORMAL);
 		criteria.setDefineOrg(owner);
@@ -152,6 +152,8 @@ public class WorkFlowConfigServiceImpl extends
 					businessModel.setProcessInstanceId(instance.getId());
 					ServiceUtils.getService(businessModel.getClass()).save(businessModel);
 					return;
+				} catch (Exception e) {
+					throw new ServiceException(e.getMessage(), e);
 				} finally {
 					identityService.setAuthenticatedUserId(null);
 				}

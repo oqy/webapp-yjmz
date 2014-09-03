@@ -52,7 +52,6 @@ public class PurchaseReqBillServiceImpl extends
 	}
 
 	private void _addEntry(PurchaseReqBillInfo info) {
-		purchaseReqEntryDao.deleteByPurchaseReqBill(info);
 		Assert.isTrue(!CollectionUtils.isEmpty(info.getEntry()), "采购单采购分录不能为空");
 		int entryCount = 0;
 		for (PurchaseReqEntryInfo entry : info.getEntry()) {
@@ -60,11 +59,12 @@ public class PurchaseReqBillServiceImpl extends
 				continue;
 			}
 			entry.setReqBill(info);
-			purchaseReqEntryService.addNew(entry);
+			purchaseReqEntryService.submit(entry);
 			entryCount++;
 		}
 		if (entryCount == 0) {
 			throw new ServiceException("采购单分类不能为空");
 		}
+		purchaseReqEntryDao.deleteInvalidEntryByPurchaseReqBill(info);
 	}
 }

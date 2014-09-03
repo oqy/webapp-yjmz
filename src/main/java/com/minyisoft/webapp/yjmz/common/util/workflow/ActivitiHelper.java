@@ -196,12 +196,17 @@ public final class ActivitiHelper {
 				.includeTaskLocalVariables().orderByHistoricTaskInstanceStartTime().asc().list();
 	}
 
-	// 毫秒格式化
-	private static PeriodFormatter formatter = new PeriodFormatterBuilder().appendDays().appendSuffix("d")
-			.appendHours().appendSuffix("h").appendMinutes().appendSuffix("m").appendSeconds().appendSuffix("s")
+	private static PeriodFormatter durationFormatter = new PeriodFormatterBuilder().appendDays().appendSuffix("天")
+			.appendHours().appendSuffix("小时").appendMinutes().appendSuffix("分").appendSeconds().appendSuffix("秒")
 			.toFormatter();
 
+	/**
+	 * 格式化输出持续时间
+	 * 
+	 * @param durationInMillis
+	 * @return
+	 */
 	public static String formatDuration(long durationInMillis) {
-		return formatter.print(new Duration(durationInMillis).toPeriod());
+		return durationFormatter.print(new Duration(durationInMillis).toPeriod());
 	}
 }

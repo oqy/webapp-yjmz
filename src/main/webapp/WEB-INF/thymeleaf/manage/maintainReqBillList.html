@@ -43,14 +43,10 @@
             <td><a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${maintainReqBill.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/maintainReqBillEdit.html?maintainReqBillId='+${maintainReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${maintainReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a onclick="return window.confirm('确定删除所选工程维修单?')" th:if="${editable}" th:href="@{'/manage/maintainReqBillDelete.html?maintainReqBillId='+${maintainReqBill.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
           </tr>
         </tbody>
-        <tbody th:if="${#lists.isEmpty(maintainReqBills)}">
-          <tr>
-            <td colspan="8">暂没有可供您浏览的工程维修单</td>
-          </tr>
-        </tbody>
       </table>
     </div>
     <div th:if="${!#lists.isEmpty(maintainReqBills)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='maintainReqBillList.html'"></div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(maintainReqBills)}">暂没有可供您浏览的工程维修单</div>
   </div>
 </div>
 <!-- end main container -->

@@ -40,7 +40,7 @@
         <td th:text="${#dates.format(task.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${task.claimTime!=null}?${#dates.format(task.claimTime,'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${task.endTime!=null}?${#dates.format(task.endTime,'yyyy-MM-dd HH:mm:ss')}"></td>
-        <td th:text="${task.durationInMillis}"></td>
+        <td th:text="${task.durationInMillis!=null}?${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).formatDuration(task.durationInMillis)}"></td>
         <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-primary btn-sm" role="button">详情</a></td>
       </tr>
     </table>

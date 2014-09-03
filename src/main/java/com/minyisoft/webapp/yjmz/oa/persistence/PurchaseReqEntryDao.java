@@ -13,4 +13,12 @@ public interface PurchaseReqEntryDao extends BaseDao<PurchaseReqEntryInfo, Purch
 	 * @return
 	 */
 	int deleteByPurchaseReqBill(PurchaseReqBillInfo purchaseReqBill);
+	
+	/**
+	 * 删除指定采购单无效分录
+	 * 
+	 * @param purchaseReqBill
+	 * @return
+	 */
+	int deleteInvalidEntryByPurchaseReqBill(PurchaseReqBillInfo purchaseReqBill);
 }

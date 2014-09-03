@@ -74,7 +74,7 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 		if (!CollectionUtils.isEmpty(entry)) {
 			BigDecimal total = BigDecimal.ZERO;
 			for (MaintainReqEntryInfo e : entry) {
-				total = total.add(e.getQuantity());
+				total = total.add(e.getPrice());
 			}
 			return Optional.of(total);
 		}

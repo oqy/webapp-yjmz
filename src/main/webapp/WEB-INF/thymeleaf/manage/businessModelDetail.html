@@ -3,45 +3,14 @@
 <head></head>
 <body>
 <div th:fragment="report">
-  <div class="col-md-8">
-    <h2 th:text="${report.company.name}"></h2>
-  </div>
-  <div class="col-md-4">
-    <table class="table table-bordered pull-right">
-      <tr>
-        <th>档案编号</th>
-        <td th:text="${report.fileNumber}">&nbsp;</td>
-      </tr>
-      <tr>
-        <th>文件编号</th>
-        <td th:text="${report.billNumber}">&nbsp;</td>
-      </tr>
-    </table>
-  </div>
-<<<<<<< HEAD
-=======
   <table class="table table-bordered">
     <tr>
-      <th>由：</th>
-      <td th:text="${report.department!=null}?${report.department.name}+'&nbsp;'+${report.createUser.name}:${report.createUser.name}">&nbsp;</td>
-      <th>日期：</th>
-      <td th:text="${#dates.format(report.createDate,'yyyy年MM月dd日')}">&nbsp;</td>
+      <th>档案编号</th>
+      <td th:text="${report.fileNumber}">&nbsp;</td>
+      <th>文件编号</th>
+      <td th:text="${report.billNumber}">&nbsp;</td>
     </tr>
     <tr>
-      <th>事由：</th>
-      <td colspan="3" th:text="${report.reportTitle}">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="4" th:text="${report.description}"></td>
-    </tr>
-  </table>
-</div>
-<div th:fragment="maintainReqBill">
-  <h2 th:text="${maintainReqBill.company.name}+'工程维修通知单'">工程维修通知单</h2>
->>>>>>> branch 'master' of https://github.com/oqy/webapp-yjmz.git
-  <table class="table table-bordered">
-    <tr>
-<<<<<<< HEAD
       <th>由：</th>
       <td th:text="${report.department!=null}?${report.department.name}+'&nbsp;'+${report.createUser.name}:${report.createUser.name}">&nbsp;</td>
       <th>日期：</th>
@@ -59,8 +28,6 @@
 <div th:fragment="maintainReqBill">
   <table class="table table-bordered">
     <tr>
-=======
->>>>>>> branch 'master' of https://github.com/oqy/webapp-yjmz.git
       <th>申请部门</th>
       <td th:text="${maintainReqBill.department!=null}?${maintainReqBill.department.name}">&nbsp;</td>
       <th>日期</th>
@@ -108,14 +75,9 @@
       <td>&nbsp;</td>
     </tr>
     <tr>
-<<<<<<< HEAD
       <th colspan="2">合计</th>
       <td th:text="${maintainReqBill.materialsTotalQuantity.orNull()}"></td>
       <td th:text="${maintainReqBill.materialsTotalPrice.orNull()}"></td>
-=======
-      <th colspan="3">合计</th>
-      <td></td>
->>>>>>> branch 'master' of https://github.com/oqy/webapp-yjmz.git
     </tr>
     <tr>
       <th>接单人</th>
@@ -128,14 +90,9 @@
 <div th:fragment="purchaseReqBill">
   <table style="width:100%; margin:10px 0px;">
     <tr>
-<<<<<<< HEAD
       <td width="33%">部门：<span th:text="${purchaseReqBill.department!=null}?${purchaseReqBill.department.name}"></span></td>
       <td width="33%">申请人：<span th:text="${purchaseReqBill.createUser.name}"></span></td>
       <td>日期：<span th:text="${#dates.format(purchaseReqBill.createDate,'yyyy年MM月dd日')}"></span></td>
-=======
-      <th width="50%">部门：<span th:text="${purchaseReqBill.department!=null}?${purchaseReqBill.department.name}"></span></th>
-      <th>日期：<span th:text="${#dates.format(purchaseReqBill.createDate,'yyyy年MM月dd日')}"></span></th>
->>>>>>> branch 'master' of https://github.com/oqy/webapp-yjmz.git
     </tr>
   </table>
   <table class="table table-bordered">

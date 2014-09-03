@@ -12,4 +12,11 @@ public interface MaintainReqEntryDao extends BaseDao<MaintainReqEntryInfo, Maint
 	 * @return
 	 */
 	int deleteByMaintainReqBill(MaintainReqBillInfo maintainReqBill);
+	
+	/**
+	 * 删除指定维修单无效分录
+	 * @param maintainReqBill
+	 * @return
+	 */
+	int deleteInvalidEntryByMaintainReqBill(MaintainReqBillInfo maintainReqBill);
 }

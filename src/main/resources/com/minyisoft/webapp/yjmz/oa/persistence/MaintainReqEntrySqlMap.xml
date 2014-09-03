@@ -83,4 +83,8 @@
   <delete id="deleteByMaintainReqBill" parameterType="MaintainReqBillInfo">
     delete from t_oa_maintainreqentry where freqbillid = #{id}
   </delete>
+  
+  <delete id="deleteInvalidEntryByMaintainReqBill" parameterType="MaintainReqBillInfo">
+    delete from t_oa_maintainreqentry where freqbillid = #{id} and fid not in <foreach collection="entry" item="item" open="(" close=")" separator=",">#{item.id}</foreach>
+  </delete>
 </mapper>
