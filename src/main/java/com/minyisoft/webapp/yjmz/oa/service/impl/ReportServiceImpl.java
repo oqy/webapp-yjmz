@@ -34,4 +34,9 @@ public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCri
 					"工作报告创建者并不隶属于报告所属部门");
 		}
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }

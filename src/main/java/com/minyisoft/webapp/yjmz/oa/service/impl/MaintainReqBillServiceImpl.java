@@ -49,4 +49,9 @@ public class MaintainReqBillServiceImpl extends
 		}
 		maintainReqEntryDao.deleteInvalidEntryByMaintainReqBill(info);
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }

@@ -18,6 +18,7 @@ import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 public class WelcomeController extends ManageBaseController {
 	@Autowired
 	private WorkFlowTaskService workFlowTaskService;
+
 	/**
 	 * 获取用户登录界面
 	 */
@@ -26,5 +27,13 @@ public class WelcomeController extends ManageBaseController {
 		// 待处理任务数
 		model.addAttribute("todoTaskCount", workFlowTaskService.countTodoTasks(currentUser));
 		return "manage/welcome";
+	}
+
+	/**
+	 * 查看用户信息
+	 */
+	@RequestMapping(value = "userInfo.html", method = RequestMethod.GET)
+	public String getUserInfo() {
+		return "manage/userInfo";
 	}
 }
