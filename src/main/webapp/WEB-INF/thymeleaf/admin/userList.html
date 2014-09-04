@@ -46,6 +46,8 @@
         </tbody>
       </table>
     </div>
+    <div th:if="${!#lists.isEmpty(users)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='userList.html'"></div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(users)}">暂无系统用户信息</div>
   </div>
 </div>
 <!-- end main container -->

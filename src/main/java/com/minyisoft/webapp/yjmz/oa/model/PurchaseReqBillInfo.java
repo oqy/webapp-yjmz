@@ -34,7 +34,7 @@ public class PurchaseReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 		if (getDepartment() != null) {
 			sb.append(getDepartment().getName());
 		}
-		return sb.append("采购单[").append(getBillNumber()).append("]").toString();
+		return sb.append("采购单").toString();
 	}
 
 	@Override

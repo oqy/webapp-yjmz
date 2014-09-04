@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.web.BaseController;
+import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum;
@@ -29,10 +31,15 @@ public class UserController extends BaseController {
 	 * 获取系统用户列表
 	 */
 	@RequestMapping(value = "userList.html", method = RequestMethod.GET)
-	public String getUserList(Model model) {
-		UserCriteria userCriteria = new UserCriteria();
+	public String getUserList(UserCriteria userCriteria, Model model) {
+		if (userCriteria.getPageDevice() == null) {
+			userCriteria.setPageDevice(new PageDevice());
+		}
 		userCriteria.setExcludeIds(SystemConstant.ADMINISTATOR_USER_ID);
 		model.addAttribute("users", userService.getCollection(userCriteria));
+
+		SelectModuleFilter filter = new SelectModuleFilter(userCriteria);
+		model.addAttribute("filter", filter);
 		return "admin/userList";
 	}
 

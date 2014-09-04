@@ -50,6 +50,7 @@
       </table>
     </div>
     <div th:if="${!#lists.isEmpty(workFlowConfigs)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='workFlowConfigList.html'"></div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(workFlowConfigs)}">暂无工作流程定义</div>
   </div>
 </div>
 <!-- 流程图模态框 begin -->

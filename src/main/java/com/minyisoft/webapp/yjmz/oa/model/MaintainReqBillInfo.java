@@ -87,7 +87,7 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 		if (getDepartment() != null) {
 			sb.append(getDepartment().getName());
 		}
-		return sb.append("工程维修单[").append(getBillNumber()).append("]").toString();
+		return sb.append("工程维修单").toString();
 	}
 
 	@Override
