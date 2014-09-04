@@ -48,9 +48,9 @@
         </div>
       </div>
     </li>
-    <li class="dropdown"> <a href="#" class="dropdown-toggle hidden-xs hidden-sm" data-toggle="dropdown"> <span th:text="'您好，'+(${currentUser!=null}?${currentUser.name}:'系统管理员')" th:remove="tag">账号管理</span> <b class="caret"></b> </a>
+    <li class="dropdown"> <a href="#" class="dropdown-toggle hidden-xs hidden-sm" data-toggle="dropdown"> <span th:text="'您好，'+${T(com.minyisoft.webapp.yjmz.common.security.SecurityUtils).currentUser.name}" th:remove="tag">账号管理</span> <b class="caret"></b> </a>
       <ul class="dropdown-menu">
-        <li><a href="personal-info.html">个人信息</a></li>
+        <li th:if="${currentUser!=null}"><a href="personal-info.html" th:href="@{'/manage/userInfo.html'}">个人信息</a></li>
         <li><a href="#" th:href="@{'/share/passwordReset.html'}">修改密码</a></li>
       </ul>
     </li>

@@ -67,4 +67,9 @@ public class PurchaseReqBillServiceImpl extends
 		}
 		purchaseReqEntryDao.deleteInvalidEntryByPurchaseReqBill(info);
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }
