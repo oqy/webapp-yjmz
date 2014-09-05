@@ -28,13 +28,21 @@ public interface WorkFlowTaskService {
 	List<Task> getTodoTasks(UserInfo user);
 
 	/**
+	 * 查询已处理任务数
+	 * 
+	 * @param user
+	 * @return
+	 */
+	long countDoneTasks(UserInfo user);
+
+	/**
 	 * 获取已处理任务列表
 	 * 
 	 * @param user
 	 * @param pageDevice
 	 * @return
 	 */
-	List<HistoricTaskInstance> getDoneTask(UserInfo user, PageDevice pageDevice);
+	List<HistoricTaskInstance> getDoneTasks(UserInfo user, PageDevice pageDevice);
 
 	/**
 	 * 完成任务
@@ -46,7 +54,7 @@ public interface WorkFlowTaskService {
 	 *            任务本地变量
 	 */
 	void completeTask(Task task, Map<String, Object> variables, Map<String, Object> variablesLocal);
-	
+
 	/**
 	 * 完成任务并更新业务对象
 	 * 

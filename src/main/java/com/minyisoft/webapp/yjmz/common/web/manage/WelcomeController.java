@@ -31,6 +31,8 @@ public class WelcomeController extends ManageBaseController {
 	public String getWelcomePage(@ModelAttribute("currentUser") UserInfo currentUser, Model model) {
 		// 待处理任务数
 		model.addAttribute("todoTaskCount", workFlowTaskService.countTodoTasks(currentUser));
+		// 已处理任务数
+		model.addAttribute("doneTaskCount", workFlowTaskService.countDoneTasks(currentUser));
 		return "manage/welcome";
 	}
 

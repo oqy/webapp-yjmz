@@ -122,7 +122,7 @@ public class WorkFlowController extends ManageBaseController {
 	@RequestMapping(value = "myDoneTasks.html", method = RequestMethod.GET)
 	public String getMyDoneTaskList(@ModelAttribute("currentUser") UserInfo currentUser, Model model,
 			PageDevice pageDevice) {
-		model.addAttribute("doneTasks", workFlowTaskService.getDoneTask(currentUser, pageDevice));
+		model.addAttribute("doneTasks", workFlowTaskService.getDoneTasks(currentUser, pageDevice));
 		model.addAttribute("pageDevice", pageDevice);
 		return "manage/myDoneTasks";
 	}

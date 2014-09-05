@@ -42,7 +42,14 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 	}
 
 	@Override
-	public List<HistoricTaskInstance> getDoneTask(UserInfo user, PageDevice pageDevice) {
+	public long countDoneTasks(UserInfo user) {
+		Assert.notNull(user, "没有指定待查询的用户信息");
+		return historyService.createHistoricTaskInstanceQuery().taskAssignee(user.getCellPhoneNumber()).finished()
+				.count();
+	}
+
+	@Override
+	public List<HistoricTaskInstance> getDoneTasks(UserInfo user, PageDevice pageDevice) {
 		Assert.notNull(user, "没有指定待查询的用户信息");
 		HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery()
 				.taskAssignee(user.getCellPhoneNumber()).finished();
@@ -75,7 +82,7 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 		if (businessModel != null) {
 			ServiceUtils.getService(businessModel.getClass()).save(businessModel);
 		}
-		
+
 		// 若任务未签收，先进行任务签收操作
 		HistoricTaskInstance historicTask = historyService.createHistoricTaskInstanceQuery().taskId(task.getId())
 				.singleResult();

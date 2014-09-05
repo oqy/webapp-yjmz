@@ -20,15 +20,15 @@
   <!-- upper main stats -->
   <div id="main-stats">
     <div class="row stats-row">
-      <div class="col-md-4 col-sm-3 stat">
+      <div class="col-md-3 col-sm-3 stat">
         <div class="data"> <a class="number" th:href="@{'/manage/myTodoTasks.html'}" th:text="${todoTaskCount}">2457</a> 条 </div>
         <span class="date">待处理任务</span> </div>
-      <div class="col-md-4 col-sm-3 stat">
+      <div class="col-md-3 col-sm-3 stat">
+        <div class="data"> <a class="number" th:href="@{'/manage/myDoneTasks.html'}" th:text="${doneTaskCount}">2457</a> 条 </div>
+        <span class="date">已处理任务</span> </div>
+      <div class="col-md-3 col-sm-3 stat">
         <div class="data"> <span class="number" th:text="${currentUser.loginCount}">3240</span> 次 </div>
         <span class="date">登录次数</span> </div>
-      <div class="col-md-4 col-sm-3 stat last">
-        <div class="data"> <span class="number">322</span> 订单 </div>
-        <span class="date">本周</span> </div>
     </div>
   </div>
   <div id="pad-wrapper">
