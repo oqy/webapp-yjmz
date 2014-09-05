@@ -28,6 +28,7 @@ import com.minyisoft.webapp.yjmz.common.model.enumField.CompanyStatusEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowStatusEnum;
 import com.minyisoft.webapp.yjmz.common.service.CompanyService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
+import com.minyisoft.webapp.yjmz.common.service.WorkFlowProcessService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper.ProcessResourceType;
 
@@ -41,7 +42,9 @@ public class WorkFlowConfigController extends BaseController {
 	private WorkFlowConfigService workFlowConfigService;
 	@Autowired
 	private CompanyService companyService;
-	
+	@Autowired
+	private WorkFlowProcessService workFlowProcessService;
+
 	/**
 	 * 获取工作流流程定义配置信息
 	 */
@@ -102,7 +105,7 @@ public class WorkFlowConfigController extends BaseController {
 		model.addAttribute("workFlowConfig", workFlowConfig);
 		if (!workFlowConfig.isIdPresented()) {
 			model.addAttribute("workFlowTypes", ObjectUuidUtils.getSubclasses(WorkFlowBusinessModel.class));
-			
+
 			CompanyCriteria criteria = new CompanyCriteria();
 			criteria.setStatus(CompanyStatusEnum.NORMAL);
 			model.addAttribute("companies", companyService.getCollection(criteria));
@@ -152,7 +155,7 @@ public class WorkFlowConfigController extends BaseController {
 			PageDevice pageDevice, Model model) {
 		model.addAttribute("workFlowConfig", workFlowConfig);
 		model.addAttribute("processInstances",
-				workFlowConfigService.getProcessInstances(workFlowConfig.getProcessDefinitionId(), pageDevice));
+				workFlowProcessService.getProcessInstances(workFlowConfig.getProcessDefinitionId(), pageDevice));
 		model.addAttribute("pageDevice", pageDevice);
 		return "admin/processInstanceList";
 	}

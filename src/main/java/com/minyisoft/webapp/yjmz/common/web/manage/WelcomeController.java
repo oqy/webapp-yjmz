@@ -6,8 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 
 /**
@@ -18,6 +21,8 @@ import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 public class WelcomeController extends ManageBaseController {
 	@Autowired
 	private WorkFlowTaskService workFlowTaskService;
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 获取用户登录界面
@@ -30,10 +35,33 @@ public class WelcomeController extends ManageBaseController {
 	}
 
 	/**
+	 * 切换登录组织
+	 */
+	@RequestMapping(value = "switchOrg.html", method = RequestMethod.GET, params = "orgId")
+	public String switchOrg(@ModelAttribute("currentUser") UserInfo currentUser,
+			@RequestParam("orgId") ISystemOrgObject org) {
+		userService.switchOrg(currentUser, org);
+		return "redirect:welcome.html";
+	}
+
+	/**
 	 * 查看用户信息
 	 */
 	@RequestMapping(value = "userInfo.html", method = RequestMethod.GET)
 	public String getUserInfo() {
 		return "manage/userInfo";
+	}
+
+	/**
+	 * 设置默认登录组织
+	 */
+	@RequestMapping(value = "setDefaultLoginOrg.html", method = RequestMethod.GET, params = "orgId")
+	public String setDefaultLoginOrg(@ModelAttribute("currentUser") UserInfo currentUser,
+			@RequestParam("orgId") ISystemOrgObject org) {
+		if (currentUser.isBelongTo(org)) {
+			currentUser.setDefaultLoginOrg(org);
+			userService.save(currentUser);
+		}
+		return "redirect:userInfo.html";
 	}
 }

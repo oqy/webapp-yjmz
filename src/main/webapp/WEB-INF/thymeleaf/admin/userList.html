@@ -41,7 +41,7 @@
             <td th:text="${user.status.description}"></td>
             <td th:text="${user.loginCount}"></td>
             <td th:text="${user.lastLoginTime!=null}?${#dates.format(user.lastLoginTime,'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td><a th:href="@{'/admin/userEdit.html?userId='+${user.id}}" class="btn btn-default btn-sm" role="button">编辑</a></td>
+            <td><a th:href="@{'/admin/userEdit.html?userId='+${user.id}}" class="btn btn-primary btn-sm" role="button">编辑</a>&nbsp;<a onclick="return window.confirm('重置密码后登录密码将被修改为用户手机号码，确认重置?')" th:href="@{'/admin/userPasswordReset.html?userId='+${user.id}}" class="btn btn-warning btn-sm" role="button">重置登录密码</a></td>
           </tr>
         </tbody>
       </table>

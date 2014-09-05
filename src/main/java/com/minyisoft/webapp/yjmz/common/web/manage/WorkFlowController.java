@@ -33,7 +33,7 @@ import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
-import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
+import com.minyisoft.webapp.yjmz.common.service.WorkFlowProcessService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.common.util.workflow.UserFormType;
@@ -47,7 +47,7 @@ import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 @RequestMapping("/manage")
 public class WorkFlowController extends ManageBaseController {
 	@Autowired
-	private WorkFlowConfigService workFlowConfigService;
+	private WorkFlowProcessService workFlowProcessService;
 	@Autowired
 	private WorkFlowTaskService workFlowTaskService;
 	@Autowired
@@ -65,7 +65,7 @@ public class WorkFlowController extends ManageBaseController {
 	@RequestMapping(value = "startWorkFlow.html", method = RequestMethod.GET, params = "workFlowModelId")
 	public String startWorkFlow(@ModelAttribute("currentCompany") CompanyInfo currentCompany,
 			@RequestParam(value = "workFlowModelId", required = false) WorkFlowBusinessModel businessModel) {
-		workFlowConfigService.startProcess(currentCompany, businessModel);
+		workFlowProcessService.startProcess(currentCompany, businessModel);
 		return "redirect:workFlowDetail.html?workFlowModelId=" + businessModel.getId();
 	}
 

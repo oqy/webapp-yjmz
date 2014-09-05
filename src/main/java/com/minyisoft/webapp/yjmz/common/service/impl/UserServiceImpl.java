@@ -17,19 +17,21 @@ import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.PermissionInfo;
 import com.minyisoft.webapp.core.security.shiro.BasePrincipal;
-import com.minyisoft.webapp.core.security.shiro.cache.ShiroClusterCacheManager;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 import com.minyisoft.webapp.yjmz.common.persistence.RoleDao;
 import com.minyisoft.webapp.yjmz.common.persistence.UserDao;
+import com.minyisoft.webapp.yjmz.common.security.ShiroDbRealm;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 
 @Service("userService")
 public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, UserDao> implements UserService {
 	@Autowired
 	private RoleDao roleDao;
+	@Autowired
+	private ShiroDbRealm shiroDbRealm;
 
 	@Override
 	public UserInfo userLogin(String userLoginInputString, String userPassword) {
@@ -58,8 +60,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 	}
 
 	@Override
-	public void currentUserSwitchOrg(ISystemOrgObject newOrg) {
-		UserInfo currentUser = com.minyisoft.webapp.yjmz.common.security.SecurityUtils.getCurrentUser();
+	public void switchOrg(UserInfo currentUser, ISystemOrgObject newOrg) {
 		if (currentUser == null) {
 			throw new ServiceException("当前登录用户信息已失效，无法进行切换操作");
 		} else if (newOrg != null && !currentUser.isBelongTo(newOrg)) {
@@ -70,18 +71,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		Subject securitySubject = SecurityUtils.getSubject();
 		BasePrincipal principal = (BasePrincipal) securitySubject.getPrincipal();
 		// 去除当前principal授权的缓存信息
-		((DefaultSecurityManager) SecurityUtils.getSecurityManager()).getCacheManager()
-				.getCache(ShiroClusterCacheManager.SESSION_CLUSTER_AUTHORIZATION_CACHE_NAME)
-				.remove(principal.toString());
-		if (newOrg != null) {
-			principal.setSystemOrg(newOrg);
-		} else {
-			principal.setSystemOrg(null);
-		}
+		shiroDbRealm.getAuthorizationCache().remove(principal);
+
+		principal.setSystemOrg(newOrg != null ? newOrg : null);
 		// 将当前登录用户信息同步到session中
 		((DefaultSecurityManager) SecurityUtils.getSecurityManager()).getSubjectDAO().save(securitySubject);
 	}
-	
+
 	@Override
 	public void delete(UserInfo info) {
 		throw new ServiceException("不允许删除系统用户信息");
@@ -93,7 +89,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 			Assert.isTrue(info.isBelongTo(info.getDefaultLoginOrg()), "待编辑用户并不隶属于待设置的默认登录组织");
 		}
 	}
-	
+
 	@Override
 	protected void _validateDataBeforeAdd(UserInfo info) {
 		if (StringUtils.isBlank(info.getUserLoginName())) {
@@ -126,7 +122,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		user.setWeixinOpenId(weixinOpenId);
 		save(user);
 	}
-	
+
 	@Override
 	protected boolean useModelCache() {
 		return true;

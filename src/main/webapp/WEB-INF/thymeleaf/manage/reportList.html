@@ -38,7 +38,7 @@
             <td th:text="${report.department!=null}?${report.department.name}:'-'"></td>
             <td th:text="${report.reportTitle}"></td>
             <td th:text="${report.createUser.name}"></td>
-            <td><a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${report.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/reportEdit.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${report.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a onclick="return window.confirm('确定删除所选工作报告?')" th:if="${editable}" th:href="@{'/manage/reportDelete.html?reportId='+${report.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
+            <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${report.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/reportEdit.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${report.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a onclick="return window.confirm('确定删除所选工作报告?')" th:if="${editable}" th:href="@{'/manage/reportDelete.html?reportId='+${report.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
           </tr>
         </tbody>
       </table>

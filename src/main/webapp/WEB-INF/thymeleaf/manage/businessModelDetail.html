@@ -6,9 +6,9 @@
   <table class="table table-bordered">
     <tr>
       <th>档案编号</th>
-      <td th:text="${report.fileNumber}">&nbsp;</td>
+      <th style="font-weight:normal;" th:text="${report.fileNumber}">&nbsp;</th>
       <th>文件编号</th>
-      <td th:text="${report.billNumber}">&nbsp;</td>
+      <th style="font-weight:normal;" th:text="${report.billNumber}">&nbsp;</th>
     </tr>
     <tr>
       <th>由：</th>
@@ -21,7 +21,7 @@
       <td colspan="3" th:text="${report.reportTitle}">&nbsp;</td>
     </tr>
     <tr>
-      <td colspan="4" th:text="${report.description}"></td>
+      <td colspan="4" th:utext="${report.description}"></td>
     </tr>
   </table>
 </div>
@@ -29,9 +29,9 @@
   <table class="table table-bordered">
     <tr>
       <th>申请部门</th>
-      <td th:text="${maintainReqBill.department!=null}?${maintainReqBill.department.name}">&nbsp;</td>
+      <th style="font-weight:normal;" th:text="${maintainReqBill.department!=null}?${maintainReqBill.department.name}">&nbsp;</th>
       <th>日期</th>
-      <td th:text="${#dates.format(maintainReqBill.createDate,'yyyy年MM月dd日')}">&nbsp;</td>
+      <th style="font-weight:normal;" th:text="${#dates.format(maintainReqBill.createDate,'yyyy年MM月dd日')}">&nbsp;</th>
     </tr>
     <tr>
       <th>申请人</th>

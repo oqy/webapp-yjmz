@@ -20,11 +20,12 @@ public interface UserService extends BaseService<UserInfo, UserCriteria> {
 	UserInfo userLogin(String userLoginInputString, String userPassword);
 
 	/**
-	 * 当前登录用户切换登录组织架构
+	 * 用户切换登录组织
 	 * 
+	 * @param currentUser
 	 * @param newOrg
 	 */
-	void currentUserSwitchOrg(ISystemOrgObject newOrg);
+	void switchOrg(UserInfo currentUser, ISystemOrgObject newOrg);
 
 	/**
 	 * 获取指定用户于指定组织架构包含角色

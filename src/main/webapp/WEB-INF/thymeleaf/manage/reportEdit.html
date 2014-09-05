@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css"></style>
+<script th:src="@{'/resource/js/ckeditor/ckeditor.js'}"></script>
 </head>
 <body>
 <!-- navbar -->
@@ -38,8 +39,8 @@
       </div>
       <div class="form-group">
         <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;报告内容：</label>
-        <div class="col-md-6">
-          <textarea class="form-control required" rows="3" id="description" name="description" placeholder="请输入报告内容" th:text="${report.description}">
+        <div class="col-md-8">
+          <textarea class="form-control required ckeditor" rows="3" id="description" name="description" placeholder="请输入报告内容" th:text="${report.description}">
           </textarea>
         </div>
       </div>

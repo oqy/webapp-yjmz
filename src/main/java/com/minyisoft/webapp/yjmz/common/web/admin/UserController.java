@@ -67,4 +67,14 @@ public class UserController extends BaseController {
 		userService.submit(user);
 		return "redirect:userList.html";
 	}
+
+	/**
+	 * 重置用户登录密码
+	 */
+	@RequestMapping(value = "userPasswordReset.html", method = RequestMethod.GET)
+	public String resetUserPassword(@ModelAttribute("user") UserInfo user) {
+		user.constructUserPassword(user.getCellPhoneNumber());
+		userService.submit(user);
+		return "redirect:userList.html";
+	}
 }

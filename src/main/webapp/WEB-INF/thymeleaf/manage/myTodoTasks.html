@@ -37,6 +37,7 @@
         <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-primary btn-sm" role="button">处理任务</a></td>
       </tr>
     </table>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(todoTasks)}">暂没有待您处理的任务信息</div>
   </div>
 </div>
 <!-- end main container -->

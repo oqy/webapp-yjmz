@@ -3,6 +3,7 @@ package com.minyisoft.webapp.yjmz.common.security;
 import java.util.List;
 
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
@@ -26,6 +27,12 @@ public class ShiroDbRealm extends AbstractShiroDbRealm<UserInfo, RoleInfo> {
 
 	@Autowired
 	private UserService userService;
+
+	@Override
+	protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
+		return principals != null && principals.getPrimaryPrincipal() != null ? principals.getPrimaryPrincipal()
+				: super.getAuthenticationCacheKey(principals);
+	}
 
 	@Override
 	public String getHashAlgorithm() {

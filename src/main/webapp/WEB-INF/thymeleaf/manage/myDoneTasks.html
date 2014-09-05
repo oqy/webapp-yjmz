@@ -45,6 +45,7 @@
       </tr>
     </table>
     <div th:if="${!#lists.isEmpty(doneTasks)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${pageDevice},url='myDoneTasks.html',pageNumberVariableName='currentPage'"></div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(doneTasks)}">暂没有您已处理的任务信息</div>
   </div>
 </div>
 <!-- end main container -->

@@ -36,6 +36,10 @@
           <th>登录总数</th>
           <td th:text="${currentUser.loginCount}"></td>
         </tr>
+        <tr th:each="orgRelation : ${currentUser.orgRelations}">
+          <th th:if="${orgRelationStat.first}" th:rowspan="${currentUser.orgRelations.size()}">从属组织</th>
+          <td><span th:text="${orgRelation.org.name}" th:remove="tag"></span><span th:if="${orgRelation.org.equals(currentUser.defaultLoginOrg)}" class="label label-success pull-right">默认登录组织</span><a th:if="${!orgRelation.org.equals(currentUser.defaultLoginOrg)}" role="button" class="btn btn-primary btn-xs pull-right" th:href="@{'/manage/setDefaultLoginOrg.html?orgId='+${orgRelation.org.id}}">设为默认登录组织</a></td>
+        </tr>
       </table>
     </div>
     <div class="col-md-4 col-md-offset-1" th:if="${orgRelation!=null}">

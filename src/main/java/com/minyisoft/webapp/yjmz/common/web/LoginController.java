@@ -53,7 +53,7 @@ public class LoginController extends BaseController {
 				ISystemOrgObject loginOrg = optionCompanies.isEmpty() ? null : optionCompanies.get(0);
 				loginOrg = loginUser.getDefaultLoginOrg() != null ? loginUser.getDefaultLoginOrg() : loginOrg;
 				if (loginOrg != null) {
-					userService.currentUserSwitchOrg(loginOrg);
+					userService.switchOrg(loginUser, loginOrg);
 					return "redirect:manage/welcome.html";
 				} else {
 					redirectAttributes.addFlashAttribute("errorMsg", "抱歉，您尚不隶属系统内任何公司，暂不能使用系统，请首先联系系统管理员添加组织隶属关系");
