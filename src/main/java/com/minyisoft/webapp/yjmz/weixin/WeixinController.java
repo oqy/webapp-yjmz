@@ -1,4 +1,4 @@
-package com.minyisoft.webapp.yjmz.weixin.rest;
+package com.minyisoft.webapp.yjmz.weixin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.minyisoft.webapp.core.web.BaseController;
-import com.minyisoft.webapp.yjmz.weixin.dto.receive.MenuMessage;
-import com.minyisoft.webapp.yjmz.weixin.dto.receive.Message;
-import com.minyisoft.webapp.yjmz.weixin.dto.receive.MessageConverter;
-import com.minyisoft.webapp.yjmz.weixin.dto.receive.MessageType;
-import com.minyisoft.webapp.yjmz.weixin.dto.receive.TransferCustomerService;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.EventMessage;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.Message;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageConverter;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageType;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.TransferCustomerService;
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -69,8 +69,8 @@ public class WeixinController extends BaseController {
 				}
 			});
 
-			// 将消息转发到多客服
-			if (!(message instanceof MenuMessage)) {
+			// 非事件推送消息，将消息转发到多客服
+			if (!(message instanceof EventMessage)) {
 				TransferCustomerService tcs = new TransferCustomerService();
 				tcs.setFromUserName(weixinNumber);
 				tcs.setToUserName(message.getFromUserName());

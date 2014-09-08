@@ -34,15 +34,15 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/weixin/*" />
 			<bean
-				class="com.minyisoft.webapp.yjmz.weixin.interceptor.WeixinMessageReceiveInterceptor">
+				class="com.minyisoft.webapp.weixin.common.web.interceptor.WeixinMessageReceiveInterceptor">
 				<property name="weixinToken" value="weixinYjmz"/>
 			</bean>
 		</mvc:interceptor>
-		<mvc:interceptor>
+		<!-- <mvc:interceptor>
 			<mvc:mapping path="/manage/**" />
 			<bean
 				class="com.minyisoft.webapp.yjmz.weixin.interceptor.WeixinOAuthInterceptor"/>
-		</mvc:interceptor>
+		</mvc:interceptor> -->
 		<mvc:interceptor>
 			<mvc:mapping path="/admin/**" />
 			<bean
