@@ -87,7 +87,7 @@
             	fversion 
           from t_common_workflowconfig
     <include refid="getCriteriaCondition"/>
-    order by fcreatedate desc
+    order by fdefineorgid, fworkflowtype, fcreatedate desc
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>

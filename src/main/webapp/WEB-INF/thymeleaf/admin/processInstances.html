@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>运行流程实例-在线OA系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::adminSidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3><span th:text="${workFlowConfig.defineOrg.name}+'·'+${workFlowConfig.name}+'·运行流程实例'" th:remove="tag">运行流程实例</span><a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/admin/workFlowConfigList.html'}"><span class="icon-share-alt"></span>&nbsp;返回流程定义列表</a></h3>
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="active"><a th:href="@{'/admin/processInstances.html?workFlowConfigId='+${workFlowConfig.id}}">运行中</a></li>
+      <li><a th:href="@{'/admin/historicProcessInstances.html?workFlowConfigId='+${workFlowConfig.id}}">已结束</a></li>
+    </ul>
+    <table class="table table-hover table-striped mt10">
+      <tr>
+        <th>序号</th>
+        <th>流程名称</th>
+        <th>创建人</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+      <tr th:each="processInstance : ${processInstances}" th:with="businessModel=${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getObject(processInstance.businessKey)}">
+        <td th:text="${processInstanceStat.count + (pageDevice.currentPage - 1) * pageDevice.recordsPerPage}"></td>
+        <td th:text="${businessModel.processInstanceName}"></td>
+        <td th:text="${businessModel.createUser.name}"></td>
+        <td th:text="${processInstance.suspended}?'暂停':'正常'"></td>
+        <td><a th:href="@{'/admin/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-default btn-sm oprt-ajax" role="button">详情</a> <a th:href="@{'/admin/processInstances.html?suspendId='+${processInstance.id}}" class="btn btn-warning btn-sm oprt-ajax" role="button" th:if="${!processInstance.suspended}" onclick="return window.confirm('确定挂起所选流程实例？')" data-loading-text="处理中，请稍候...">挂起</a> <a th:href="@{'/admin/processInstances.html?activeId='+${processInstance.id}}" class="btn btn-warning btn-sm oprt-ajax" role="button" th:if="${processInstance.suspended}" onclick="return window.confirm('确定激活所选流程实例？')" vdata-loading-text="处理中，请稍候...">激活</a> <a th:href="@{'/admin/processInstances.html?deleteId='+${processInstance.id}}" class="btn btn-danger btn-sm" role="button" onclick="return window.confirm('确定删除所选流程实例？')">删除</a></td>
+      </tr>
+    </table>
+    <div th:if="${!#lists.isEmpty(processInstances)} and ${pageDevice.totalPages gt 1}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${pageDevice},url='processInstances.html',pageNumberVariableName='currentPage'"></div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(processInstances)}">暂没有运行中的流程实例</div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_workflow_config'" th:remove="tag"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('a.oprt-ajax').click(function(){
+		var btn = jQuery(this).button('loading');
+		jQuery.getJSON(jQuery(this).attr('href'),function(data){
+			if(Boolean(data)){
+				location.reload();
+			} else{
+				alert('抱歉，操作出错，请稍候再试');
+				btn.button('reset');
+			}
+		});
+		return false;
+	});
+});
+</script>
+</body>
+</html>

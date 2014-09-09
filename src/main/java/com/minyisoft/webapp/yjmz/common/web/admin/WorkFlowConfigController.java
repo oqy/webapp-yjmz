@@ -155,7 +155,7 @@ public class WorkFlowConfigController extends BaseController {
 			PageDevice pageDevice, Model model) {
 		model.addAttribute("workFlowConfig", workFlowConfig);
 		model.addAttribute("processInstances",
-				workFlowProcessService.getProcessInstances(workFlowConfig.getProcessDefinitionId(), pageDevice));
+				workFlowProcessService.getHistoricProcessInstances(workFlowConfig.getProcessDefinitionId(), pageDevice));
 		model.addAttribute("pageDevice", pageDevice);
 		return "admin/processInstanceList";
 	}

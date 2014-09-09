@@ -3,6 +3,7 @@ package com.minyisoft.webapp.yjmz.common.service;
 import java.util.List;
 
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.runtime.ProcessInstance;
 
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
@@ -22,15 +23,25 @@ public interface WorkFlowProcessService {
 	 * 删除运行中的工作流实例
 	 * 
 	 * @param processInstanceId
+	 * @param deleteReason
 	 */
-	void deleteRunningProcess(String processInstanceId);
-
+	void deleteRunningProcess(String processInstanceId, String deleteReason);
+	
 	/**
-	 * 获取指定流程定义的流程实例
+	 * 获取指定流程定义的运行流程实例
 	 * 
 	 * @param processDefinitionId
 	 * @param pageDevice
 	 * @return
 	 */
-	List<HistoricProcessInstance> getProcessInstances(String processDefinitionId, PageDevice pageDevice);
+	List<ProcessInstance> getProcessInstances(String processDefinitionId, PageDevice pageDevice);
+
+	/**
+	 * 获取指定流程定义的历史流程实例
+	 * 
+	 * @param processDefinitionId
+	 * @param pageDevice
+	 * @return
+	 */
+	List<HistoricProcessInstance> getHistoricProcessInstances(String processDefinitionId, PageDevice pageDevice);
 }

@@ -9,6 +9,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionParser;
@@ -43,10 +44,10 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 	private WorkFlowConfigService workFlowConfigService;
 
 	@Override
-	public List<HistoricProcessInstance> getProcessInstances(String processDefinitionId, PageDevice pageDevice) {
+	public List<HistoricProcessInstance> getHistoricProcessInstances(String processDefinitionId, PageDevice pageDevice) {
 		Assert.hasText(processDefinitionId, "流程定义ID不能为空");
 		HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery()
-				.processDefinitionId(processDefinitionId).orderByProcessInstanceId().desc();
+				.processDefinitionId(processDefinitionId).finished().orderByProcessDefinitionId().desc();
 		if (pageDevice != null) {
 			pageDevice.setTotalRecords((int) query.count());
 			return query.listPage(pageDevice.getStartRowNumberOfCurrentPage() - 1, pageDevice.getRecordsPerPage());
@@ -97,8 +98,34 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 	}
 
 	@Override
-	public void deleteRunningProcess(String processInstanceId) {
-		runtimeService.deleteProcessInstance(processInstanceId, null);
-		historyService.deleteHistoricProcessInstance(processInstanceId);
+	public void deleteRunningProcess(String processInstanceId, String deleteReason) {
+		SecurityUtils.checkIsCurrentUserAdministrator();
+		Assert.hasText(processInstanceId, "流程定义ID不能为空");
+		HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceId(processInstanceId).singleResult();
+		if (processInstance != null) {
+			// 清空WorkFlowBusinessModel的processInstanceId字段
+			WorkFlowBusinessModel model = (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
+					.getBusinessKey());
+			if (model != null) {
+				model.setProcessInstanceId(null);
+				ServiceUtils.getService(model.getClass()).save(model);
+			}
+			runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
+			historyService.deleteHistoricProcessInstance(processInstanceId);
+		}
+	}
+
+	@Override
+	public List<ProcessInstance> getProcessInstances(String processDefinitionId, PageDevice pageDevice) {
+		Assert.hasText(processDefinitionId, "流程定义ID不能为空");
+		ProcessInstanceQuery query = runtimeService.createProcessInstanceQuery()
+				.processDefinitionId(processDefinitionId).orderByProcessInstanceId().desc();
+		if (pageDevice != null) {
+			pageDevice.setTotalRecords((int) query.count());
+			return query.listPage(pageDevice.getStartRowNumberOfCurrentPage() - 1, pageDevice.getRecordsPerPage());
+		} else {
+			return query.list();
+		}
 	}
 }
