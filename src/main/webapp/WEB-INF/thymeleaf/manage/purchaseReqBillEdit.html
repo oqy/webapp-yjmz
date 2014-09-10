@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>编辑采购单-在线OA系统</title>
+<title>编辑采购单-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css"></style>
@@ -16,8 +16,14 @@
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
-    <h3>编辑采购单<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/purchaseReqBillList.html'}"><span class="icon-share-alt"></span>&nbsp;返回采购单列表</a></h3>
+    <h3 style="border-bottom:#ccc solid 1px;">编辑采购单<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/purchaseReqBillList.html'}"><span class="icon-share-alt"></span>&nbsp;返回采购单列表</a></h3>
     <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/purchaseReqBillEdit.html'}" method="post">
+      <div class="form-group">
+        <label class="col-md-2 control-label" style="text-align:left">申请部门：</label>
+        <div class="col-md-6">
+          <p class="form-control-static" th:text="${currentDepartment!=null}?${currentDepartment.name}"></p>
+        </div>
+      </div>
       <table class="table table-hover table-striped">
         <thead>
           <tr>

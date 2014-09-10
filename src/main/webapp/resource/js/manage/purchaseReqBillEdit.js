@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
 	});
 	
 	jQuery('tbody').on("click",'a.rm-entry', function() {
-		if(jQuery('tbody tr').length()>1){
+		if(jQuery('tbody tr').length>1){
   			jQuery(this).parent().parent().remove();
   		}
 		return false;

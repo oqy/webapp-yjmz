@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="purchaseProcess" name="采购单审批流程" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="applyUserId"></startEvent>
     <userTask id="usertask1" name="仓库检查是否有该物料的库存" activiti:assignee="13630150260" activiti:formKey="purchaseReqDepotCheck"></userTask>
@@ -23,10 +23,10 @@
     <sequenceFlow id="flow10" sourceRef="usertask7" targetRef="endevent1"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow11" sourceRef="usertask2" targetRef="exclusivegateway2"></sequenceFlow>
-    <sequenceFlow id="flow13" name="通过" sourceRef="exclusivegateway2" targetRef="usertask3">
+    <sequenceFlow id="flow13" sourceRef="exclusivegateway2" targetRef="usertask3">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${allowPurchaseReq}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow14" name="不通过" sourceRef="exclusivegateway2" targetRef="endevent1">
+    <sequenceFlow id="flow14" sourceRef="exclusivegateway2" targetRef="endevent1">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!allowPurchaseReq}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow15" sourceRef="usertask1" targetRef="usertask2"></sequenceFlow>
@@ -94,18 +94,12 @@
       <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
         <omgdi:waypoint x="571.0" y="248.0"></omgdi:waypoint>
         <omgdi:waypoint x="571.0" y="296.0"></omgdi:waypoint>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="581.0" y="256.0"></omgdc:Bounds>
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
         <omgdi:waypoint x="571.0" y="208.0"></omgdi:waypoint>
         <omgdi:waypoint x="570.0" y="180.0"></omgdi:waypoint>
         <omgdi:waypoint x="1117.0" y="180.0"></omgdi:waypoint>
         <omgdi:waypoint x="1157.0" y="211.0"></omgdi:waypoint>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="582.0" y="161.0"></omgdc:Bounds>
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
         <omgdi:waypoint x="365.0" y="228.0"></omgdi:waypoint>

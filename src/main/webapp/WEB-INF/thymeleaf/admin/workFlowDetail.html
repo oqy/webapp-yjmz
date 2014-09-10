@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:with="classLabel=${businessModel.classLabel}">
 <head>
-<title th:text="${classLabel}+'详情-在线OA系统'">编辑工作报告-在线OA系统</title>
+<title th:text="${classLabel}+'详情-敏易在线办公系统'">编辑工作报告-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css"></style>
@@ -29,7 +29,7 @@
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::purchaseReqBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E349704C')}" th:with="purchaseReqBill=${businessModel}"> </div>
       <div class="tab-pane" id="workFlowDetail">
         <div class="alert alert-warning" role="alert" th:if="${businessModel.processUnStarted}">当前<span th:text="${classLabel}"></span>尚未进入工作流程，暂无相关可供查阅的流程信息</div>
-        <img alt="" class="img-responsive" th:if="${!businessModel.processUnStarted}" th:src="@{'/manage/processInstanceDiagram.html?processInstanceId='+${businessModel.processInstanceId}}"/>
+        <img alt="" class="img-responsive" th:if="${!businessModel.processUnStarted}" th:src="@{'/admin/processInstanceDiagram.html?processInstanceId='+${businessModel.processInstanceId}}"/>
         <div class="table-responsive" th:if="${!businessModel.processUnStarted}">
           <table class="table table-hover table-striped">
             <tr>

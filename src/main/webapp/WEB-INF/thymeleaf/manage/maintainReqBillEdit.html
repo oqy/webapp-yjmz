@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>编辑工程维修单-在线OA系统</title>
+<title>编辑工程维修单-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css"></style>
@@ -18,6 +18,12 @@
   <div id="pad-wrapper">
     <h3 style="border-bottom:#ccc solid 1px;">编辑工程维修单<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/maintainReqBillList.html'}"><span class="icon-share-alt"></span>&nbsp;返回工程维修单列表</a></h3>
     <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/maintainReqBillEdit.html'}" method="post" style="margin-top:20px;">
+      <div class="form-group">
+        <label class="col-md-2 control-label">申请部门：</label>
+        <div class="col-md-6">
+          <p class="form-control-static" th:text="${currentDepartment!=null}?${currentDepartment.name}"></p>
+        </div>
+      </div>
       <div class="form-group">
         <label for="location" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;位置：</label>
         <div class="col-md-6">
