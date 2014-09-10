@@ -55,7 +55,7 @@ public class WorkFlowProcessController extends BaseController {
 	/**
 	 * 挂起工作流程实例
 	 */
-	@RequestMapping(value = "processInstances.html", method = RequestMethod.GET, params = "suspendId")
+	@RequestMapping(value = "processInstances.do", method = RequestMethod.GET, params = "suspendId")
 	@ResponseBody
 	public boolean suspendProcessInstance(@RequestParam String suspendId) {
 		try {
@@ -71,7 +71,7 @@ public class WorkFlowProcessController extends BaseController {
 	/**
 	 * 激活工作流程实例
 	 */
-	@RequestMapping(value = "processInstances.html", method = RequestMethod.GET, params = "activeId")
+	@RequestMapping(value = "processInstances.do", method = RequestMethod.GET, params = "activeId")
 	@ResponseBody
 	public boolean activeProcessInstance(@RequestParam String activeId) {
 		try {
@@ -87,11 +87,13 @@ public class WorkFlowProcessController extends BaseController {
 	/**
 	 * 删除流程实例
 	 */
-	@RequestMapping(value = "processInstances.html", method = RequestMethod.GET, params = "deleteId")
-	public String getProcessInstances(@RequestParam("deleteId") String deleteId,
+	@RequestMapping(value = "processInstances.html", method = RequestMethod.GET, params = { "workFlowConfigId",
+			"deleteId" })
+	public String getProcessInstances(@RequestParam("workFlowConfigId") String workFlowConfigId,
+			@RequestParam("deleteId") String deleteId,
 			@RequestParam(value = "deleteReason", required = false) String deleteReason) {
 		workFlowProcessService.deleteRunningProcess(deleteId, deleteReason);
-		return "redirect:processInstances.html";
+		return "redirect:processInstances.html?workFlowConfigId=" + workFlowConfigId;
 	}
 
 	/**

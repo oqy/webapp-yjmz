@@ -68,29 +68,39 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 		criteria.setWorkFlowType(businessModel.getClass());
 		List<WorkFlowConfigInfo> configs = workFlowConfigService.getCollection(criteria);
 
+		WorkFlowConfigInfo targetCoinfig = null;// 待启动的工作流配置信息
 		StandardEvaluationContext context = new StandardEvaluationContext(businessModel);
 		ExpressionParser parser = new SpelExpressionParser();
 		for (WorkFlowConfigInfo config : configs) {
-			if (StringUtils.isNotBlank(config.getProcessDefinitionId())
+			if (StringUtils.isNotBlank(config.getProcessDefinitionId())// 当前流程id不为空
 					&& (StringUtils.isBlank(config.getTriggerExpression()) || parser.parseExpression(
-							config.getTriggerExpression()).getValue(context, Boolean.class))) {
-				// 启动工作流
-				try {
-					Map<String, Object> processVariables = Maps.newHashMap();
-					processVariables.put(businessModel.getBusinessModelProcessVariableName(), businessModel);
-					identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getCellPhoneNumber());
-					ProcessInstance instance = runtimeService.startProcessInstanceById(config.getProcessDefinitionId(),
-							businessModel.getId(), processVariables);
+							config.getTriggerExpression()).getValue(context, Boolean.class))// 当前流程无触发条件或当前业务对象符合触发条件
+					&& (targetCoinfig == null// 待启动流程为空
+							|| (StringUtils.isBlank(targetCoinfig.getTriggerExpression()) && !StringUtils
+									.isBlank(config.getTriggerExpression())) // 或待启动流程无触发条件，现流程存在触发条件
+					|| (targetCoinfig.getCreateDate().before(config.getCreateDate()))))// 或待启动流程创建时间早于当前流程创建时间
+			{
+				targetCoinfig = config;
+			}
+		}
 
-					// 保存工作流程实例id
-					businessModel.setProcessInstanceId(instance.getId());
-					ServiceUtils.getService(businessModel.getClass()).save(businessModel);
-					return;
-				} catch (Exception e) {
-					throw new ServiceException(e.getMessage(), e);
-				} finally {
-					identityService.setAuthenticatedUserId(null);
-				}
+		if (targetCoinfig != null) {
+			// 启动工作流
+			try {
+				Map<String, Object> processVariables = Maps.newHashMap();
+				processVariables.put(businessModel.getBusinessModelProcessVariableName(), businessModel);
+				identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getCellPhoneNumber());
+				ProcessInstance instance = runtimeService.startProcessInstanceById(
+						targetCoinfig.getProcessDefinitionId(), businessModel.getId(), processVariables);
+
+				// 保存工作流程实例id
+				businessModel.setProcessInstanceId(instance.getId());
+				ServiceUtils.getService(businessModel.getClass()).save(businessModel);
+				return;
+			} catch (Exception e) {
+				throw new ServiceException(e.getMessage(), e);
+			} finally {
+				identityService.setAuthenticatedUserId(null);
 			}
 		}
 		throw new ServiceException(owner.getName() + "并没有为指定的"
