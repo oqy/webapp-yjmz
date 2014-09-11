@@ -31,11 +31,11 @@ public class UserOrgRelationServiceImpl extends
 	private UserService userService;
 	@Autowired
 	private RoleDao roleDao;
-	private UserOrgRelationCUDPostProcessor processor = new UserOrgRelationCUDPostProcessor();
 
-	@Override
-	protected CUDPostProcessor<?>[] getPostProcessors() {
-		return new CUDPostProcessor<?>[] { processor };
+	public UserOrgRelationServiceImpl() {
+		List<CUDPostProcessor<?>> processors = Lists.newArrayList();
+		processors.add(new UserOrgRelationCUDPostProcessor());
+		setPostProcessors(processors);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class UserOrgRelationServiceImpl extends
 			}
 		}
 	}
-	
+
 	@Override
 	public List<UserInfo> getSubordinateness(ISystemOrgObject org, UserInfo upperUser) {
 		Assert.notNull(org, "所属组织不能为空");
@@ -81,7 +81,7 @@ public class UserOrgRelationServiceImpl extends
 	protected boolean useModelCache() {
 		return true;
 	}
-	
+
 	@Override
 	public Optional<UserInfo> getDepartmentLeader(DepartmentInfo department) {
 		Assert.notNull(department, "部门不能为空");

@@ -1,8 +1,11 @@
 package com.minyisoft.webapp.yjmz.common.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import com.minyisoft.webapp.core.service.CUDPostProcessor;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
@@ -17,11 +20,11 @@ public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentInfo, Depar
 		DepartmentService {
 	@Autowired
 	private UserOrgRelationDao userOrgRelationDao;
-	private DepartmentCUDPostProcessor processor = new DepartmentCUDPostProcessor();
 
-	@Override
-	protected CUDPostProcessor<?>[] getPostProcessors() {
-		return new CUDPostProcessor<?>[] { processor };
+	public DepartmentServiceImpl() {
+		List<CUDPostProcessor<?>> processors = Lists.newArrayList();
+		processors.add(new DepartmentCUDPostProcessor());
+		setPostProcessors(processors);
 	}
 
 	@Override
