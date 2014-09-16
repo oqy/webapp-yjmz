@@ -78,6 +78,9 @@
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(viewer)">
             and exists(select * from t_common_userorgrelation where fuserid=m.fcreateuserid and forgid=m.fcompanyid and fuserpath like concat('%',#{viewer.id},'%'))
         </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(processStatus)">
+            and fprocessstatus = #{processStatus}
+        </if>
 	</where>
   </sql>
   

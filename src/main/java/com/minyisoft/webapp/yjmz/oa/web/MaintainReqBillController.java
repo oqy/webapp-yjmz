@@ -1,5 +1,6 @@
 package com.minyisoft.webapp.yjmz.oa.web;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
+import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 import com.minyisoft.webapp.yjmz.oa.model.MaintainReqBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.MaintainReqBillCriteria;
@@ -36,7 +38,8 @@ public class MaintainReqBillController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "maintainReqBillList.html", method = RequestMethod.GET)
 	public String getMaintainReqBillList(@ModelAttribute("currentUser") UserInfo currentUser,
-			@ModelAttribute("currentCompany") CompanyInfo currentCompany, MaintainReqBillCriteria criteria, Model model) {
+			@ModelAttribute("currentCompany") CompanyInfo currentCompany, MaintainReqBillCriteria criteria, Model model)
+			throws Exception {
 		if (criteria.getPageDevice() == null) {
 			criteria.setPageDevice(new PageDevice());
 		}
@@ -49,6 +52,7 @@ public class MaintainReqBillController extends ManageBaseController {
 						.getCollection(criteria));
 
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
+		filter.addField("processStatus", Arrays.asList(WorkFlowProcessStatusEnum.values()));
 		model.addAttribute("filter", filter);
 		return "manage/maintainReqBillList";
 	}
