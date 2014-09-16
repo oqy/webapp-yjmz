@@ -9,6 +9,7 @@
   	  <result property="company" column="fcompanyid" typeHandler="bizModelHandler" />
       <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
       <result property="processInstanceId" column="fprocessinstanceid" />
+      <result property="processStatus" column="fprocessstatus" />
       <result property="billNumber" column="fbillnumber" />
       <result property="description" column="fdescription" />
       <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
@@ -29,20 +30,21 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="PurchaseReqBillResult">
     select
-    			p.fcompanyid ,
-            	p.fdepartmentid ,
-            	p.fprocessinstanceid ,
-            	p.fbillnumber ,
-            	p.fdescription ,
-            	p.fsourcebillid ,
-            	p.fcreateuserid ,
-            	p.fcreatedate ,
-            	p.flastupdateuserid ,
-            	p.flastupdatedate ,
-            	p.fid ,
-            	p.fversion ,
-            	e.fid as fpurchasereqentryid
-          from t_oa_purchasereqbill p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
+		p.fcompanyid ,
+      	p.fdepartmentid ,
+      	p.fprocessinstanceid ,
+      	p.fprocessstatus ,
+      	p.fbillnumber ,
+      	p.fdescription ,
+      	p.fsourcebillid ,
+      	p.fcreateuserid ,
+      	p.fcreatedate ,
+      	p.flastupdateuserid ,
+      	p.flastupdatedate ,
+      	p.fid ,
+      	p.fversion ,
+      	e.fid as fpurchasereqentryid
+    from t_oa_purchasereqbill p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
     where p.fid = #{id}
   </select>
   
@@ -76,19 +78,20 @@
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="PurchaseReqBillCriteria" resultMap="PurchaseReqBillResult">
     select
-    			p.fcompanyid ,
-            	p.fdepartmentid ,
-            	p.fprocessinstanceid ,
-            	p.fbillnumber ,
-            	p.fdescription ,
-            	p.fsourcebillid ,
-            	p.fcreateuserid ,
-            	p.fcreatedate ,
-            	p.flastupdateuserid ,
-            	p.flastupdatedate ,
-            	p.fid ,
-            	p.fversion ,
-            	e.fid as fpurchasereqentryid
+		p.fcompanyid ,
+      	p.fdepartmentid ,
+      	p.fprocessinstanceid ,
+      	p.fprocessstatus ,
+      	p.fbillnumber ,
+      	p.fdescription ,
+      	p.fsourcebillid ,
+      	p.fcreateuserid ,
+      	p.fcreatedate ,
+      	p.flastupdateuserid ,
+      	p.flastupdatedate ,
+      	p.fid ,
+      	p.fversion ,
+      	e.fid as fpurchasereqentryid
     from 
     (select * from t_oa_purchasereqbill p
     <include refid="getCriteriaCondition"/>
@@ -101,14 +104,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="PurchaseReqBillInfo">
-    insert into t_oa_purchasereqbill (fcompanyid,fdepartmentid,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{company.id},#{department.id},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_purchasereqbill (fcompanyid,fdepartmentid,fprocessinstanceid,fprocessstatus,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{processInstanceId},#{processStatus},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="PurchaseReqBillInfo">
-    update t_oa_purchasereqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},fprocessinstanceid=#{processInstanceId},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},
-    fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_oa_purchasereqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fbillnumber=#{billNumber},fdescription=#{description},
+    fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

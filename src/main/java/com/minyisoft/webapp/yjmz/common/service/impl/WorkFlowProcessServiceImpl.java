@@ -90,15 +90,9 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 				Map<String, Object> processVariables = Maps.newHashMap();
 				processVariables.put(businessModel.getBusinessModelProcessVariableName(), businessModel);
 				identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getCellPhoneNumber());
-				ProcessInstance instance = runtimeService.startProcessInstanceById(
-						targetCoinfig.getProcessDefinitionId(), businessModel.getId(), processVariables);
-
-				// 保存工作流程实例id
-				businessModel.setProcessInstanceId(instance.getId());
-				ServiceUtils.getService(businessModel.getClass()).save(businessModel);
+				runtimeService.startProcessInstanceById(targetCoinfig.getProcessDefinitionId(), businessModel.getId(),
+						processVariables);
 				return;
-			} catch (Exception e) {
-				throw new ServiceException(e.getMessage(), e);
 			} finally {
 				identityService.setAuthenticatedUserId(null);
 			}

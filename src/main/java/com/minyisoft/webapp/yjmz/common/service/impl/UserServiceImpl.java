@@ -46,7 +46,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		}
 
 		UsernamePasswordToken token = new UsernamePasswordToken(loginUser.getUserLoginName(), userPassword);
-		token.setRememberMe(true);
+		// token.setRememberMe(true);
 		securitySubject.login(token);
 
 		// 累增用户登录次数并记录登录日志

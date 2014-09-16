@@ -13,6 +13,7 @@ import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
+import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 
 /**
  * @author qingyong_ou 采购单
@@ -27,6 +28,8 @@ public class PurchaseReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private List<PurchaseReqEntryInfo> entry;
 	// 工作流流程实例id
 	private String processInstanceId;
+	// 工作流程状态
+	private WorkFlowProcessStatusEnum processStatus = WorkFlowProcessStatusEnum.UNSTARTED;
 
 	@Override
 	public String getProcessInstanceName() {

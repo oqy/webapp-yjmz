@@ -222,3 +222,7 @@ create table t_common_workflowconfig
   primary key (fid)
 );
 ALTER TABLE t_oa_purchasereqentry ADD fdepotamount DECIMAL(13, 2) NULL DEFAULT 0 AFTER fremark;
+
+ALTER TABLE t_oa_report ADD fprocessstatus INT NULL DEFAULT 0 AFTER fprocessinstanceid;
+ALTER TABLE t_oa_purchasereqbill ADD fprocessstatus INT NULL DEFAULT 0 AFTER fprocessinstanceid;
+ALTER TABLE t_oa_maintainreqbill ADD fprocessstatus INT NULL DEFAULT 0 AFTER fprocessinstanceid;

@@ -1,6 +1,7 @@
 package com.minyisoft.webapp.yjmz.common.model;
 
 import com.minyisoft.webapp.core.model.IModelObject;
+import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 
 /**
  * @author qingyong_ou 工作流业务基类对象接口
@@ -26,6 +27,20 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	 * @return
 	 */
 	void setProcessInstanceId(String processInstanceId);
+
+	/**
+	 * 获取工作流程状态
+	 * 
+	 * @return
+	 */
+	WorkFlowProcessStatusEnum getProcessStatus();
+
+	/**
+	 * 设置工作流程状态
+	 * 
+	 * @param status
+	 */
+	void setProcessStatus(WorkFlowProcessStatusEnum status);
 
 	/**
 	 * 获取业务对象对应的工作流程变量名

@@ -28,6 +28,7 @@
             <th>数量</th>
             <th>单价</th>
             <th>备注</th>
+            <th style="text-align:center;">流程状态</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -46,6 +47,7 @@
                   </tr>
                 </tbody>
               </table></td>
+            <td style="text-align:center;"><i th:class="${purchaseReqBill.processStatus.value eq 0}?'icon-circle-blank':'icon-circle'" th:classappend="${purchaseReqBill.processStatus.value eq 2}?'text-success':(${purchaseReqBill.processStatus.value eq 1}?'text-primary')"></i></td>
             <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/purchaseReqBillEdit.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a onclick="return window.confirm('确定删除所选采购单?')" th:if="${editable}" th:href="@{'/manage/purchaseReqBillDelete.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
           </tr>
         </tbody>

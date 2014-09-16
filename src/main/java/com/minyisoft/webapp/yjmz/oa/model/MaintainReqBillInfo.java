@@ -19,6 +19,7 @@ import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
+import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 
 /**
@@ -48,6 +49,8 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private UserInfo examiner;
 	// 工作流流程实例id
 	private String processInstanceId;
+	// 工作流程状态
+	private WorkFlowProcessStatusEnum processStatus = WorkFlowProcessStatusEnum.UNSTARTED;
 
 	/**
 	 * 获取维修材料总数量

@@ -15,6 +15,7 @@
       <result property="receiver" column="freceiverid" typeHandler="bizModelHandler" />
       <result property="examiner" column="fexaminerid" typeHandler="bizModelHandler" />
       <result property="processInstanceId" column="fprocessinstanceid" />
+      <result property="processStatus" column="fprocessstatus" />
       <result property="billNumber" column="fbillnumber" />
       <result property="description" column="fdescription" />
       <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
@@ -35,26 +36,27 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="MaintainReqBillResult">
     select
-    			m.fcompanyid ,
-            	m.fdepartmentid ,
-            	m.flocation ,
-            	m.fmaintaintypes ,
-            	m.fmaintenancemanid ,
-            	m.ffinishdate ,
-            	m.freceiverid ,
-            	m.fexaminerid ,
-            	m.fprocessinstanceid ,
-            	m.fbillnumber ,
-            	m.fdescription ,
-            	m.fsourcebillid ,
-            	m.fcreateuserid ,
-            	m.fcreatedate ,
-            	m.flastupdateuserid ,
-            	m.flastupdatedate ,
-            	m.fid ,
-            	m.fversion ,
-            	e.fid as fmaintainreqentryid
-          from t_oa_maintainreqbill m left join t_oa_maintainreqentry e on m.fid = e.freqbillid
+		m.fcompanyid ,
+      	m.fdepartmentid ,
+      	m.flocation ,
+      	m.fmaintaintypes ,
+      	m.fmaintenancemanid ,
+      	m.ffinishdate ,
+      	m.freceiverid ,
+      	m.fexaminerid ,
+      	m.fprocessinstanceid ,
+      	m.fprocessstatus ,
+      	m.fbillnumber ,
+      	m.fdescription ,
+      	m.fsourcebillid ,
+      	m.fcreateuserid ,
+      	m.fcreatedate ,
+      	m.flastupdateuserid ,
+      	m.flastupdatedate ,
+      	m.fid ,
+      	m.fversion ,
+      	e.fid as fmaintainreqentryid
+    from t_oa_maintainreqbill m left join t_oa_maintainreqentry e on m.fid = e.freqbillid
     where m.fid = #{id}
   </select>
   
@@ -88,25 +90,26 @@
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="MaintainReqBillCriteria" resultMap="MaintainReqBillResult">
     select
-    			m.fcompanyid ,
-            	m.fdepartmentid ,
-            	m.flocation ,
-            	m.fmaintaintypes ,
-            	m.fmaintenancemanid ,
-            	m.ffinishdate ,
-            	m.freceiverid ,
-            	m.fexaminerid ,
-            	m.fprocessinstanceid ,
-            	m.fbillnumber ,
-            	m.fdescription ,
-            	m.fsourcebillid ,
-            	m.fcreateuserid ,
-            	m.fcreatedate ,
-            	m.flastupdateuserid ,
-            	m.flastupdatedate ,
-            	m.fid ,
-            	m.fversion ,
-            	e.fid as fmaintainreqentryid
+		m.fcompanyid ,
+      	m.fdepartmentid ,
+      	m.flocation ,
+      	m.fmaintaintypes ,
+      	m.fmaintenancemanid ,
+      	m.ffinishdate ,
+      	m.freceiverid ,
+      	m.fexaminerid ,
+      	m.fprocessinstanceid ,
+      	m.fprocessstatus ,
+      	m.fbillnumber ,
+      	m.fdescription ,
+      	m.fsourcebillid ,
+      	m.fcreateuserid ,
+      	m.fcreatedate ,
+      	m.flastupdateuserid ,
+      	m.flastupdatedate ,
+      	m.fid ,
+      	m.fversion ,
+      	e.fid as fmaintainreqentryid
     from 
     (select * from t_oa_maintainreqbill m
     <include refid="getCriteriaCondition"/>
@@ -119,14 +122,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="MaintainReqBillInfo">
-    insert into t_oa_maintainreqbill (fcompanyid,fdepartmentid,flocation,fmaintaintypes,fmaintenancemanid,ffinishdate,freceiverid,fexaminerid,fprocessinstanceid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{company.id},#{department.id},#{location},#{maintainTypes,typeHandler=describableEnumArrayHandler},#{maintenanceMan.id},#{finishDate},#{receiver.id},#{examiner.id},#{processInstanceId},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_maintainreqbill (fcompanyid,fdepartmentid,flocation,fmaintaintypes,fmaintenancemanid,ffinishdate,freceiverid,fexaminerid,fprocessinstanceid,fprocessstatus,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{location},#{maintainTypes,typeHandler=describableEnumArrayHandler},#{maintenanceMan.id},#{finishDate},#{receiver.id},#{examiner.id},#{processInstanceId},#{processStatus},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="MaintainReqBillInfo">
     update t_oa_maintainreqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},flocation=#{location},fmaintaintypes=#{maintainTypes,typeHandler=describableEnumArrayHandler},fmaintenancemanid=#{maintenanceMan.id},ffinishdate=#{finishDate},freceiverid=#{receiver.id},fexaminerid=#{examiner.id},
-    fprocessinstanceid=#{processInstanceId},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

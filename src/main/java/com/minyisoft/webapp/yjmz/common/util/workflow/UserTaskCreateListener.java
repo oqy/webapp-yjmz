@@ -7,6 +7,8 @@ import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.task.IdentityLink;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.minyisoft.webapp.core.model.IModelObject;
 import com.minyisoft.webapp.core.service.utils.ServiceUtils;
@@ -16,7 +18,9 @@ import com.minyisoft.webapp.yjmz.common.service.UserService;
 
 @SuppressWarnings("serial")
 @Setter
+@Component
 public class UserTaskCreateListener implements TaskListener {
+	@Autowired
 	private UserService userService;
 
 	@Override

@@ -63,7 +63,7 @@
 		class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
 		<property name="prefix" value="/WEB-INF/thymeleaf/" />
 		<property name="suffix" value=".html" />
-		<property name="cacheable" value="false" />
+		<property name="cacheable" value="false" /> <!-- 在生产环境可设置为true -->
 		<property name="characterEncoding" value="UTF-8" />
 	</bean>
 	

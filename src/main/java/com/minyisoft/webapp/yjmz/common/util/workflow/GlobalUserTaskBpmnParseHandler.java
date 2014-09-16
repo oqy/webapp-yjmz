@@ -9,9 +9,13 @@ import org.activiti.engine.impl.bpmn.parser.BpmnParse;
 import org.activiti.engine.impl.bpmn.parser.handler.AbstractBpmnParseHandler;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.task.TaskDefinition;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Setter
+@Component
 public class GlobalUserTaskBpmnParseHandler extends AbstractBpmnParseHandler<UserTask> {
+	@Autowired
 	private UserTaskCreateListener userTaskCreateListener;
 
 	@Override
