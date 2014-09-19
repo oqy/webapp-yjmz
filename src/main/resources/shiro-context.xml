@@ -10,13 +10,18 @@
 
 	<!-- Shiro's main business-tier object for web-enabled applications -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="shiroDbRealm" />
+		<property name="realms">
+			<list>
+			    <ref bean="shiroDbRealm"/>
+				<bean class="com.minyisoft.webapp.yjmz.weixin.security.ShiroWeixinRealm"/>
+			</list>
+		</property>
 		<property name="cacheManager" ref="ehcacheManager" />
 		<!-- 配置session cluster，若使用缓存，需搭配设置相应的缓存服务器
 		<property name="cacheManager" ref="shiroClusterCacheManager" />
 		<property name="sessionManager" ref="sessionManager" /> -->
 	</bean>
-
+	
 	<!-- 項目自定义的Realm -->
 	<bean id="shiroDbRealm" class="com.minyisoft.webapp.yjmz.common.security.ShiroDbRealm"/>
 	

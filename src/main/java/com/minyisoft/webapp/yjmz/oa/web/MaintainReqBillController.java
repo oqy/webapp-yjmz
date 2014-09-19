@@ -43,6 +43,10 @@ public class MaintainReqBillController extends ManageBaseController {
 		if (criteria.getPageDevice() == null) {
 			criteria.setPageDevice(new PageDevice());
 		}
+		if (criteria.getQueryBeginDate() != null && criteria.getQueryEndDate() != null
+				&& criteria.getQueryBeginDate().after(criteria.getQueryEndDate())) {
+			criteria.setQueryEndDate(criteria.getQueryBeginDate());
+		}
 		criteria.setCompany(currentCompany);
 		criteria.setViewer(currentUser);
 		criteria.getPageDevice().setTotalRecords(maintainReqBillService.count(criteria));
@@ -53,6 +57,8 @@ public class MaintainReqBillController extends ManageBaseController {
 
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
 		filter.addField("processStatus", Arrays.asList(WorkFlowProcessStatusEnum.values()));
+		filter.addField("queryBeginDate");
+		filter.addField("queryEndDate");
 		model.addAttribute("filter", filter);
 		return "manage/maintainReqBillList";
 	}

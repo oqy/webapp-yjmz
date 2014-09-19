@@ -1,4 +1,6 @@
-package com.minyisoft.webapp.yjmz.weixin;
+package com.minyisoft.webapp.yjmz.weixin.web;
+
+import java.text.MessageFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,10 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.EventMessage;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.EventType;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.Message;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageConverter;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageType;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.TransferCustomerService;
+import com.minyisoft.webapp.weixin.common.service.WeixinPostService;
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.service.UserService;
+import com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor;
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -28,10 +35,23 @@ public class WeixinController extends BaseController {
 	private XStream xStream;
 	@Autowired
 	private TaskExecutor taskExecutor;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private WeixinPostService weixinPostService;
 
 	// 公众号微信号
 	@Value("#{applicationProperties['weixin.weixinNumber']}")
 	private String weixinNumber;
+	// 公众号微信号
+	@Value("#{applicationProperties['weixin.dkf_enabled']}")
+	private boolean dkfEnabled;
+	// 关注微信公众号后的欢迎语
+	@Value("#{applicationProperties['weixin.welcome_subscribe']}")
+	private String welcomeSubscribe;
+	// 网站域名
+	@Value("#{applicationProperties['web.domain']}")
+	private String webDomain;
 
 	public WeixinController() {
 		xStream = new XStream();
@@ -70,7 +90,7 @@ public class WeixinController extends BaseController {
 			});
 
 			// 非事件推送消息，将消息转发到多客服
-			if (!(message instanceof EventMessage)) {
+			if (dkfEnabled && !(message instanceof EventMessage)) {
 				TransferCustomerService tcs = new TransferCustomerService();
 				tcs.setFromUserName(weixinNumber);
 				tcs.setToUserName(message.getFromUserName());
@@ -84,9 +104,27 @@ public class WeixinController extends BaseController {
 	}
 
 	/**
-	 * @param message
-	 * @param messageString
+	 * 处理微信消息
 	 */
 	private void _processReceivedMessage(final Message message, final String messageString) {
+		// 关注
+		if (message instanceof EventMessage && ((EventMessage) message).getEvent() == EventType.SUBSCRIBE) {
+			weixinPostService.postTextMessage(
+					message.getFromUserName(),
+					MessageFormat.format(
+							welcomeSubscribe,
+							new StringBuffer(webDomain).append("/login.html?")
+									.append(WeixinOAuthInterceptor.WEIXIN_OPEN_ID).append("&")
+									.append(message.getFromUserName())).toString());
+		}
+		// 取消关注
+		else if (message instanceof EventMessage && ((EventMessage) message).getEvent() == EventType.UNSUBSCRIBE) {
+			UserInfo user = userService.getValue(message.getFromUserName());
+			// 清除用户openId信息
+			if (user != null) {
+				user.setWeixinOpenId(null);
+				userService.save(user);
+			}
+		}
 	}
 }

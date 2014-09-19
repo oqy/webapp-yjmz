@@ -14,7 +14,15 @@
 
 	<description>在线OA系统配置</description>
 
-	<util:properties id="applicationProperties" location="classpath:application.properties" />
+	<bean id="applicationProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<array>
+				<value>classpath:*.properties</value>
+				<value>classpath*:com/fusung/webapp/**/*Config.properties</value>
+			</array>
+		</property>
+	</bean>
 	<context:property-placeholder
 		ignore-resource-not-found="true" ignore-unresolvable="true"
 		properties-ref="applicationProperties" />
@@ -52,7 +60,7 @@
 		<property name="describableEnumPackage" value="com.minyisoft.webapp.yjmz" />
 		<property name="typeAliasesPackage" value="com.minyisoft.webapp.yjmz.common.model,com.minyisoft.webapp.yjmz.oa.model" />
 		<property name="mapperLocations"
-			value="classpath*:com/minyisoft/webapp/yjmz/**/persistence/*SqlMap.xml" />
+			value="classpath*:com/minyisoft/webapp/**/persistence/*SqlMap.xml" />
 	</bean>
 	<!-- scan for mappers and let them be autowired -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
@@ -60,11 +68,10 @@
 	</bean>
 
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
-	<context:component-scan base-package="com.minyisoft.webapp.yjmz">
+	<context:component-scan base-package="com.minyisoft.webapp">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-	<context:component-scan base-package="com.minyisoft.webapp.core.utils" />
 
 	<!-- 声明式事务配置 -->
 	<bean id="transactionManager"
@@ -171,6 +178,19 @@
 					</list>
 				</property>
 			</bean>
+		</property>
+	</bean>
+
+	<!-- 并发线程池配置 -->
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="15" />
+		<property name="queueCapacity" value="1000" />
+		<!-- 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者 -->
+		<property name="rejectedExecutionHandler">
+			<!-- CallerRunsPolicy:主线程直接执行该任务，执行完之后尝试添加下一个任务到线程池中，可以有效降低向线程池内添加任务的速度 -->
+			<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
 		</property>
 	</bean>
 </beans>

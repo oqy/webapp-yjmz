@@ -69,6 +69,12 @@
 		<if test="excludeIds!=null">
             and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
+        <if test="queryBeginDate!=null">
+            and date(fcreatedate) >= #{queryBeginDate}
+        </if>
+        <if test="queryEndDate!=null">
+            and #{queryEndDate} >= date(fcreatedate)
+        </if>
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(company)">
             and fcompanyid = #{company.id}
         </if>

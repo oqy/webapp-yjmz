@@ -45,7 +45,7 @@ create table t_common_role(
   primary key (fid)
 );
 
-create table T_COMMON_PERMISSION
+create table t_common_permission
 (
   FID               varchar(32) not null,
   FCREATEUSERID     varchar(32),
@@ -61,7 +61,7 @@ create table T_COMMON_PERMISSION
   primary key (fid)
 );
 
-create table T_COMMON_USER_ROLE
+create table t_common_user_role
 (
   FID     varchar(36) not null,
   FUSERID varchar(32),
@@ -70,7 +70,7 @@ create table T_COMMON_USER_ROLE
   primary key (fid)
 );
 
-create table T_COMMON_ROLE_PERMISSION
+create table t_common_role_permission
 (
   FID           varchar(36) not null,
   FROLEID       varchar(32),
@@ -193,7 +193,7 @@ ALTER TABLE t_oa_maintainreqbill ADD fcompanyid VARCHAR(32) NULL FIRST;
 ALTER TABLE t_oa_purchasereqbill ADD fcompanyid VARCHAR(32) NULL FIRST;
 ALTER TABLE t_oa_report ADD fcompanyid VARCHAR(32) NULL FIRST;
 
-create table T_COMMON_BILLRELATION
+create table t_common_billrelation
 (
   FID                 varchar(32) not null,
   FSOURCEBILLID       varchar(32),

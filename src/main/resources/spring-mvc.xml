@@ -38,11 +38,12 @@
 				<property name="weixinToken" value="weixinYjmz"/>
 			</bean>
 		</mvc:interceptor>
-		<!-- <mvc:interceptor>
+		<mvc:interceptor>
 			<mvc:mapping path="/manage/**" />
+			<mvc:mapping path="/login.html" />
 			<bean
-				class="com.minyisoft.webapp.yjmz.weixin.interceptor.WeixinOAuthInterceptor"/>
-		</mvc:interceptor> -->
+				class="com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor"/>
+		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/admin/**" />
 			<bean

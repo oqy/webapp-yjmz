@@ -96,7 +96,7 @@
           <input type="hidden" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" th:value="${entry.quantity}"/></td>
         <td class="col-md-2"><span th:text="${entry.unitPrice}" th:remove="tag"></span>
           <input type="hidden" th:id="'price'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" th:value="${entry.unitPrice}"/></td>
-        <td class="col-md-2"><input type="text" class="form-control number" th:id="'depotAmount'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].depotAmount'" th:value="${entry.depotAmount}"/></td>
+        <td class="col-md-2"><input type="text" class="form-control required number" th:id="'depotAmount'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].depotAmount'" th:value="${entry.depotAmount}"/></td>
         <td class="col-md-2"><span th:text="${entry.remark}" th:remove="tag"></span>
           <input type="hidden" th:id="'remark'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].remark'" th:value="${entry.remark}"/></td>
       </tr>

@@ -4,6 +4,8 @@
 <title>敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link th:href="@{'/resource/img/favicon.ico'}" rel="icon" type="image/x-icon" />
+<link th:href="@{'/resource/img/favicon.ico'}" rel="shortcut icon" type="image/x-icon" />
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="css/compiled/signin.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/signin.css'}"/>
 </head>
@@ -16,6 +18,7 @@
         <div class="alert alert-danger" role="alert" th:if="${!#strings.isEmpty(errorMsg)}" th:text="${errorMsg}">抱歉，您输入的用户名和密码有误，请检查</div>
         <input class="form-control" type="text" name="userLoginName" id="userLoginName" placeholder="登录用户名/手机号"/>
         <input class="form-control" type="password" name="userPassword" id="userPassword" placeholder="密码"/>
+        <input type="hidden" name="weixinOpenId" id="weixinOpenId" th:value="${#httpServletRequest.session.getAttribute('weixinOpenId')}"/>
         <button type="submit" class="btn btn-primary btn-block">登录</button>
         </form>
     </div>

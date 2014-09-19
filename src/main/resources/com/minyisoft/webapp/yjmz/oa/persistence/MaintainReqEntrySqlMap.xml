@@ -85,6 +85,9 @@
   </delete>
   
   <delete id="deleteInvalidEntryByMaintainReqBill" parameterType="MaintainReqBillInfo">
-    delete from t_oa_maintainreqentry where freqbillid = #{id} and fid not in <foreach collection="entry" item="item" open="(" close=")" separator=",">#{item.id}</foreach>
-  </delete>
+	delete from t_oa_maintainreqentry where freqbillid = #{id}
+	<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(entry)">
+		and fid not in <foreach collection="entry" item="item" open="(" close=")" separator=",">#{item.id}</foreach>
+	</if>
+</delete>
 </mapper>

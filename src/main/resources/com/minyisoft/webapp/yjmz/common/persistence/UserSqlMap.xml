@@ -55,7 +55,7 @@
             	u.fversion ,
             	r.fid as forgrelationid
           from t_common_user u left join t_common_userorgrelation r on u.fid=r.fuserid
-    where u.fid = #{id} or u.fuserloginname = #{id} or u.fcellphonenumber = #{id}
+    where u.fid = #{id} or u.fuserloginname = #{id} or u.fcellphonenumber = #{id} or u.fweixinopenid = #{id}
   </select>
   
   <!-- 查询条件SQL -->
