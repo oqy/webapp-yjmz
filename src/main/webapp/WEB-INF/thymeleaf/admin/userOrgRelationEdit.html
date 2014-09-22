@@ -74,7 +74,7 @@
       <div class="selectExistsUser form-group" th:if="${userOrgRelation.user==null and !#lists.isEmpty(users)}" style="display:none">
         <label for="existsUser" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;选择用户：</label>
         <div class="col-md-4">
-          <select id="existsUser" name="existsUser" class="form-control">
+          <select id="existsUser" name="existsUser" class="form-control" th:disabled="${userOrgRelation.user==null}?'disabled'">
             <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}" th:selected="${userOrgRelation.user!=null} and ${userOrgRelation.user.equals(user)}"></option>
           </select>
         </div>

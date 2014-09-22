@@ -30,7 +30,7 @@
             	fseq ,
             	fid ,
             	fversion 
-          from t_common_userorgrelation
+          from t_common_userorgrelation u
     where fid = #{id}
   </select>
   
@@ -38,44 +38,44 @@
   <sql id="getCriteriaCondition">
   	<where>
 		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(ids)">
-            fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
+            u.fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
 		<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(excludeIds)">
-            and fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
+            and u.fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
         </if>
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
-            and forgid = #{org.id}
+            and u.forgid = #{org.id}
         </if>
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(upperUser)">
-            and fupperuserid = #{upperUser.id}
+            and u.fupperuserid = #{upperUser.id}
         </if>
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(department)">
-            and fdepartmentid = #{department.id}
+            and u.fdepartmentid = #{department.id}
         </if>
 	</where>
   </sql>
   
   <!-- 获取满足指定过滤条件的记录数 -->
   <select id="countEntity" parameterType="UserOrgRelationCriteria" resultType="int">
-    select count(*) from t_common_userorgrelation
+    select count(*) from t_common_userorgrelation u
     <include refid="getCriteriaCondition"/>
   </select>
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="UserOrgRelationCriteria" resultMap="UserOrgRelationResult">
     select
-            	fuserid ,
-            	forgid ,
-            	fdepartmentid ,
-            	fjobnumber ,
-            	ftitle ,
-            	fupperuserid ,
-            	fseq ,
-            	fid ,
-            	fversion 
-          from t_common_userorgrelation
+            	u.fuserid ,
+            	u.forgid ,
+            	u.fdepartmentid ,
+            	u.fjobnumber ,
+            	u.ftitle ,
+            	u.fupperuserid ,
+            	u.fseq ,
+            	u.fid ,
+            	u.fversion 
+          from t_common_userorgrelation u left join t_common_department d on u.fdepartmentid = d.fid
     <include refid="getCriteriaCondition"/>
-    order by fuserpath asc
+    order by d.fseq asc, u.fuserpath asc
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
