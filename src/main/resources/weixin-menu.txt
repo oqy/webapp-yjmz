@@ -1,0 +1,18 @@
+{
+    "button": [
+	{
+           "type":"click",
+           "name":"每日推介",
+           "key":"yj_promotion"
+      },
+		 {
+           "type":"click",
+           "name":"雍憬风采",
+           "key":"yj_introduction"
+      }, {
+           "type":"click",
+           "name":"在线办公",
+           "key":"yj_weboa"
+      }
+    ]
+}
