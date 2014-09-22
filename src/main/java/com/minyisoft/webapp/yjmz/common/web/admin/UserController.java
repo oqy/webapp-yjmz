@@ -36,6 +36,7 @@ public class UserController extends BaseController {
 			userCriteria.setPageDevice(new PageDevice());
 		}
 		userCriteria.setExcludeIds(SystemConstant.ADMINISTATOR_USER_ID);
+		userCriteria.getPageDevice().setTotalRecords(userService.count(userCriteria));
 		model.addAttribute("users", userService.getCollection(userCriteria));
 
 		SelectModuleFilter filter = new SelectModuleFilter(userCriteria);
