@@ -14,7 +14,7 @@
     </select>
     <input th:if="${unit.type.equalsIgnoreCase('text')}" th:name="${unit.name}" th:id="${unit.id}" type="text" th:value="${unit.getObjectValue(unit.value)}"  th:size="${#strings.equalsIgnoreCase(unit.name,'pageDevice.recordsPerPage')}?'2'" />
     <div class="input-group date" th:if="${unit.type.equalsIgnoreCase('date')}">
-      <input class="form-control" th:name="${unit.name}" th:id="${unit.id}" type="text" th:value="${unit.getObjectValue(unit.value)}" size="10" maxlength="10"/>
+      <input class="form-control" readonly="readonly" th:name="${unit.name}" th:id="${unit.id}" type="text" th:value="${unit.getObjectValue(unit.value)}" size="10" maxlength="10"/>
       <span class="input-group-addon"><span class="icon-calendar"></span></span> </div>
     <input th:if="${unit.type.equalsIgnoreCase('autoComplete')}" class="autoCompleteBox form-control" th:name="'label_'+${unit.name}" th:id="'label_'+${unit.id}" type="text" th:value="${unit.value.label}" th:inline="text" th:src="${unit.autoCompleteRequestUrl}"/>
     <input th:if="${unit.type.equalsIgnoreCase('autoComplete')}" class="autoCompleteHiddenValue form-control" th:name="${unit.name}" th:id="${unit.id}" type="hidden" th:value="${unit.getObjectValue(unit.value)}" />

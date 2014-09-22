@@ -19,7 +19,7 @@
 		<property name="locations">
 			<array>
 				<value>classpath:*.properties</value>
-				<value>classpath*:com/fusung/webapp/**/*Config.properties</value>
+				<value>classpath*:com/minyisoft/webapp/**/*Config.properties</value>
 			</array>
 		</property>
 	</bean>
@@ -28,7 +28,7 @@
 		properties-ref="applicationProperties" />
 
 	<!-- DBCP连接池 -->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driver}" />
 		<property name="url" value="${jdbc.url}" />

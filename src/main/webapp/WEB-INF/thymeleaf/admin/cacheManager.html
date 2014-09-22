@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>清理缓存-敏易在线办公系统</title>
+<title>缓存管理-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css">
@@ -17,12 +17,19 @@
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">获取缓存</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <button id="getWeixinAccessToken" type="submit" class="btn btn-primary" data-loading-text="获取中，请稍候……">获取微信access token</button>
+      </div>
+    </div>
     <h3 style="border-bottom:#ccc solid 1px;">清理缓存</h3>
     <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/admin/cacheClear.html'}" method="post" style="margin-top:20px;">
       <div class="form-group">
         <div class="col-md-6">
           <div class="alert alert-success" role="alert" th:text="${msg}" th:if="${!#strings.isEmpty(msg)}"></div>
-          <button type="submit" class="btn btn-default">缓存清理</button>
+          <button id="clearModelCache" name="clearModelCache" type="submit" class="btn btn-primary">清理对象缓存</button>
+          <button id="clearWeixinAccessToken" name="clearWeixinAccessToken" type="submit" class="btn btn-primary">清空微信access token</button>
         </div>
       </div>
     </form>
@@ -30,5 +37,17 @@
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_system_tool'" th:remove="tag"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('#getWeixinAccessToken').click(function(){
+		var btn = jQuery(this).button('loading');
+		btn.next('p').remove();
+		jQuery.getJSON('getWeixinAccessToken.do',function(data){
+			btn.after('<p style="margin-top:10px;">当前access token：'+data['access_token']+'</p>');
+			btn.button('reset');
+		});
+	});
+});
+</script>
 </body>
 </html>

@@ -82,6 +82,6 @@ public class LoginController extends BaseController {
 		if (currentUser != null) {
 			currentUser.logout();
 		}
-		return "redirect:login";
+		return "redirect:login.html";
 	}
 }

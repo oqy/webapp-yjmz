@@ -4,7 +4,8 @@
 <title>采购单列表-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css"></style>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
 </head>
 <body>
 <!-- navbar -->
@@ -19,7 +20,7 @@
     <h3>采购单列表<a th:href="@{'/manage/purchaseReqBillEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="icon-plus"></span>&nbsp;新增采购单</a></h3>
     <div th:replace="component/selectFilterModule::selectForm" th:with="filter = ${filter}, url = @{'/manage/purchaseReqBillList.html'}"></div>
     <div class="table-responsive">
-      <table class="table table-hover table-striped">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th>申请部门</th>
@@ -34,23 +35,19 @@
           </tr>
         </thead>
         <tbody th:if="${!#lists.isEmpty(purchaseReqBills)}">
-          <tr th:each="purchaseReqBill :${purchaseReqBills}" th:with="editable = ${currentUser.equals(purchaseReqBill.createUser) and purchaseReqBill.processUnStarted}">
-            <td th:text="${purchaseReqBill.department!=null}?${purchaseReqBill.department.name}:'-'"></td>
-            <td th:text="${#dates.format(purchaseReqBill.createDate,'yyyy-MM-dd HH:mm')}"></td>
-            <td colspan="5"><table>
-                <tbody>
-                  <tr th:each="entry : ${purchaseReqBill.entry}">
-                    <td th:text="${entry.name}"></td>
-                    <td th:text="${entry.standard}"></td>
-                    <td th:text="${entry.quantity}"></td>
-                    <td th:text="${entry.unitPrice}"></td>
-                    <td th:text="${entry.remark}"></td>
-                  </tr>
-                </tbody>
-              </table></td>
-            <td style="text-align:center;"><i th:class="${purchaseReqBill.processStatus.value eq 0}?'icon-circle-blank':'icon-circle'" th:classappend="${purchaseReqBill.processStatus.value eq 2}?'text-success':(${purchaseReqBill.processStatus.value eq 1}?'text-primary')"></i></td>
-            <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/purchaseReqBillEdit.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a onclick="return window.confirm('确定删除所选采购单?')" th:if="${editable}" th:href="@{'/manage/purchaseReqBillDelete.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
+        <tbody th:each="purchaseReqBill :${purchaseReqBills}" th:remove="tag">
+          <tr th:each="entry : ${purchaseReqBill.entry}" th:with="editable = ${currentUser.equals(purchaseReqBill.createUser) and purchaseReqBill.processUnStarted}">
+            <td th:text="${purchaseReqBill.department!=null}?${purchaseReqBill.department.name}:'-'" th:if="${entryStat.first}" th:rowspan="${purchaseReqBill.entry.size()}"></td>
+            <td th:text="${#dates.format(purchaseReqBill.createDate,'yyyy-MM-dd HH:mm')}" th:if="${entryStat.first}" th:rowspan="${purchaseReqBill.entry.size()}"></td>
+            <td th:text="${entry.name}"></td>
+            <td th:text="${entry.standard}"></td>
+            <td th:text="${entry.quantity}"></td>
+            <td th:text="${entry.unitPrice}"></td>
+            <td th:text="${entry.remark}"></td>
+            <td style="text-align:center;" th:if="${entryStat.first}" th:rowspan="${purchaseReqBill.entry.size()}"><i th:class="${purchaseReqBill.processStatus.value eq 0}?'icon-circle-blank':'icon-circle'" th:classappend="${purchaseReqBill.processStatus.value eq 2}?'text-success':(${purchaseReqBill.processStatus.value eq 1}?'text-primary')"></i></td>
+            <td th:if="${entryStat.first}" th:rowspan="${purchaseReqBill.entry.size()}"><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/purchaseReqBillEdit.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${purchaseReqBill.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a onclick="return window.confirm('确定删除所选采购单?')" th:if="${editable}" th:href="@{'/manage/purchaseReqBillDelete.html?purchaseReqBillId='+${purchaseReqBill.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
           </tr>
+        </tbody>
         </tbody>
       </table>
     </div>
