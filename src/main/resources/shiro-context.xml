@@ -32,6 +32,7 @@
 		<property name="filterChainDefinitions">
 			<value>
 			    /login.html = anon
+			    /viewDetail.html = anon
 			    /resource/** = anon
 			    /weixin/** = anon
 				/** = authc

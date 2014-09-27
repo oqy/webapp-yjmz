@@ -75,6 +75,10 @@ public class WorkFlowController extends ManageBaseController {
 	@RequestMapping(value = "workFlowDetail.html", method = RequestMethod.GET, params = "workFlowModelId")
 	public String viewWorkFlowDetail(@ModelAttribute("currentUser") UserInfo currentUser,
 			@RequestParam(value = "workFlowModelId", required = false) WorkFlowBusinessModel businessModel, Model model) {
+		if (businessModel == null) {
+			return "redirect:myTodoTasks.html";
+		}
+		
 		model.addAttribute("businessModel", businessModel);
 		if (businessModel instanceof MaintainReqBillInfo) {
 			model.addAttribute("maintainTypes", MaintainTypeEnum.values());

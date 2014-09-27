@@ -118,6 +118,11 @@ public class UserOrgRelationServiceImpl extends
 				getCacheManager().getModelCache(info.getOrg().getClass()).evict(info.getOrg().getId());
 			}
 			getCacheManager().getModelCache(info.getUser().getClass()).evict(info.getUser().getId());
+			// 若删除的组织关系里组织为用户的默认登录组织，清空用户默认登录组织
+			if (info.getOrg().equals(info.getUser().getDefaultLoginOrg())) {
+				info.getUser().setDefaultLoginOrg(null);
+				userService.save(info.getUser());
+			}
 		}
 
 		@Override

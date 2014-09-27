@@ -41,6 +41,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/manage/**" />
 			<mvc:mapping path="/login.html" />
+			<mvc:mapping path="/viewDetail.html"/>
 			<bean
 				class="com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor"/>
 		</mvc:interceptor>

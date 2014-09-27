@@ -1,7 +1,6 @@
 package com.minyisoft.webapp.yjmz.weixin.web;
 
-import java.text.MessageFormat;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
@@ -13,13 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.minyisoft.webapp.core.security.utils.PermissionUtils;
 import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.EventMessage;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.EventType;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.MenuMessage;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.Message;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageConverter;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageType;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.TransferCustomerService;
+import com.minyisoft.webapp.weixin.common.model.dto.send.Article;
+import com.minyisoft.webapp.weixin.common.service.WeixinCommonService;
 import com.minyisoft.webapp.weixin.common.service.WeixinPostService;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
@@ -39,6 +42,8 @@ public class WeixinController extends BaseController {
 	private UserService userService;
 	@Autowired
 	private WeixinPostService weixinPostService;
+	@Autowired
+	private WeixinCommonService weixinCommonService;
 
 	// 公众号微信号
 	@Value("#{applicationProperties['weixin.weixinNumber']}")
@@ -52,6 +57,12 @@ public class WeixinController extends BaseController {
 	// 网站域名
 	@Value("#{applicationProperties['web.domain']}")
 	private String webDomain;
+	// 栏目建设中图片
+	@Value("#{applicationProperties['weixin.build_column_pic']}")
+	private String buildColumnPicPath;
+	// 在线办公栏目图片
+	@Value("#{applicationProperties['weixin.web_oa_pic']}")
+	private String webOAPicPath;
 
 	public WeixinController() {
 		xStream = new XStream();
@@ -109,22 +120,50 @@ public class WeixinController extends BaseController {
 	private void _processReceivedMessage(final Message message, final String messageString) {
 		// 关注
 		if (message instanceof EventMessage && ((EventMessage) message).getEvent() == EventType.SUBSCRIBE) {
-			weixinPostService.postTextMessage(
-					message.getFromUserName(),
-					MessageFormat.format(
-							welcomeSubscribe,
-							new StringBuffer(webDomain).append("/login.html?")
-									.append(WeixinOAuthInterceptor.WEIXIN_OPEN_ID).append("&")
-									.append(message.getFromUserName())).toString());
+			weixinPostService.postTextMessage(message.getFromUserName(), welcomeSubscribe);
 		}
 		// 取消关注
 		else if (message instanceof EventMessage && ((EventMessage) message).getEvent() == EventType.UNSUBSCRIBE) {
 			UserInfo user = userService.getValue(message.getFromUserName());
 			// 清除用户openId信息
 			if (user != null) {
+				PermissionUtils.stopPermissionCheck();
 				user.setWeixinOpenId(null);
 				userService.save(user);
+				PermissionUtils.startPermissionCheck();
 			}
 		}
+		// 点击菜单
+		else if (message instanceof MenuMessage) {
+			WeixinMenu menu = WeixinMenu.valueOf(StringUtils.upperCase(((MenuMessage) message).getEventKey()));
+			switch (menu) {
+			case WEBOA:
+				Article article = new Article();
+				article.setTitle("雍憬明珠微办公系统");
+				article.setDescription("欢迎使用雍憬明珠微办公系统，请点击登录。");
+				article.setURL(WeixinOAuthInterceptor.appendWeixinTicket(webDomain + "/login.html",
+						weixinCommonService.genWeixinTicket(message.getFromUserName())));
+				article.setPicurl(webOAPicPath);
+				weixinPostService.postNewsMessage(message.getFromUserName(), article);
+				break;
+			default:
+				article = new Article();
+				article.setTitle("栏目建设中");
+				article.setDescription("栏目建设中，敬请期待。");
+				article.setPicurl(buildColumnPicPath);
+				weixinPostService.postNewsMessage(message.getFromUserName(), article);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * 微信菜单
+	 * 
+	 * @author qingyong_ou
+	 * 
+	 */
+	private enum WeixinMenu {
+		HOTEL, REPAST, WEBOA
 	}
 }

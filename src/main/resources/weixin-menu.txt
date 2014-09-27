@@ -2,17 +2,21 @@
     "button": [
 	{
            "type":"click",
-           "name":"每日推介",
-           "key":"yj_promotion"
+           "name":"酒店服务",
+           "key":"hotel"
       },
 		 {
            "type":"click",
-           "name":"雍憬风采",
-           "key":"yj_introduction"
+           "name":"餐饮服务",
+           "key":"repast"
       }, {
-           "type":"click",
-           "name":"在线办公",
-           "key":"yj_weboa"
+           "name":"我的",
+           "sub_button":[
+            {
+               "type":"click",
+               "name":"微办公",
+               "key":"weboa"
+            }]
       }
     ]
 }

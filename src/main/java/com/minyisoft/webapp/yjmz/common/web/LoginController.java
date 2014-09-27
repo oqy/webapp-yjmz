@@ -33,6 +33,12 @@ public class LoginController extends BaseController {
 	 */
 	@RequestMapping(value = { "/", "login.html", "index.html" }, method = RequestMethod.GET)
 	public String getLoginForm() {
+		UserInfo currentUser = com.minyisoft.webapp.yjmz.common.security.SecurityUtils.getCurrentUser();
+		ISystemOrgObject loginOrg = null;
+		if (currentUser != null && (loginOrg = _getLoginOrg(currentUser)) != null) {
+			userService.switchOrg(currentUser, loginOrg);
+			return "redirect:manage/welcome.html";
+		}
 		return "login";
 	}
 
@@ -52,9 +58,7 @@ public class LoginController extends BaseController {
 					return "redirect:admin/companyList.html";
 				}
 				// 否则进入用户管理页面
-				List<CompanyInfo> optionCompanies = loginUser.getOrgList(CompanyInfo.class);
-				ISystemOrgObject loginOrg = optionCompanies.isEmpty() ? null : optionCompanies.get(0);
-				loginOrg = loginUser.getDefaultLoginOrg() != null ? loginUser.getDefaultLoginOrg() : loginOrg;
+				ISystemOrgObject loginOrg = _getLoginOrg(loginUser);
 				if (loginOrg != null) {
 					userService.switchOrg(loginUser, loginOrg);
 					// 绑定微信号
@@ -71,6 +75,17 @@ public class LoginController extends BaseController {
 			}
 		}
 		return "redirect:login.html";
+	}
+
+	/**
+	 * 获取指定用户的默认登录组织
+	 */
+	private ISystemOrgObject _getLoginOrg(UserInfo loginUser) {
+		if (loginUser.getDefaultLoginOrg() != null) {
+			return loginUser.getDefaultLoginOrg();
+		}
+		List<CompanyInfo> optionCompanies = loginUser.getOrgList(CompanyInfo.class);
+		return optionCompanies.isEmpty() ? null : optionCompanies.get(0);
 	}
 
 	/**

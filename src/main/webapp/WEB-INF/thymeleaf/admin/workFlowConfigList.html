@@ -18,6 +18,7 @@
 <div class="content">
   <div id="pad-wrapper">
     <h3>工作流程列表<a th:href="@{'/admin/workFlowConfigEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="icon-plus"></span>&nbsp;新增工作流程</a></h3>
+    <div th:replace="component/selectFilterModule::selectForm" th:with="filter = ${filter}, url = @{'/admin/workFlowConfigList.html'}"></div>
     <div class="table-responsive">
       <table class="table table-hover table-striped">
         <thead>
