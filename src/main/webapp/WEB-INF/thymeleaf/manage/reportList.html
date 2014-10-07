@@ -22,7 +22,7 @@
       <table class="table table-hover table-striped">
         <thead>
           <tr>
-            <th class="hidden-xs"></th>
+            <th class="hidden-xs"><input type="checkbox" id="checkAll" name="checkAll"/></th>
             <th>创建时间</th>
             <th>档案编号</th>
             <th>文件编号</th>
@@ -56,5 +56,22 @@
 <!-- end main container -->
 <script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_report'" th:remove="tag"></script>
 <script type="text/javascript" th:replace="component/selectFilterModule::selectFormResource"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('.export-excel').click(function(){
+		if(jQuery('input[name="exportIds"]:checked').length==0){
+			alert('请首先勾选需要导出的工作报告');
+			return false;
+		}
+		jQuery(this).attr('href','exportReoprtExcel.do?'+jQuery('input[name="exportIds"]:checked').serialize());
+	});
+	
+	jQuery('#checkAll').click(function(){
+		jQuery('input[name="exportIds"]').each(function(){
+			jQuery(this).attr('checked', jQuery('#checkAll').attr('checked'));
+		});
+	});
+});
+</script>
 </body>
 </html>

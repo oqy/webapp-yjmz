@@ -16,12 +16,13 @@
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
-    <h3>工程维修单列表<a th:href="@{'/manage/maintainReqBillEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="icon-plus"></span>&nbsp;新增工程维修单</a></h3>
+    <h3>工程维修单列表<a th:href="@{'/manage/maintainReqBillEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="icon-plus"></span>&nbsp;新增工程维修单</a><a style="margin-right:5px;" th:href="@{'/manage/exportMaintainReqBillExcel.do'}" role="button" class="export-excel hidden-xs btn btn-default btn-sm pull-right"><span class="icon-file-text"></span>&nbsp;导出Excel文档</a></h3>
     <div th:replace="component/selectFilterModule::selectForm" th:with="filter = ${filter}, url = @{'/manage/maintainReqBillList.html'}"></div>
     <div class="table-responsive">
       <table class="table table-hover table-striped">
         <thead>
           <tr>
+            <th class="hidden-xs"><input type="checkbox" id="checkAll" name="checkAll"/></th>
             <th>申请部门</th>
             <th>日期</th>
             <th>申请人</th>
@@ -35,6 +36,7 @@
         </thead>
         <tbody th:if="${!#lists.isEmpty(maintainReqBills)}">
           <tr th:each="maintainReqBill :${maintainReqBills}" th:with="editable = ${currentUser.equals(maintainReqBill.createUser) and maintainReqBill.processUnStarted}">
+            <td class="hidden-xs"><input type="checkbox" name="exportIds" th:value="${maintainReqBill.id}"/></td>
             <td th:text="${maintainReqBill.department!=null}?${maintainReqBill.department.name}:'-'"></td>
             <td th:text="${#dates.format(maintainReqBill.createDate,'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${maintainReqBill.createUser.name}"></td>
@@ -56,5 +58,22 @@
 <!-- end main container -->
 <script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_maintainReqBill'" th:remove="tag"></script>
 <script type="text/javascript" th:replace="component/selectFilterModule::selectFormResource"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('.export-excel').click(function(){
+		if(jQuery('input[name="exportIds"]:checked').length==0){
+			alert('请首先勾选需要导出的工程维修单');
+			return false;
+		}
+		jQuery(this).attr('href','exportMaintainReqBillExcel.do?'+jQuery('input[name="exportIds"]:checked').serialize());
+	});
+	
+	jQuery('#checkAll').click(function(){
+		jQuery('input[name="exportIds"]').each(function(){
+			jQuery(this).attr('checked', jQuery('#checkAll').attr('checked'));
+		});
+	});
+});
+</script>
 </body>
 </html>

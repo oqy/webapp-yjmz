@@ -2,6 +2,7 @@ package com.minyisoft.webapp.yjmz.oa.web;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
@@ -22,6 +25,7 @@ import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.PurchaseReqBillCriteria;
 import com.minyisoft.webapp.yjmz.oa.service.PurchaseReqBillService;
+import com.minyisoft.webapp.yjmz.oa.web.view.PurchaseReqBillExcelView;
 
 /**
  * @author qingyong_ou 采购单controller
@@ -115,5 +119,18 @@ public class PurchaseReqBillController extends ManageBaseController {
 			Model model) {
 		model.addAttribute("purchaseReqBill", purchaseReqBill);
 		return "manage/purchaseReqBillDetail";
+	}
+	
+	@Autowired
+	private PurchaseReqBillExcelView purchaseReqBillExcelView;
+
+	/**
+	 * 导出Excel文档
+	 */
+	@RequestMapping(value = "exportPurchaseReqBillExcel.do", method = RequestMethod.GET)
+	public ModelAndView exportReoprtExcel(@RequestParam(value = "exportIds", required = false) PurchaseReqBillInfo[] purchaseReqBills) {
+		Map<String, Object> model = Maps.newHashMap();
+		model.put("purchaseReqBills", purchaseReqBills);
+		return new ModelAndView(purchaseReqBillExcelView, model);
 	}
 }
