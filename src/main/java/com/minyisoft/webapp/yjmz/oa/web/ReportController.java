@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
+import com.minyisoft.webapp.core.security.utils.PermissionUtils;
 import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
@@ -35,6 +36,8 @@ import com.minyisoft.webapp.yjmz.oa.web.view.ReportExcelView;
 public class ReportController extends ManageBaseController {
 	@Autowired
 	private ReportService reportService;
+	
+	private static final String PERMISSION_READ_ALL = "Report:readAll";// 查看全部工作报告的权限
 
 	/**
 	 * 获取报告列表
@@ -51,7 +54,9 @@ public class ReportController extends ManageBaseController {
 			criteria.setQueryEndDate(criteria.getQueryBeginDate());
 		}
 		criteria.setCompany(currentCompany);
-		criteria.setViewer(currentUser);
+		if (!PermissionUtils.hasPermission(PERMISSION_READ_ALL)) {
+			criteria.setViewer(currentUser);
+		}
 		criteria.getPageDevice().setTotalRecords(reportService.count(criteria));
 		model.addAttribute("reports", criteria.getPageDevice().getTotalRecords() == 0 ? Collections.emptyList()
 				: reportService.getCollection(criteria));
