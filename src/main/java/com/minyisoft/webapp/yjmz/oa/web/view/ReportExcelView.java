@@ -62,7 +62,7 @@ public class ReportExcelView extends AbstractExcelView {
 			anchor = new HSSFClientAnchor(0, 0, 1023, 255, (short) 8, 4, (short) 8, 5);
 			anchor.setAnchorType(3);
 			byteArrayOut = new ByteArrayOutputStream();
-			QrCodeGenerator.createQrCode(report.getId(), 100, 0, byteArrayOut);
+			QrCodeGenerator.createQrCode("view:" + report.getId(), 100, 0, byteArrayOut);
 			patriarch
 					.createPicture(anchor, book.addPicture(byteArrayOut.toByteArray(), HSSFWorkbook.PICTURE_TYPE_JPEG));
 		}

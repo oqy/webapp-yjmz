@@ -16,6 +16,10 @@
                "type":"click",
                "name":"微办公",
                "key":"weboa"
+            },{
+               "type":"scancode_waitmsg",
+               "name":"扫一扫",
+               "key":"scan_code"
             }]
       }
     ]

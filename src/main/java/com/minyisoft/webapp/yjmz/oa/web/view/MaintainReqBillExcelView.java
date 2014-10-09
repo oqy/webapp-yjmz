@@ -89,7 +89,7 @@ public class MaintainReqBillExcelView extends AbstractExcelView {
 			anchor = new HSSFClientAnchor(0, 0, 1023, 255, (short) 7, 1, (short) 7, 2);
 			anchor.setAnchorType(3);
 			byteArrayOut = new ByteArrayOutputStream();
-			QrCodeGenerator.createQrCode(maintainReqBill.getId(), 100, 0, byteArrayOut);
+			QrCodeGenerator.createQrCode("view:" + maintainReqBill.getId(), 100, 0, byteArrayOut);
 			patriarch
 					.createPicture(anchor, book.addPicture(byteArrayOut.toByteArray(), HSSFWorkbook.PICTURE_TYPE_JPEG));
 		}

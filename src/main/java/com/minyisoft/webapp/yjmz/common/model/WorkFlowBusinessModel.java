@@ -1,5 +1,7 @@
 package com.minyisoft.webapp.yjmz.common.model;
 
+import java.util.Date;
+
 import com.minyisoft.webapp.core.model.IModelObject;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 
@@ -55,4 +57,11 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	 * @return
 	 */
 	boolean isProcessUnStarted();
+
+	/**
+	 * 获取创建时间
+	 * 
+	 * @return
+	 */
+	Date getCreateDate();
 }

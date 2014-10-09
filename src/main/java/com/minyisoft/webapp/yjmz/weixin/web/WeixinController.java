@@ -1,6 +1,9 @@
 package com.minyisoft.webapp.yjmz.weixin.web;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
@@ -12,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.common.collect.Maps;
+import com.minyisoft.webapp.core.model.IModelObject;
 import com.minyisoft.webapp.core.security.utils.PermissionUtils;
+import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.EventMessage;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.EventType;
@@ -20,11 +26,15 @@ import com.minyisoft.webapp.weixin.common.model.dto.receive.MenuMessage;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.Message;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageConverter;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageType;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.ScanCodeMenuMessage;
 import com.minyisoft.webapp.weixin.common.model.dto.receive.TransferCustomerService;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.messagenode.ScanCodeConverter;
 import com.minyisoft.webapp.weixin.common.model.dto.send.Article;
+import com.minyisoft.webapp.weixin.common.model.dto.send.TemplateMessageData;
 import com.minyisoft.webapp.weixin.common.service.WeixinCommonService;
 import com.minyisoft.webapp.weixin.common.service.WeixinPostService;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor;
 import com.thoughtworks.xstream.XStream;
@@ -69,6 +79,7 @@ public class WeixinController extends BaseController {
 		xStream.alias("xml", Message.class);
 		xStream.autodetectAnnotations(true);
 		xStream.registerConverter(new MessageConverter());
+		xStream.registerConverter(new ScanCodeConverter());
 	}
 
 	/**
@@ -146,6 +157,20 @@ public class WeixinController extends BaseController {
 				article.setPicurl(webOAPicPath);
 				weixinPostService.postNewsMessage(message.getFromUserName(), article);
 				break;
+			case SCAN_CODE:
+				if (message instanceof ScanCodeMenuMessage
+						&& ((ScanCodeMenuMessage) message).getScanCodeInfo().getScanType().equalsIgnoreCase("qrcode")) {
+					String scanResult = StringUtils.removeStartIgnoreCase(((ScanCodeMenuMessage) message)
+							.getScanCodeInfo().getScanResult(), "view:");
+					IModelObject model = ObjectUuidUtils.getObject(scanResult);
+					if (model instanceof WorkFlowBusinessModel
+							&& ((WorkFlowBusinessModel) model).getProcessStatus() != null) {
+						_postWorkFlowBusinessModelDetail((WorkFlowBusinessModel) model, message.getFromUserName());
+					} else {
+						weixinPostService.postTextMessage(message.getFromUserName(), "抱歉，不存在指定的工作流任务信息");
+					}
+				}
+				break;
 			default:
 				article = new Article();
 				article.setTitle("栏目建设中");
@@ -164,6 +189,30 @@ public class WeixinController extends BaseController {
 	 * 
 	 */
 	private enum WeixinMenu {
-		HOTEL, REPAST, WEBOA
+		HOTEL, REPAST, WEBOA, SCAN_CODE
+	}
+
+	@Value("#{applicationProperties['weixin.notify_template_id']}")
+	private String weixinNotifyTemplateId;
+
+	/**
+	 * 发送工作流任务信息
+	 */
+	private void _postWorkFlowBusinessModelDetail(WorkFlowBusinessModel model, String weixinOpenId) {
+		// 微信模板消息待发送内容
+		Map<String, TemplateMessageData> data = Maps.newHashMap();
+		data.put("first", new TemplateMessageData("工作流任务概况\n"));
+		data.put("keyword1", new TemplateMessageData(((WorkFlowBusinessModel) model).getProcessInstanceName()));
+		data.put("keyword2", new TemplateMessageData(((WorkFlowBusinessModel) model).getProcessStatus()
+				.getDescription()));
+		data.put(
+				"keyword3",
+				new TemplateMessageData(DateFormatUtils.format(((WorkFlowBusinessModel) model).getCreateDate(),
+						"yyyy年M月d日HH时mm分")));
+		data.put("remark", new TemplateMessageData("\n点击查看工作流任务详情"));
+
+		weixinPostService.postTemplateMessage(weixinOpenId, weixinNotifyTemplateId, WeixinOAuthInterceptor
+				.appendWeixinTicket(webDomain + "/viewDetail.html?billId=" + model.getId(),
+						weixinCommonService.genWeixinTicket(weixinOpenId)), data);
 	}
 }
