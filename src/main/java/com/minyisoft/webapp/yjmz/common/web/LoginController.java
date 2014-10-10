@@ -37,7 +37,7 @@ public class LoginController extends BaseController {
 		ISystemOrgObject loginOrg = null;
 		if (currentUser != null && (loginOrg = _getLoginOrg(currentUser)) != null) {
 			userService.switchOrg(currentUser, loginOrg);
-			return "redirect:manage/welcome.html";
+			return "redirect:manage/index.html";
 		}
 		return "login";
 	}
@@ -55,7 +55,7 @@ public class LoginController extends BaseController {
 				UserInfo loginUser = userService.userLogin(userLoginName, userPassword);
 				// 若是系统管理员登录，转入系统管理页面
 				if (loginUser.equals(SystemConstant.ADMINISTRATOR_USER)) {
-					return "redirect:admin/companyList.html";
+					return "redirect:admin/index.html";
 				}
 				// 否则进入用户管理页面
 				ISystemOrgObject loginOrg = _getLoginOrg(loginUser);
@@ -65,7 +65,7 @@ public class LoginController extends BaseController {
 					if (StringUtils.hasText(weixinOpenId)) {
 						userService.bindWeixinOpenId(userService.getValue(loginUser.getId()), weixinOpenId);
 					}
-					return "redirect:manage/welcome.html";
+					return "redirect:manage/index.html";
 				} else {
 					redirectAttributes.addFlashAttribute("errorMsg", "抱歉，您尚不隶属系统内任何公司，暂不能使用系统，请首先联系系统管理员添加组织隶属关系");
 				}

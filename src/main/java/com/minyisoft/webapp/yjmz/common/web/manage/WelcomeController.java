@@ -27,7 +27,7 @@ public class WelcomeController extends ManageBaseController {
 	/**
 	 * 获取用户登录界面
 	 */
-	@RequestMapping(value = "welcome.html", method = RequestMethod.GET)
+	@RequestMapping(value = { "index.html", "welcome.html" }, method = RequestMethod.GET)
 	public String getWelcomePage(@ModelAttribute("currentUser") UserInfo currentUser, Model model) {
 		// 待处理任务数
 		model.addAttribute("todoTaskCount", workFlowTaskService.countTodoTasks(currentUser));
@@ -43,7 +43,7 @@ public class WelcomeController extends ManageBaseController {
 	public String switchOrg(@ModelAttribute("currentUser") UserInfo currentUser,
 			@RequestParam("orgId") ISystemOrgObject org) {
 		userService.switchOrg(currentUser, org);
-		return "redirect:welcome.html";
+		return "redirect:index.html";
 	}
 
 	/**

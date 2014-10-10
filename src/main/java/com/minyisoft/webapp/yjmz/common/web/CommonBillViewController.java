@@ -32,6 +32,6 @@ public class CommonBillViewController extends BaseController {
 				return "redirect:" + webDomain + "/manage/workFlowDetail.html?workFlowModelId=" + billId;
 			}
 		}
-		return "redirect:" + webDomain + "/manage/welcome.html";
+		return "redirect:" + webDomain + "/manage/index.html";
 	}
 }

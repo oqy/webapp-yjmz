@@ -29,7 +29,7 @@ public class CompanyController extends BaseController {
 	/**
 	 * 获取公司列表
 	 */
-	@RequestMapping(value = "companyList.html", method = RequestMethod.GET)
+	@RequestMapping(value = { "index.html", "companyList.html" }, method = RequestMethod.GET)
 	public String getCompanyList(Model model) {
 		model.addAttribute("companies", companyService.getCollection());
 		return "admin/companyList";
