@@ -59,14 +59,14 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>${mysql.version}</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.thoughtworks.xstream</groupId>
-		    <artifactId>xstream</artifactId>
-		    <version>${xstream.version}</version>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>${xstream.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.activiti</groupId>
@@ -74,13 +74,17 @@
 			<version>${activiti-spring.version}</version>
 			<exclusions>
 				<exclusion>
-				    <groupId>org.springframework</groupId>
+					<groupId>org.springframework</groupId>
 					<artifactId>*</artifactId>
 				</exclusion>
-	            <exclusion>
-	            	<groupId>org.apache.commons</groupId>
-   					<artifactId>commons-email</artifactId>
-	            </exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-email</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-dbcp</artifactId>
+					<groupId>commons-dbcp</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -100,9 +104,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-		    <groupId>com.google.zxing</groupId>
-		    <artifactId>core</artifactId>
-		    <version>${zxing.version}</version>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${zxing.version}</version>
 		</dependency>
 
 		<!-- TEST -->

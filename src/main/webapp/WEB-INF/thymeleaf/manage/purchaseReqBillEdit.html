@@ -6,6 +6,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css">
 </style>
+<style type="text/css">
+#attachmentWrapper {
+	padding:0px;
+	margin:0px;
+}
+#attachmentWrapper li {
+	list-style:none;
+	padding:7px 0px;
+	margin-right: 20px;
+}
+</style>
 </head>
 <body>
 <!-- navbar -->
@@ -58,8 +69,20 @@
         </tbody>
       </table>
       <div class="form-group">
-        <div class="col-md-12">
-          <button type="submit" class="btn btn-default">提交</button>
+        <label for="attachmentUploadNode" class="col-md-2 control-label" style="text-align:left">附件资源：</label>
+        <div class="col-md-8">
+          <ul id="attachmentWrapper" class="pull-left">
+            <li th:if="${!#lists.isEmpty(purchaseReqBill.attachments)}" th:each="attachment : ${purchaseReqBill.attachments}"><span th:class="${attachment.image}?'icon-picture':'icon-file-text'"></span>&nbsp;<a target="_blank" th:href="${attachment.url}" th:text="${attachment.name}"></a>
+              <input type="hidden" name="attachments" th:value="${attachment.id}" />
+              &nbsp;<a class="deleteAttachment text-danger" href="#" title="删除"><span class="icon-remove"></span></a></li>
+          </ul>
+          <input type="hidden" name="attachments" value="" />
+          <button type="button" id="attachmentUploadNode" class="attachmentUpload[uploadCallBack] pull-left btn btn-default">上传附件</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-8 col-md-offset-2">
+          <button type="submit" class="btn btn-primary">提交</button>
           <button type="reset" class="btn btn-info">重置</button>
           <input name="purchaseReqBillId" type="hidden" th:value="${purchaseReqBill.id}"/>
         </div>
@@ -73,6 +96,7 @@
 <script type="text/javascript" th:inline="javascript">
 var entryIndex=/*[[${#lists.isEmpty(purchaseReqBill.entry)}?0:${purchaseReqBill.entry.size()}]]*/;
 </script>
+<script type="text/javascript" th:src="@{'/resource/js/manage/attachmentUploader.js'}"></script>
 <script src="js/manage/purchaseReqBillEdit.js" th:src="@{'/resource/js/manage/purchaseReqBillEdit.js'}"></script>
 </body>
 </html>

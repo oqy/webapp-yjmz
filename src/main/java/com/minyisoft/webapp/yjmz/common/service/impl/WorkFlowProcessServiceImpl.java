@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -42,12 +44,19 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 	private HistoryService historyService;
 	@Autowired
 	private WorkFlowConfigService workFlowConfigService;
+	@Autowired
+	private RepositoryService repositoryService;
 
 	@Override
 	public List<HistoricProcessInstance> getHistoricProcessInstances(String processDefinitionId, PageDevice pageDevice) {
 		Assert.hasText(processDefinitionId, "流程定义ID不能为空");
+		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+				.processDefinitionId(processDefinitionId).singleResult();
+		Assert.notNull(processDefinition, "无法获取指定id对应的流程定义");
+
+		// 获取包含相同processDefinitionKey的所有历史流程，避免流程重新发布后无法获取前一版本流程定义的实例
 		HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery()
-				.processDefinitionId(processDefinitionId).finished().orderByProcessDefinitionId().desc();
+				.processDefinitionKey(processDefinition.getKey()).finished().orderByProcessDefinitionId().desc();
 		if (pageDevice != null) {
 			pageDevice.setTotalRecords((int) query.count());
 			return query.listPage(pageDevice.getStartRowNumberOfCurrentPage() - 1, pageDevice.getRecordsPerPage());
@@ -123,8 +132,13 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 	@Override
 	public List<ProcessInstance> getProcessInstances(String processDefinitionId, PageDevice pageDevice) {
 		Assert.hasText(processDefinitionId, "流程定义ID不能为空");
+		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+				.processDefinitionId(processDefinitionId).singleResult();
+		Assert.notNull(processDefinition, "无法获取指定id对应的流程定义");
+
+		// 获取包含相同processDefinitionKey的所有运行流程，避免流程重新发布后无法获取前一版本流程定义正在运行的实例
 		ProcessInstanceQuery query = runtimeService.createProcessInstanceQuery()
-				.processDefinitionId(processDefinitionId).orderByProcessInstanceId().desc();
+				.processDefinitionKey(processDefinition.getKey()).orderByProcessInstanceId().desc();
 		if (pageDevice != null) {
 			pageDevice.setTotalRecords((int) query.count());
 			return query.listPage(pageDevice.getStartRowNumberOfCurrentPage() - 1, pageDevice.getRecordsPerPage());

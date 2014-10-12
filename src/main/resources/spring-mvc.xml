@@ -42,6 +42,7 @@
 			<mvc:mapping path="/manage/**" />
 			<mvc:mapping path="/login.html" />
 			<mvc:mapping path="/viewDetail.html"/>
+			<mvc:exclude-mapping path="/manage/attachmentUploadResult.html"/>
 			<bean
 				class="com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor"/>
 		</mvc:interceptor>

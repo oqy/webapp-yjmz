@@ -226,3 +226,21 @@ ALTER TABLE t_oa_purchasereqentry ADD fdepotamount DECIMAL(13, 2) NULL DEFAULT 0
 ALTER TABLE t_oa_report ADD fprocessstatus INT NULL DEFAULT 0 AFTER fprocessinstanceid;
 ALTER TABLE t_oa_purchasereqbill ADD fprocessstatus INT NULL DEFAULT 0 AFTER fprocessinstanceid;
 ALTER TABLE t_oa_maintainreqbill ADD fprocessstatus INT NULL DEFAULT 0 AFTER fprocessinstanceid;
+
+create table t_common_attachment(
+  forgid varchar(32),
+  furl varchar(200),
+  fmimetype varchar(32),
+  fname varchar(200),
+  fdescription varchar(32),
+  fcreateuserid varchar(32),
+  fcreatedate datetime,
+  flastupdateuserid varchar(32),
+  flastupdatedate datetime,
+  fid varchar(32) not null,
+  fversion int default 1, 
+  primary key (fid)
+);
+
+ALTER TABLE t_oa_report ADD fattachments varchar(320) AFTER fprocessstatus;
+ALTER TABLE t_oa_purchasereqbill ADD fattachments varchar(320) AFTER fprocessstatus;

@@ -1,6 +1,7 @@
 package com.minyisoft.webapp.yjmz.oa.web.view;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
+import com.minyisoft.webapp.core.utils.StringUtils;
 import com.minyisoft.webapp.yjmz.common.util.QrCodeGenerator;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo;
 
@@ -47,13 +49,20 @@ public class PurchaseReqBillExcelView extends AbstractExcelView {
 			setText(getCell(sheet, 1, 1), purchaseReqBill.getDepartment() != null ? purchaseReqBill.getDepartment()
 					.getName() : "");
 			setText(getCell(sheet, 1, 6), DateFormatUtils.format(purchaseReqBill.getCreateDate(), "yyyy-MM-dd"));
+
+			BigDecimal totalPrice = BigDecimal.ZERO; // 合计总额
 			for (int i = 0; i < purchaseReqBill.getEntry().size(); i++) {
 				setText(getCell(sheet, 4 + i, 0), purchaseReqBill.getEntry().get(i).getName());
 				setText(getCell(sheet, 4 + i, 5), purchaseReqBill.getEntry().get(i).getStandard());
 				setText(getCell(sheet, 4 + i, 6), String.valueOf(purchaseReqBill.getEntry().get(i).getQuantity()));
 				setText(getCell(sheet, 4 + i, 7), String.valueOf(purchaseReqBill.getEntry().get(i).getUnitPrice()));
 				setText(getCell(sheet, 4 + i, 8), purchaseReqBill.getEntry().get(i).getRemark());
+
+				totalPrice = totalPrice.add(purchaseReqBill.getEntry().get(i).getUnitPrice()
+						.multiply(purchaseReqBill.getEntry().get(i).getQuantity())
+						.setScale(2, BigDecimal.ROUND_HALF_UP));
 			}
+			setText(getCell(sheet, 10, 5), StringUtils.convert2RMB(totalPrice));
 
 			// 插入二维码图片
 			patriarch = sheet.createDrawingPatriarch();
@@ -68,5 +77,4 @@ public class PurchaseReqBillExcelView extends AbstractExcelView {
 
 		ExcelViewUtils.setExportFileName("采购单", request, response);
 	}
-
 }

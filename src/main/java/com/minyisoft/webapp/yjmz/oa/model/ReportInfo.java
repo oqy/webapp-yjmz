@@ -1,5 +1,7 @@
 package com.minyisoft.webapp.yjmz.oa.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
+import com.minyisoft.webapp.yjmz.common.model.AttachmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
@@ -31,6 +34,8 @@ public class ReportInfo extends CompanyBillBaseInfo implements WorkFlowBusinessM
 	private String processInstanceId;
 	// 工作流程状态
 	private WorkFlowProcessStatusEnum processStatus = WorkFlowProcessStatusEnum.UNSTARTED;
+	// 附件
+	private List<AttachmentInfo> attachments;
 
 	@Override
 	public String getProcessInstanceName() {
