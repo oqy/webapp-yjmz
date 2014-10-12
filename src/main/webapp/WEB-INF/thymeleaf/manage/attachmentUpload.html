@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>上传附件-敏易在线办公系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css"></style>
+</head>
+<body style="background:#fff; font-size:14px;">
+<form id="uploadForm" name="uploadForm" method="post" th:action="${uploadUrl}" enctype="multipart/form-data">
+  <label for="file">请选择文件：</label>
+  <input id="key" name="key" type="hidden" th:value="${key}"/>
+  <input id="token" name="token" type="hidden" th:value="${uploadToken}"/>
+  <input id="file" name="file" type="file" />
+</form>
+</body>
+</html>

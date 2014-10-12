@@ -22,11 +22,15 @@
       <result property="id" column="fid" />
       <result property="version" column="fversion" />
     </resultMap>
+    
+  <resultMap id="ReportDetailResult" type="ReportInfo" extends="ReportResult">
+  	  <result property="attachments" column="fattachments" typeHandler="attachmentListHandler" />
+  </resultMap>
 
   <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
 
   <!-- 根据ID查询记录 -->
-  <select id="getEntity" parameterType="String" resultMap="ReportResult">
+  <select id="getEntity" parameterType="String" resultMap="ReportDetailResult">
     select
 		fcompanyid ,
       	fdepartmentid ,
@@ -35,6 +39,7 @@
       	fattachmenturl ,
       	fprocessinstanceid ,
       	fprocessstatus ,
+      	fattachments ,
       	fbillnumber ,
       	fdescription ,
       	fsourcebillid ,
@@ -113,14 +118,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="ReportInfo">
-    insert into t_oa_report (fcompanyid,fdepartmentid,ffilenumber,freporttitle,fattachmenturl,fprocessinstanceid,fprocessstatus,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{company.id},#{department.id},#{fileNumber},#{reportTitle},#{attachmentUrl},#{processInstanceId},#{processStatus},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_report (fcompanyid,fdepartmentid,ffilenumber,freporttitle,fattachmenturl,fprocessinstanceid,fprocessstatus,fattachments,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{fileNumber},#{reportTitle},#{attachmentUrl},#{processInstanceId},#{processStatus},#{attachments,typeHandler=attachmentListHandler},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="ReportInfo">
-    update t_oa_report set fcompanyid=#{company.id},fdepartmentid=#{department.id},ffilenumber=#{fileNumber},freporttitle=#{reportTitle},fattachmenturl=#{attachmentUrl},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fbillnumber=#{billNumber},
-    fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_oa_report set fcompanyid=#{company.id},fdepartmentid=#{department.id},ffilenumber=#{fileNumber},freporttitle=#{reportTitle},fattachmenturl=#{attachmentUrl},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fattachments=#{attachments,typeHandler=attachmentListHandler},
+    fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
+import com.minyisoft.webapp.yjmz.common.model.AttachmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
@@ -30,6 +31,8 @@ public class PurchaseReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private String processInstanceId;
 	// 工作流程状态
 	private WorkFlowProcessStatusEnum processStatus = WorkFlowProcessStatusEnum.UNSTARTED;
+	// 附件
+	private List<AttachmentInfo> attachments;
 
 	@Override
 	public String getProcessInstanceName() {

@@ -23,6 +23,12 @@
     <tr>
       <td colspan="4" th:utext="${report.description}"></td>
     </tr>
+    <tr th:if="${!#lists.isEmpty(report.attachments)}">
+      <th>附件：</th>
+      <td colspan="3"><ul>
+          <li th:each="attachment : ${report.attachments}"><span th:class="${attachment.image}?'icon-picture':'icon-file-text'"></span>&nbsp;<a target="_blank" th:href="${attachment.url}" th:text="${attachment.name}"></a> </li>
+        </ul></td>
+    </tr>
   </table>
 </div>
 <div th:fragment="maintainReqBill">
@@ -113,6 +119,12 @@
       <td th:text="${entry.depotAmount}">&nbsp;</td>
       <td th:text="${entry.actualQuantity}">&nbsp;</td>
       <td th:text="${entry.remark}">&nbsp;</td>
+    </tr>
+    <tr th:if="${!#lists.isEmpty(purchaseReqBill.attachments)}">
+      <th>附件</th>
+      <td colspan="6"><ul>
+          <li th:each="attachment : ${purchaseReqBill.attachments}"><span th:class="${attachment.image}?'icon-picture':'icon-file-text'"></span>&nbsp;<a target="_blank" th:href="${attachment.url}" th:text="${attachment.name}"></a> </li>
+        </ul></td>
     </tr>
   </table>
 </div>
