@@ -20,7 +20,7 @@
         <li th:each="orgRelation : ${currentUser.orgRelations}" th:if="${!orgRelation.org.equals(currentCompany)}"><a href="personal-info.html" th:href="@{'/manage/switchOrg.html?orgId='+${orgRelation.org.id}}" th:text="${orgRelation.org.name}">个人信息</a></li>
       </ul>
     </li>
-    <li class="settings"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-share-alt"></i> </a> </li>
+    <li class="settings"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-signout"></i> </a> </li>
   </ul>
 </header>
 <!-- 普通用户左侧主菜单 -->
