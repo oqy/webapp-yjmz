@@ -48,12 +48,12 @@ public class PurchaseReqBillExcelView extends AbstractExcelView {
 			setText(getCell(sheet, 0, 0), purchaseReqBill.getCompany().getName() + "采购单");
 			setText(getCell(sheet, 1, 1), purchaseReqBill.getDepartment() != null ? purchaseReqBill.getDepartment()
 					.getName() : "");
-			setText(getCell(sheet, 1, 6), DateFormatUtils.format(purchaseReqBill.getCreateDate(), "yyyy-MM-dd"));
+			setText(getCell(sheet, 1, 7), DateFormatUtils.format(purchaseReqBill.getCreateDate(), "yyyy-MM-dd"));
 
 			BigDecimal totalPrice = BigDecimal.ZERO; // 合计总额
 			for (int i = 0; i < purchaseReqBill.getEntry().size(); i++) {
 				setText(getCell(sheet, 4 + i, 0), purchaseReqBill.getEntry().get(i).getName());
-				setText(getCell(sheet, 4 + i, 5), purchaseReqBill.getEntry().get(i).getStandard());
+				setText(getCell(sheet, 4 + i, 4), purchaseReqBill.getEntry().get(i).getStandard());
 				setText(getCell(sheet, 4 + i, 6), String.valueOf(purchaseReqBill.getEntry().get(i).getQuantity()));
 				setText(getCell(sheet, 4 + i, 7), String.valueOf(purchaseReqBill.getEntry().get(i).getUnitPrice()));
 				setText(getCell(sheet, 4 + i, 8), purchaseReqBill.getEntry().get(i).getRemark());
@@ -62,11 +62,11 @@ public class PurchaseReqBillExcelView extends AbstractExcelView {
 						.multiply(purchaseReqBill.getEntry().get(i).getQuantity())
 						.setScale(2, BigDecimal.ROUND_HALF_UP));
 			}
-			setText(getCell(sheet, 10, 5), StringUtils.convert2RMB(totalPrice));
+			setText(getCell(sheet, 10, 6), StringUtils.convert2RMB(totalPrice));
 
 			// 插入二维码图片
 			patriarch = sheet.createDrawingPatriarch();
-			anchor = new HSSFClientAnchor(0, 100, 1023, 255, (short) 10, 0, (short) 10, 1);
+			anchor = new HSSFClientAnchor(0, 100, 1023, 255, (short) 12, 0, (short) 12, 1);
 			anchor.setAnchorType(3);
 			byteArrayOut = new ByteArrayOutputStream();
 			QrCodeGenerator.createQrCode("view:" + purchaseReqBill.getId(), 100, 0, byteArrayOut);
