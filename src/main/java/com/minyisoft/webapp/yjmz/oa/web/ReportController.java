@@ -112,15 +112,6 @@ public class ReportController extends ManageBaseController {
 		return "redirect:reportList.html";
 	}
 
-	/**
-	 * 获取报告详情页
-	 */
-	@RequestMapping(value = "reportDetail.html", method = RequestMethod.GET)
-	public String getReportDetailPage(@ModelAttribute("report") ReportInfo report, Model model) {
-		model.addAttribute("report", report);
-		return "manage/reportDetail";
-	}
-
 	@Autowired
 	private ReportExcelView reportExcelView;
 

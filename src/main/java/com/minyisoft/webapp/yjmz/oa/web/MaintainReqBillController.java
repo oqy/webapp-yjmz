@@ -120,16 +120,6 @@ public class MaintainReqBillController extends ManageBaseController {
 		return "redirect:maintainReqBillList.html";
 	}
 
-	/**
-	 * 获取维修单详情页
-	 */
-	@RequestMapping(value = "maintainReqBillDetail.html", method = RequestMethod.GET)
-	public String getMaintainReqBillDetailPage(@ModelAttribute("maintainReqBill") MaintainReqBillInfo maintainReqBill,
-			Model model) {
-		model.addAttribute("maintainReqBill", maintainReqBill);
-		return "manage/maintainReqBillDetail";
-	}
-
 	@Autowired
 	private MaintainReqBillExcelView maintainReqBillExcelView;
 

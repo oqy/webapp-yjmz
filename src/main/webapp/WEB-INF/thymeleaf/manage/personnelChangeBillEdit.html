@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>编辑人事变动单-敏易在线办公系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css"></style>
+<link href="http://cdn.bootcss.com/bootstrap-datetimepicker/2.1.30/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">编辑人事变动单<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/personnelChangeBillList.html'}"><span class="icon-share-alt"></span>&nbsp;返回列表</a></h3>
+    <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/personnelChangeBillEdit.html'}" method="post" style="margin-top:20px;">
+      <div th:fragment="personnelChangeBillStaffInfo">
+        <div class="form-group">
+          <label class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;姓名：</label>
+          <div class="col-md-6">
+            <input type="text" class="form-control required" id="staffName" name="staffName" placeholder="请输入姓名" th:value="${personnelChangeBill.staffName}"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2 control-label">性别：</label>
+          <div class="col-md-6">
+            <select class="form-control" id="userMale" name="userMale">
+              <option th:each="userMale : ${T(com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum).values()}" th:selected="${userMale == personnelChangeBill.userMale}" th:value="${userMale.value}" th:text="${userMale.description}"></option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;入职日期：</label>
+          <div class="col-md-6">
+            <div class="input-group datetimepicker">
+              <input class="form-control required" readonly="readonly" name="entryDate" id="entryDate" type="text" th:value="${personnelChangeBill.entryDate!=null}?${#dates.format(personnelChangeBill.entryDate,'yyyy-MM-dd')}"/>
+              <span class="input-group-addon"><span class="icon-calendar"></span></span></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;员工号码：</label>
+          <div class="col-md-6">
+            <input type="text" class="form-control required" id="staffNumber" name="staffNumber" placeholder="请输入号码" th:value="${personnelChangeBill.staffNumber}"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;生效日期：</label>
+          <div class="col-md-6">
+            <div class="input-group datetimepicker">
+              <input class="form-control required" readonly="readonly" name="effectiveDate" id="effectiveDate" type="text" th:value="${personnelChangeBill.effectiveDate!=null}?${#dates.format(personnelChangeBill.effectiveDate,'yyyy-MM-dd')}" />
+              <span class="input-group-addon"><span class="icon-calendar"></span></span></div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-md-2 control-label">变动类型：</label>
+          <div class="col-md-3" style="margin-bottom:15px;">
+            <select class="form-control" id="changeType" name="changeType">
+              <option th:each="changeType : ${T(com.minyisoft.webapp.yjmz.oa.model.enumField.PersonnelChangeTypeEnum).values()}" th:selected="${changeType == personnelChangeBill.changeType}" th:value="${changeType.value}" th:text="${changeType.description}"></option>
+            </select>
+          </div>
+          <div class="col-md-3" th:style="'margin-bottom:15px;'+(${personnelChangeBill.changeType.value != 4}?' display: none;')">
+            <input class="form-control required" name="otherChangeType" id="otherChangeType" type="text" th:value="${personnelChangeBill.otherChangeType}" />
+          </div>
+        </div>
+      </div>
+      <div th:fragment="personnelChangeBillChangeInfo">
+        <div class="form-group">
+          <label class="col-md-2 control-label">人事变动：</label>
+          <div class="col-md-8">
+            <table class="table table-bordered">
+              <tr>
+                <th rowspan="2" class="col-md-2" style="text-align:center; vertical-align:middle;">部门</th>
+                <th class="col-md-3" style="text-align:center;">由</th>
+                <th class="col-md-3" style="text-align:center;">至</th>
+              </tr>
+              <tr>
+                <td th:text="${personnelChangeBill.department!=null}?${personnelChangeBill.department.name}:(${currentDepartment!=null}?${currentDepartment.name})"></td>
+                <td><select class="form-control" id="newDepartment" name="newDepartment">
+                    <option th:each="department : ${currentCompany.departments}" th:selected="${personnelChangeBill.newDepartment!=null}?${department.equals(personnelChangeBill.newDepartment)}:${department.equals(currentDepartment)}" th:value="${department.id}" th:text="${department.name}"></option>
+                  </select></td>
+              </tr>
+              <tr>
+                <td align="center" valign="middle">职位</td>
+                <td><input type="text" class="form-control" id="oriPosition" name="oriPosition" placeholder="请输入原职位" th:value="${personnelChangeBill.oriPosition}"/></td>
+                <td><input type="text" class="form-control" id="newPosition" name="newPosition" placeholder="请输入新职位" th:value="${personnelChangeBill.newPosition}"/></td>
+              </tr>
+              <tr>
+                <td align="center" valign="middle">级别</td>
+                <td><input type="text" class="form-control" id="oriRank" name="oriRank" placeholder="请输入原级别" th:value="${personnelChangeBill.oriRank}"/></td>
+                <td><input type="text" class="form-control" id="newRank" name="newRank" placeholder="请输入新级别" th:value="${personnelChangeBill.newRank}"/></td>
+              </tr>
+              <tr>
+                <td align="center" valign="middle">工资</td>
+                <td><div class="input-group">
+                    <input type="text" class="form-control number" id="oriSalary" name="oriSalary" placeholder="请输入原工资" th:value="${personnelChangeBill.oriSalary}"/>
+                    <span class="input-group-addon">RMB/月</span> </div></td>
+                <td><div class="input-group">
+                    <input type="text" class="form-control number" id="newSalary" readonly="readonly" name="newSalary" placeholder="请输入新工资" th:value="${personnelChangeBill.newSalary}"/>
+                    <span class="input-group-addon">RMB/月</span> </div></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reportTitle" class="col-md-2 control-label">最后工作日期：</label>
+          <div class="col-md-6">
+            <div class="input-group datetimepicker">
+              <input class="form-control" readonly="readonly" name="lastWorkDate" id="lastWorkDate" type="text" th:value="${personnelChangeBill.lastWorkDate!=null}?${#dates.format(personnelChangeBill.lastWorkDate,'yyyy-MM-dd')}"/>
+              <span class="input-group-addon"><span class="icon-calendar"></span></span> </div>
+          </div>
+        </div>
+        <div class="row">
+          <label for="reportTitle" class="col-md-2 control-label">薪金调整：</label>
+          <div class="col-md-2" style="margin-bottom:15px;">
+            <select id="addSalary" name="addSalary" class="form-control col-md-2">
+              <option value="1">增加</option>
+              <option value="0" th:selected="${personnelChangeBill.salaryChangeAmount lt 0}">扣除</option>
+            </select>
+          </div>
+          <div class="col-md-2" style="margin-bottom:15px;">
+            <div class="input-group">
+              <input type="text" class="form-control number" id="salaryChangeAmount" name="salaryChangeAmount" placeholder="请输入调整幅度" th:value="${personnelChangeBill.salaryChangeAmount.abs()}"/>
+              <span class="input-group-addon">RMB/月</span> </div>
+          </div>
+          <div class="col-md-4" style="margin-bottom:15px;">
+            <div class="input-group"> <span class="input-group-addon">原因</span>
+              <input type="text" class="form-control" id="salaryChangeReason" name="salaryChangeReason" placeholder="请输入原因" th:value="${personnelChangeBill.salaryChangeReason}"/>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reportTitle" class="col-md-2 control-label">其他意见：</label>
+          <div class="col-md-8">
+            <textarea class="form-control" rows="3" id="description" name="description" placeholder="请输入其他意见" th:text="${personnelChangeBill.description}">
+          </textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+          <button type="submit" class="btn btn-primary">提交</button>
+          <button type="reset" class="btn btn-info">重置</button>
+          <input name="personnelChangeBillId" type="hidden" th:value="${personnelChangeBill.id}"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_personnelChangeBill'" th:remove="tag"></script>
+<script type="text/javascript" th:include="component/resource::formValidateJs" th:with="formId=form1" th:remove="tag"></script>
+<script src="http://cdn.bootcss.com/moment.js/2.7.0/moment.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap-datetimepicker/2.1.30/js/bootstrap-datetimepicker.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap-datetimepicker/2.1.30/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" th:src="@{'/resource/js/manage/personnelChangeBillEdit.js'}"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>采购单列表-敏易在线办公系统</title>
+<title>采购单-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css">
@@ -17,7 +17,7 @@
 <!-- main container -->
 <div class="content">
   <div id="pad-wrapper">
-    <h3>采购单列表<a th:href="@{'/manage/purchaseReqBillEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="icon-plus"></span>&nbsp;新增采购单</a><a style="margin-right:5px;" th:href="@{'/manage/exportPurchaseReqBillExcel.do'}" role="button" class="export-excel hidden-xs btn btn-default btn-sm pull-right"><span class="icon-file-text"></span>&nbsp;导出Excel文档</a></h3>
+    <h3>采购单<a th:href="@{'/manage/purchaseReqBillEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="icon-plus"></span>&nbsp;新增采购单</a><a style="margin-right:5px;" th:href="@{'/manage/exportPurchaseReqBillExcel.do'}" role="button" class="export-excel hidden-xs btn btn-default btn-sm pull-right"><span class="icon-file-text"></span>&nbsp;导出Excel文档</a></h3>
     <div th:replace="component/selectFilterModule::selectForm" th:with="filter = ${filter}, url = @{'/manage/purchaseReqBillList.html'}"></div>
     <div class="table-responsive">
       <table class="table table-hover">
@@ -54,7 +54,7 @@
       </table>
     </div>
     <p th:if="${!#lists.isEmpty(purchaseReqBills)}"><i class="icon-circle-blank"></i>&nbsp;未启动&nbsp;&nbsp;<i class="icon-circle text-primary"></i>&nbsp;运行中&nbsp;&nbsp;<i class="icon-circle text-success"></i>&nbsp;已结束</p>
-    <div th:if="${!#lists.isEmpty(purchaseReqBills)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},url='purchaseReqBillList.html'"></div>
+    <div th:if="${!#lists.isEmpty(purchaseReqBills)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},requestQueryString=${filter.requestQueryString},url='purchaseReqBillList.html'+(${#strings.isEmpty(requestQueryString)}?'':'?'+${requestQueryString})"></div>
     <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(purchaseReqBills)}">暂没有可供您浏览的采购单</div>
   </div>
 </div>
@@ -69,12 +69,6 @@ jQuery(document).ready(function() {
 			return false;
 		}
 		jQuery(this).attr('href','exportPurchaseReqBillExcel.do?'+jQuery('input[name="exportIds"]:checked').serialize());
-	});
-	
-	jQuery('#checkAll').click(function(){
-		jQuery('input[name="exportIds"]').each(function(){
-			jQuery(this).attr('checked', jQuery('#checkAll').attr('checked'));
-		});
 	});
 });
 </script>

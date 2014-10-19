@@ -122,6 +122,7 @@
     from 
     (select * from t_oa_maintainreqbill m
     <include refid="getCriteriaCondition"/>
+    order by m.fcreatedate desc, m.fid
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>

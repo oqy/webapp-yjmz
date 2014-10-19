@@ -29,6 +29,7 @@ import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.WorkFlowConfigCriteria;
+import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowStatusEnum;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
@@ -122,6 +123,7 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 					.getBusinessKey());
 			if (model != null) {
 				model.setProcessInstanceId(null);
+				model.setProcessStatus(WorkFlowProcessStatusEnum.UNSTARTED);
 				ServiceUtils.getService(model.getClass()).save(model);
 			}
 			runtimeService.deleteProcessInstance(processInstanceId, deleteReason);

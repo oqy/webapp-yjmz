@@ -134,5 +134,59 @@
     </div>
   </div>
 </div>
+<div th:fragment="personnelChangeBill">
+  <table class="table table-bordered">
+    <tr>
+      <th>姓名</th>
+      <th style="font-weight:normal;" th:text="${personnelChangeBill.staffName}">&nbsp;</th>
+      <th>性别</th>
+      <th style="font-weight:normal;" th:text="${personnelChangeBill.userMale.description}">&nbsp;</th>
+      <th>入职日期</th>
+      <th style="font-weight:normal;" th:text="${#dates.format(personnelChangeBill.entryDate,'yyyy-MM-dd')}">&nbsp;</th>
+    </tr>
+    <tr>
+      <th>员工号码</th>
+      <td colspan="3" th:text="${personnelChangeBill.staffNumber}">&nbsp;</td>
+      <th>生效日期</th>
+      <td th:text="${#dates.format(personnelChangeBill.effectiveDate,'yyyy-MM-dd')}">&nbsp;</td>
+    </tr>
+    <tr>
+      <th>变更类型</th>
+      <td colspan="5" th:text="${personnelChangeBill.changeType.description}">&nbsp;</td>
+    </tr>
+  </table>
+  <table class="table table-bordered">
+    <tr>
+      <th rowspan="2" class="col-md-2" style="text-align:center; vertical-align:middle;">部门</th>
+      <th class="col-md-3" style="text-align:center;">由</th>
+      <th class="col-md-3" style="text-align:center;">至</th>
+    </tr>
+    <tr>
+      <td th:text="${personnelChangeBill.department!=null}?${personnelChangeBill.department.name}"></td>
+      <td th:text="${personnelChangeBill.newDepartment.name}"></td>
+    </tr>
+    <tr>
+      <td align="center" valign="middle">职位</td>
+      <td th:text="${personnelChangeBill.oriPosition}"></td>
+      <td th:text="${personnelChangeBill.newPosition}"></td>
+    </tr>
+    <tr>
+      <td align="center" valign="middle">级别</td>
+      <td th:text="${personnelChangeBill.oriRank}"></td>
+      <td th:text="${personnelChangeBill.newRank}"></td>
+    </tr>
+    <tr>
+      <td align="center" valign="middle">工资</td>
+      <td><span th:text="${personnelChangeBill.oriSalary}"></span>&nbsp;RMB/月</td>
+      <td><span th:text="${personnelChangeBill.newSalary}"></span>&nbsp;RMB/月</td>
+    </tr>
+  </table>
+  <p>备注：</p>
+  <p>最后工作日期：<span th:text="${personnelChangeBill.lastWorkDate!=null}?${#dates.format(personnelChangeBill.lastWorkDate,'yyyy年MM月dd日')}"></span></p>
+  <p>增加薪金：RMB<span style="width: 70px; display: inline-block;" th:text="${personnelChangeBill.salaryChangeAmount ge 0}?${personnelChangeBill.salaryChangeAmount}"></span>&nbsp;原因：<span th:text="${personnelChangeBill.salaryChangeAmount ge 0}?${personnelChangeBill.salaryChangeReason}"></span></p>
+  <p>扣除薪金：RMB<span style="width: 70px; display: inline-block;" th:text="${personnelChangeBill.salaryChangeAmount lt 0}?${personnelChangeBill.salaryChangeAmount.abs()}"></span>&nbsp;原因：<span th:text="${personnelChangeBill.salaryChangeAmount lt 0}?${personnelChangeBill.salaryChangeReason}"></span></p>
+  <p>其他意见：<span th:text="${personnelChangeBill.description}"></span></p>
+  <p>制单人：<span th:text="${personnelChangeBill.createUser.name}"></span></p>
+</div>
 </body>
 </html>

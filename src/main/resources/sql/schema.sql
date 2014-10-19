@@ -244,3 +244,36 @@ create table t_common_attachment(
 
 ALTER TABLE t_oa_report ADD fattachments varchar(320) AFTER fprocessstatus;
 ALTER TABLE t_oa_purchasereqbill ADD fattachments varchar(320) AFTER fprocessstatus;
+
+create table t_oa_personnelchangebill(
+  fstaffname varchar(20),
+  fusermale int default 0,
+  fstaffnumber varchar(32),
+  fentrydate datetime,
+  feffectivedate datetime,
+  fchangetype int default 0,
+  fotherchangetype varchar(32),
+  foriposition varchar(32),
+  forirank varchar(32),
+  forisalary decimal(13,2) default 0,
+  fnewdepartmentid varchar(32),
+  fnewposition varchar(32),
+  fnewrank varchar(32),
+  fnewsalary decimal(13,2) default 0,
+  flastworkdate datetime,
+  fsalarychangereason text,
+  fprocessinstanceid varchar(32),
+  fprocessstatus int default 0,
+  fcompanyid varchar(32),
+  fdepartmentid varchar(32),
+  fbillnumber varchar(32),
+  fdescription text,
+  fsourcebillid varchar(32),
+  fcreateuserid varchar(32),
+  fcreatedate datetime,
+  flastupdateuserid varchar(32),
+  flastupdatedate datetime,
+  fid varchar(32) not null,
+  fversion int default 0, 
+  primary key (fid)
+);

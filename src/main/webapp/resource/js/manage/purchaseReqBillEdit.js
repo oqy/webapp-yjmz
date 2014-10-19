@@ -22,5 +22,5 @@ jQuery(document).ready(function() {
 });
 
 function uploadCallBack(attachmentId, attachmentName, attachmentUrl, isImage){
-	jQuery('#attachmentWrapper').append('<li><span class="'+(isImage=='true'?'icon-picture':'icon-file-text')+'"></span>&nbsp;<a target="_blank" href="'+attachmentUrl+'">'+attachmentName+'</a><input type="hidden" name="attachments" value="'+attachmentId+'" />&nbsp;<a class="deleteAttachment text-danger" href="#" title="ɾ��"><span class="icon-remove"></span></a></li>');
+	jQuery('#attachmentWrapper').append('<li><span class="'+(isImage=='true'?'icon-picture':'icon-file-text')+'"></span>&nbsp;<a target="_blank" href="'+attachmentUrl+'">'+attachmentName+'</a><input type="hidden" name="attachments" value="'+attachmentId+'" />&nbsp;<a class="deleteAttachment text-danger" href="#" title="删除"><span class="icon-remove"></span></a></li>');
 }

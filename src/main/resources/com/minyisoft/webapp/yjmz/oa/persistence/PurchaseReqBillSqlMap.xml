@@ -109,6 +109,7 @@
     from 
     (select * from t_oa_purchasereqbill p
     <include refid="getCriteriaCondition"/>
+    order by p.fcreatedate desc, p.fid
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>

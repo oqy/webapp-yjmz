@@ -115,16 +115,6 @@ public class PurchaseReqBillController extends ManageBaseController {
 		purchaseReqBillService.submit(purchaseReqBill);
 		return "redirect:purchaseReqBillList.html";
 	}
-
-	/**
-	 * 获取采购单详情页
-	 */
-	@RequestMapping(value = "purchaseReqBillDetail.html", method = RequestMethod.GET)
-	public String getPurchaseReqBillDetailPage(@ModelAttribute("purchaseReqBill") PurchaseReqBillInfo purchaseReqBill,
-			Model model) {
-		model.addAttribute("purchaseReqBill", purchaseReqBill);
-		return "manage/purchaseReqBillDetail";
-	}
 	
 	@Autowired
 	private PurchaseReqBillExcelView purchaseReqBillExcelView;

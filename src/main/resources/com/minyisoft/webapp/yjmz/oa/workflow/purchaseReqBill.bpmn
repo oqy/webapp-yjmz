@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="purchaseProcess" name="采购单审批流程" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="applyUserId"></startEvent>
-    <userTask id="usertask1" name="仓库检查是否有该物料的库存" activiti:assignee="13927781557" activiti:formKey="purchaseReqDepotCheck"></userTask>
+    <userTask id="usertask1" name="仓库检查是否有该物料的库存" activiti:assignee="13630150260" activiti:formKey="purchaseReqDepotCheck"></userTask>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
-    <userTask id="usertask2" name="采购主管审核" activiti:assignee="13925999991">
+    <userTask id="usertask2" name="采购主管审核" activiti:assignee="13630150260">
       <extensionElements>
         <activiti:formProperty id="allowPurchaseReq" name="同意采购" type="boolean"></activiti:formProperty>
         <activiti:formProperty id="buyer" name="采购员" type="user"></activiti:formProperty>
       </extensionElements>
     </userTask>
     <userTask id="usertask3" name="采购员采购" activiti:assignee="${buyer.cellPhoneNumber}"></userTask>
-    <userTask id="usertask4" name="仓管入库" activiti:assignee="13927781557"></userTask>
+    <userTask id="usertask4" name="仓管入库" activiti:assignee="13630150260"></userTask>
     <sequenceFlow id="flow6" sourceRef="usertask3" targetRef="usertask4"></sequenceFlow>
-    <userTask id="usertask5" name="采购主管确认" activiti:assignee="13925999991"></userTask>
+    <userTask id="usertask5" name="采购主管确认" activiti:assignee="13630150260"></userTask>
     <sequenceFlow id="flow7" sourceRef="usertask4" targetRef="usertask5"></sequenceFlow>
-    <userTask id="usertask6" name="财务经理审核" activiti:assignee="13902423101"></userTask>
+    <userTask id="usertask6" name="财务经理审核" activiti:assignee="13630150260"></userTask>
     <sequenceFlow id="flow8" sourceRef="usertask5" targetRef="usertask6"></sequenceFlow>
-    <userTask id="usertask7" name="财务总监审批" activiti:assignee="13827731266"></userTask>
+    <userTask id="usertask7" name="财务总监审批" activiti:assignee="13630150260"></userTask>
     <sequenceFlow id="flow9" sourceRef="usertask6" targetRef="usertask7"></sequenceFlow>
     <sequenceFlow id="flow10" sourceRef="usertask7" targetRef="endevent1"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
