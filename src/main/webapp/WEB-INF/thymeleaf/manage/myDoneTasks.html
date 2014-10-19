@@ -4,8 +4,7 @@
 <title>已处理任务-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css">
-</style>
+<style type="text/css" th:substituteby="component/resource::css"></style>
 </head>
 <body>
 <!-- navbar -->
@@ -24,22 +23,22 @@
     </ul>
     <table class="table table-hover table-striped mt10">
       <tr>
-        <th>序号</th>
+        <th class="hidden-xs">序号</th>
         <th>流程名称</th>
         <th>节点名称</th>
         <th>开始时间</th>
-        <th>签收时间</th>
-        <th>完成时间</th>
+        <th class="hidden-xs">签收时间</th>
+        <th class="hidden-xs">完成时间</th>
         <th>任务耗时</th>
         <th>操作</th>
       </tr>
       <tr th:each="task : ${doneTasks}" th:with="businessModel=${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).getBusinessModel(task)}">
-        <td th:text="${taskStat.count + (pageDevice.currentPage - 1) * pageDevice.recordsPerPage}"></td>
+        <td class="hidden-xs" th:text="${taskStat.count + (pageDevice.currentPage - 1) * pageDevice.recordsPerPage}"></td>
         <td th:text="${businessModel.processInstanceName}"></td>
         <td th:text="${task.name}"></td>
         <td th:text="${#dates.format(task.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
-        <td th:text="${task.claimTime!=null}?${#dates.format(task.claimTime,'yyyy-MM-dd HH:mm:ss')}"></td>
-        <td th:text="${task.endTime!=null}?${#dates.format(task.endTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td class="hidden-xs" th:text="${task.claimTime!=null}?${#dates.format(task.claimTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td class="hidden-xs" th:text="${task.endTime!=null}?${#dates.format(task.endTime,'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${task.durationInMillis!=null}?${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).formatDuration(task.durationInMillis)}"></td>
         <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-primary btn-sm" role="button">详情</a></td>
       </tr>

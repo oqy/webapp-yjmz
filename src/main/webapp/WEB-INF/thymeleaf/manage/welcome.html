@@ -4,8 +4,7 @@
 <title>欢迎登录敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css">
-</style>
+<style type="text/css" th:substituteby="component/resource::css"></style>
 <link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/index.css'}" />
 </head>
 <body>
@@ -32,7 +31,7 @@
     </div>
   </div>
   <div id="pad-wrapper">
-    <div class="panel panel-default table-responsive">
+    <div class="panel panel-default">
       <!-- Default panel contents -->
       <div class="panel-heading">
         <h4 style="font-style:normal;"><strong class="text-primary" th:text="${currentCompany.name}"></strong>·企业通讯录</h4>
@@ -42,23 +41,23 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>#</th>
+            <th class="hidden-xs">#</th>
             <th>部门</th>
             <th>姓名</th>
-            <th>性别</th>
-            <th>工号</th>
-            <th>职衔</th>
+            <th class="hidden-xs">性别</th>
+            <th class="hidden-xs">工号</th>
+            <th class="hidden-xs">职衔</th>
             <th>联系手机</th>
           </tr>
         </thead>
         <tbody th:if="${!#lists.isEmpty(currentCompany.userOrgRelations)}">
           <tr th:each="userOrgRelation :${currentCompany.userOrgRelations}">
-            <td th:text="${userOrgRelationStat.count}"></td>
+            <td class="hidden-xs" th:text="${userOrgRelationStat.count}"></td>
             <td th:text="${userOrgRelation.department!=null}?${userOrgRelation.department.name}"></td>
             <td th:text="${userOrgRelation.user.name}"></td>
-            <td th:text="${userOrgRelation.user.userMale.description}"></td>
-            <td th:text="${userOrgRelation.jobNumber}"></td>
-            <td th:text="${userOrgRelation.title}"></td>
+            <td class="hidden-xs" th:text="${userOrgRelation.user.userMale.description}"></td>
+            <td class="hidden-xs" th:text="${userOrgRelation.jobNumber}"></td>
+            <td class="hidden-xs" th:text="${userOrgRelation.title}"></td>
             <td th:text="${userOrgRelation.user.cellPhoneNumber}"></td>
           </tr>
         </tbody>

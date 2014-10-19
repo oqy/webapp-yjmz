@@ -23,14 +23,14 @@
     </ul>
     <table class="table table-hover table-striped mt10">
       <tr>
-        <th>序号</th>
+        <th class="hidden-xs">序号</th>
         <th>流程名称</th>
         <th>节点名称</th>
         <th>开始时间</th>
-        <th>备注</th>
+        <th>操作</th>
       </tr>
       <tr th:each="task : ${todoTasks}" th:with="businessModel=${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).getBusinessModel(task)}">
-        <td th:text="${taskStat.count}"></td>
+        <td class="hidden-xs" th:text="${taskStat.count}"></td>
         <td th:text="${businessModel.processInstanceName}"></td>
         <td th:text="${task.name}"></td>
         <td th:text="${#dates.format(task.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>

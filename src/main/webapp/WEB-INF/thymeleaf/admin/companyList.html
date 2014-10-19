@@ -4,8 +4,7 @@
 <title>公司列表-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css">
-</style>
+<style type="text/css" th:substituteby="component/resource::css"></style>
 </head>
 <body>
 <!-- navbar -->
@@ -18,28 +17,26 @@
 <div class="content">
   <div id="pad-wrapper">
     <h3>公司列表<a th:href="@{'/admin/companyEdit.html'}" role="button" class="btn btn-success btn-sm pull-right"><span class="icon-plus"></span>&nbsp;新增公司</a></h3>
-    <div class="table-responsive">
-      <table class="table table-hover table-striped">
-        <thead>
-          <tr>
-            <th>序号</th>
-            <th>名称</th>
-            <th>状态</th>
-            <th>备注</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="company :${companies}" th:class="${company.status.value==1}?'danger'">
-            <td th:text="${companyStat.count}"></td>
-            <td th:text="${company.name}"></td>
-            <td th:text="${company.status.description}"></td>
-            <td th:text="${company.description}"></td>
-            <td><a th:href="@{'/admin/companyEdit.html?companyId='+${company.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}" class="btn btn-default btn-sm" role="button">详情</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>名称</th>
+          <th>状态</th>
+          <th>备注</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="company :${companies}" th:class="${company.status.value==1}?'danger'">
+          <td th:text="${companyStat.count}"></td>
+          <td th:text="${company.name}"></td>
+          <td th:text="${company.status.description}"></td>
+          <td th:text="${company.description}"></td>
+          <td><a th:href="@{'/admin/companyEdit.html?companyId='+${company.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a th:href="@{'/admin/companyDetail.html?companyId='+${company.id}}" class="btn btn-default btn-sm" role="button">详情</a></td>
+        </tr>
+      </tbody>
+    </table>
     <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(companies)}">暂无公司信息</div>
   </div>
 </div>
