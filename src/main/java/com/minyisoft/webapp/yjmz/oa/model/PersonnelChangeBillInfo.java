@@ -32,8 +32,7 @@ public class PersonnelChangeBillInfo extends CompanyBillBaseInfo implements Work
 	@Label("性别")
 	@NotNull
 	private UserMaleEnum userMale = UserMaleEnum.MALE;
-	@Label("员工号码")
-	@NotBlank
+	// 员工号码
 	private String staffNumber;
 	@Label("入职日期")
 	@NotNull
