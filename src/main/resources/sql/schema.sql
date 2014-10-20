@@ -277,3 +277,6 @@ create table t_oa_personnelchangebill(
   fversion int default 0, 
   primary key (fid)
 );
+
+ALTER TABLE t_oa_report ADD fpreapprovedepartmentid VARCHAR(32) NULL AFTER fattachments;
+ALTER TABLE t_oa_report ADD fpreapprovedepartmentleaderid VARCHAR(32) NULL AFTER fattachments;

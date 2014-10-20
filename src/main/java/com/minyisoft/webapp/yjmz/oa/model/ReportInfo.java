@@ -12,6 +12,8 @@ import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.yjmz.common.model.AttachmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
+import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 
@@ -28,14 +30,16 @@ public class ReportInfo extends CompanyBillBaseInfo implements WorkFlowBusinessM
 	@Label("报告标题")
 	@NotBlank
 	private String reportTitle;
-	// 附件url
-	private String attachmentUrl;
 	// 工作流流程实例id
 	private String processInstanceId;
 	// 工作流程状态
 	private WorkFlowProcessStatusEnum processStatus = WorkFlowProcessStatusEnum.UNSTARTED;
 	// 附件
 	private List<AttachmentInfo> attachments;
+	// 前置审批部门
+	private DepartmentInfo preApproveDepartment;
+	// 前置审批部门负责人
+	private UserInfo preApproveDepartmentLeader;
 
 	@Override
 	public String getProcessInstanceName() {

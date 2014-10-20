@@ -1,5 +1,6 @@
 package com.minyisoft.webapp.yjmz.oa.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -8,6 +9,7 @@ import com.minyisoft.webapp.core.service.impl.BillBaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
+import com.minyisoft.webapp.yjmz.common.service.UserOrgRelationService;
 import com.minyisoft.webapp.yjmz.oa.model.ReportInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.ReportCriteria;
 import com.minyisoft.webapp.yjmz.oa.persistence.ReportDao;
@@ -16,6 +18,9 @@ import com.minyisoft.webapp.yjmz.oa.service.ReportService;
 @Service("reportService")
 public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCriteria, ReportDao> implements
 		ReportService {
+	@Autowired
+	private UserOrgRelationService userOrgRelationService;
+
 	@Override
 	protected void _validateDataBeforeDelete(ReportInfo info) {
 		Assert.isTrue(info.getCreateUser() != null && info.getCreateUser().equals(SecurityUtils.getCurrentUser()),
@@ -33,8 +38,13 @@ public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCri
 			Assert.isTrue(orgRelation.isPresent() && info.getDepartment().equals(orgRelation.get().getDepartment()),
 					"工作报告创建者并不隶属于报告所属部门");
 		}
+		// 设置了前置审批部门，自动置入对应的部门负责人
+		if (info.getPreApproveDepartment() != null) {
+			info.setPreApproveDepartmentLeader(userOrgRelationService.getDepartmentLeader(
+					info.getPreApproveDepartment()).orNull());
+		}
 	}
-	
+
 	@Override
 	protected boolean useModelCache() {
 		return true;
