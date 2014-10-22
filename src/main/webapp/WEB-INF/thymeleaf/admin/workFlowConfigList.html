@@ -39,8 +39,17 @@
           <td th:text="${#strings.isEmpty(workFlowConfig.triggerExpression)}?'-':${workFlowConfig.triggerExpression}"></td>
           <td th:text="${workFlowConfig.description}"></td>
           <td><a th:href="@{'/admin/workFlowConfigEdit.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-default btn-sm" role="button">编辑</a>
-            <button class="workflow-config-diagram btn btn-default btn-sm" th:attr="data-config-id=${workFlowConfig.processDefinitionId},data-config-title=${workFlowConfig.name}">流程定义</button>
-            <a onclick="return window.confirm('确定挂起指定工作流程定义?')" th:if="${workFlowConfig.workFlowStatus.value==0}" th:href="@{'/admin/workFlowConfigSuspend.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-warning btn-sm" role="button">挂起</a> <a th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigActive.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-success btn-sm" role="button">激活</a> <a onclick="return window.confirm('确定删除指定工作流程定义?')" th:if="${workFlowConfig.workFlowStatus.value==1}" th:href="@{'/admin/workFlowConfigDelete.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-danger btn-sm" role="button">删除</a> <a th:href="@{'/admin/processInstances.html?workFlowConfigId='+${workFlowConfig.id}}" class="btn btn-primary btn-sm" role="button">流程实例</a></td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"> 管理 <span class="caret"></span> </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#" class="workflow-config-diagram" th:attr="data-config-id=${workFlowConfig.processDefinitionId},data-config-title=${workFlowConfig.name}">流程定义</a></li>
+                <li><a th:href="@{'/admin/processInstances.html?workFlowConfigId='+${workFlowConfig.id}}">流程实例</a></li>
+                <li class="divider"></li>
+                <li th:if="${workFlowConfig.workFlowStatus.value==0}"><a onclick="return window.confirm('确定挂起指定工作流程定义?')" th:href="@{'/admin/workFlowConfigSuspend.html?workFlowConfigId='+${workFlowConfig.id}}">挂起</a></li>
+                <li th:if="${workFlowConfig.workFlowStatus.value==1}"><a th:href="@{'/admin/workFlowConfigActive.html?workFlowConfigId='+${workFlowConfig.id}}">激活</a></li>
+                <li th:if="${workFlowConfig.workFlowStatus.value==1}"><a onclick="return window.confirm('确定删除指定工作流程定义?')"  th:href="@{'/admin/workFlowConfigDelete.html?workFlowConfigId='+${workFlowConfig.id}}">删除</a></li>
+              </ul>
+            </div></td>
         </tr>
       </tbody>
     </table>

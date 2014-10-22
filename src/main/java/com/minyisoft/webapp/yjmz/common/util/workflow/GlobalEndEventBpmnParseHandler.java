@@ -6,12 +6,14 @@ import org.activiti.bpmn.model.BaseElement;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.engine.impl.bpmn.parser.BpmnParse;
 import org.activiti.engine.impl.bpmn.parser.handler.AbstractBpmnParseHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Setter
 @Component
 public class GlobalEndEventBpmnParseHandler extends AbstractBpmnParseHandler<EndEvent> {
-	private static final EndEventCompleteListener endEventCompleteListener = new EndEventCompleteListener();
+	@Autowired
+	private EndEventCompleteListener endEventCompleteListener;
 
 	@Override
 	protected Class<? extends BaseElement> getHandledType() {

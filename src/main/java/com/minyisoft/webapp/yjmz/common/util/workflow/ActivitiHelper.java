@@ -31,7 +31,7 @@ import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
  * @author qingyong_ou Activiti工具类
  */
 public final class ActivitiHelper {
-	private static final ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+	public static final ProcessEngine PROCESS_ENGINE = ProcessEngines.getDefaultProcessEngine();
 
 	private ActivitiHelper() {
 	}
@@ -54,12 +54,12 @@ public final class ActivitiHelper {
 	public static Optional<InputStream> getProcessDefinitionResource(String processDefinitionId,
 			ProcessResourceType resourceType) {
 		Assert.hasText(processDefinitionId, "工作流程定义ID不能为空");
-		ProcessDefinition processDefinition = processEngine.getRepositoryService().createProcessDefinitionQuery()
+		ProcessDefinition processDefinition = PROCESS_ENGINE.getRepositoryService().createProcessDefinitionQuery()
 				.processDefinitionId(processDefinitionId).singleResult();
 		if (processDefinition != null && resourceType == ProcessResourceType.XML) {
-			return Optional.of(processEngine.getRepositoryService().getProcessModel(processDefinition.getId()));
+			return Optional.of(PROCESS_ENGINE.getRepositoryService().getProcessModel(processDefinition.getId()));
 		} else if (processDefinition != null && resourceType == ProcessResourceType.IMAGE) {
-			return Optional.of(processEngine.getRepositoryService().getProcessDiagram(processDefinition.getId()));
+			return Optional.of(PROCESS_ENGINE.getRepositoryService().getProcessDiagram(processDefinition.getId()));
 		} else {
 			return Optional.absent();
 		}
@@ -74,13 +74,13 @@ public final class ActivitiHelper {
 	public static Optional<String> getProcessInstanceBusinessKey(String processInstanceId) {
 		Assert.hasText(processInstanceId, "流程实例ID不能为空");
 		// 首先判断是否为正在运行的实例
-		ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery()
+		ProcessInstance processInstance = PROCESS_ENGINE.getRuntimeService().createProcessInstanceQuery()
 				.processInstanceId(processInstanceId).singleResult();
 		if (processInstance != null) {
 			return Optional.of(processInstance.getBusinessKey());
 		}
 		// 然后判断是否为已结束的实例
-		HistoricProcessInstance historicProcessInstance = processEngine.getHistoryService()
+		HistoricProcessInstance historicProcessInstance = PROCESS_ENGINE.getHistoryService()
 				.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
 		if (historicProcessInstance != null) {
 			return Optional.of(historicProcessInstance.getBusinessKey());
@@ -97,14 +97,14 @@ public final class ActivitiHelper {
 	public static Optional<InputStream> getProcessInstanceDiagram(String processInstanceId) {
 		Assert.hasText(processInstanceId, "流程实例ID不能为空");
 		// 首先判断是否为正在运行的实例
-		ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery()
+		ProcessInstance processInstance = PROCESS_ENGINE.getRuntimeService().createProcessInstanceQuery()
 				.processInstanceId(processInstanceId).singleResult();
 		if (processInstance != null) {
 			return Optional.of(getProcessInstanceDiagram(processInstance.getId(),
 					processInstance.getProcessDefinitionId(), true));
 		}
 		// 然后判断是否为已结束的实例
-		HistoricProcessInstance historicProcessInstance = processEngine.getHistoryService()
+		HistoricProcessInstance historicProcessInstance = PROCESS_ENGINE.getHistoryService()
 				.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
 		if (historicProcessInstance != null) {
 			return Optional.of(getProcessInstanceDiagram(historicProcessInstance.getId(),
@@ -116,29 +116,29 @@ public final class ActivitiHelper {
 	private static InputStream getProcessInstanceDiagram(String processInstanceId, String processDefinitionId,
 			boolean isRuntimeProcessInstance) {
 		List<String> highLightedActivities = Lists.newArrayList();
-		List<HistoricActivityInstance> historicActivityInstances = processEngine.getHistoryService()
+		List<HistoricActivityInstance> historicActivityInstances = PROCESS_ENGINE.getHistoryService()
 				.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId)
 				.orderByHistoricActivityInstanceStartTime().asc().list();
 		for (HistoricActivityInstance hai : historicActivityInstances) {
 			highLightedActivities.add(hai.getActivityId());
 		}
 		if (isRuntimeProcessInstance) {
-			highLightedActivities.addAll(processEngine.getRuntimeService().getActiveActivityIds(processInstanceId));
+			highLightedActivities.addAll(PROCESS_ENGINE.getRuntimeService().getActiveActivityIds(processInstanceId));
 		}
 
 		List<String> highLightedFlows = getHighLightedFlows(highLightedActivities,
-				((RepositoryServiceImpl) processEngine.getRepositoryService())
+				((RepositoryServiceImpl) PROCESS_ENGINE.getRepositoryService())
 						.getDeployedProcessDefinition(processDefinitionId));
 
-		Context.setProcessEngineConfiguration(((ProcessEngineImpl) processEngine).getProcessEngineConfiguration());
-		return processEngine
+		Context.setProcessEngineConfiguration(((ProcessEngineImpl) PROCESS_ENGINE).getProcessEngineConfiguration());
+		return PROCESS_ENGINE
 				.getProcessEngineConfiguration()
 				.getProcessDiagramGenerator()
-				.generateDiagram(processEngine.getRepositoryService().getBpmnModel(processDefinitionId), "png",
+				.generateDiagram(PROCESS_ENGINE.getRepositoryService().getBpmnModel(processDefinitionId), "png",
 						highLightedActivities, highLightedFlows,
-						processEngine.getProcessEngineConfiguration().getActivityFontName(),
-						processEngine.getProcessEngineConfiguration().getLabelFontName(),
-						processEngine.getProcessEngineConfiguration().getClassLoader(), 1.0);
+						PROCESS_ENGINE.getProcessEngineConfiguration().getActivityFontName(),
+						PROCESS_ENGINE.getProcessEngineConfiguration().getLabelFontName(),
+						PROCESS_ENGINE.getProcessEngineConfiguration().getClassLoader(), 1.0);
 	}
 
 	private static List<String> getHighLightedFlows(List<String> highLightedActivities,
@@ -164,7 +164,7 @@ public final class ActivitiHelper {
 	 */
 	public static WorkFlowBusinessModel getBusinessModel(Task task) {
 		Assert.notNull(task);
-		ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery()
+		ProcessInstance processInstance = PROCESS_ENGINE.getRuntimeService().createProcessInstanceQuery()
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
 		return processInstance != null ? (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
 				.getBusinessKey()) : null;
@@ -178,7 +178,7 @@ public final class ActivitiHelper {
 	 */
 	public static WorkFlowBusinessModel getBusinessModel(HistoricTaskInstance task) {
 		Assert.notNull(task);
-		HistoricProcessInstance processInstance = processEngine.getHistoryService()
+		HistoricProcessInstance processInstance = PROCESS_ENGINE.getHistoryService()
 				.createHistoricProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
 		return processInstance != null ? (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
 				.getBusinessKey()) : null;
@@ -192,8 +192,9 @@ public final class ActivitiHelper {
 	 */
 	public static List<HistoricTaskInstance> getHistoricTaskInstances(String processInstanceId) {
 		Assert.hasLength(processInstanceId);
-		return processEngine.getHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processInstanceId)
-				.includeTaskLocalVariables().orderByHistoricTaskInstanceStartTime().asc().list();
+		return PROCESS_ENGINE.getHistoryService().createHistoricTaskInstanceQuery()
+				.processInstanceId(processInstanceId).includeTaskLocalVariables()
+				.orderByHistoricTaskInstanceStartTime().asc().list();
 	}
 
 	private static PeriodFormatter durationFormatter = new PeriodFormatterBuilder().appendWeeks().appendSuffix("周")

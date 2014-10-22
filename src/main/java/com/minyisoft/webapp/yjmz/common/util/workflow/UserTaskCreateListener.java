@@ -2,8 +2,6 @@ package com.minyisoft.webapp.yjmz.common.util.workflow;
 
 import java.util.Map;
 
-import lombok.Setter;
-
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
@@ -26,7 +24,6 @@ import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor;
 
 @SuppressWarnings("serial")
-@Setter
 @Component
 public class UserTaskCreateListener implements TaskListener {
 	@Autowired
