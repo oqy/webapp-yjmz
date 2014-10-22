@@ -27,6 +27,7 @@
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::report" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E1C6843F')}" th:with="report=${businessModel}"> </div>
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::maintainReqBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E24CEB79')}" th:with="maintainReqBill=${businessModel}"> </div>
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::purchaseReqBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E349704C')}" th:with="purchaseReqBill=${businessModel}"> </div>
+      <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::personnelChangeBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('14920E2FE89')}" th:with="personnelChangeBill=${businessModel}"> </div>
       <div class="tab-pane" id="workFlowDetail">
         <div class="alert alert-warning" role="alert" th:if="${businessModel.processUnStarted}">当前<span th:text="${classLabel}"></span>尚未进入工作流程，暂无相关可供查阅的流程信息</div>
         <img alt="" class="img-responsive" th:if="${!businessModel.processUnStarted}" th:src="@{'/admin/processInstanceDiagram.html?processInstanceId='+${businessModel.processInstanceId}}"/>

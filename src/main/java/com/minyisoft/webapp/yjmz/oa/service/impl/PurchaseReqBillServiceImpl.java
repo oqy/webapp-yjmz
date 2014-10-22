@@ -1,5 +1,7 @@
 package com.minyisoft.webapp.yjmz.oa.service.impl;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,10 +10,12 @@ import org.springframework.util.CollectionUtils;
 
 import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.service.impl.BillBaseServiceImpl;
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqEntryInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.PurchaseReqBillCriteria;
+import com.minyisoft.webapp.yjmz.oa.model.entity.PurchaseProcessReportInfo;
 import com.minyisoft.webapp.yjmz.oa.persistence.PurchaseReqBillDao;
 import com.minyisoft.webapp.yjmz.oa.persistence.PurchaseReqEntryDao;
 import com.minyisoft.webapp.yjmz.oa.service.PurchaseReqBillService;
@@ -67,9 +71,23 @@ public class PurchaseReqBillServiceImpl extends
 		}
 		purchaseReqEntryDao.deleteInvalidEntryByPurchaseReqBill(info);
 	}
-	
+
 	@Override
 	protected boolean useModelCache() {
 		return true;
+	}
+
+	@Override
+	public void addProcessReport(PurchaseReqBillInfo reqBill, boolean purchaseFinished, String reportDetail) {
+		Assert.notNull(reqBill);
+		UserInfo currentUser = null;
+		if (!purchaseFinished && StringUtils.isNotBlank(reportDetail)
+				&& (currentUser = SecurityUtils.getCurrentUser()) != null) {
+			PurchaseProcessReportInfo processReport = new PurchaseProcessReportInfo();
+			processReport.setReportDate(new Date());
+			processReport.setReportDetail(reportDetail);
+			processReport.setReportUser(currentUser);
+			getBaseDao().addProcessReport(reqBill, processReport);
+		}
 	}
 }

@@ -280,3 +280,15 @@ create table t_oa_personnelchangebill(
 
 ALTER TABLE t_oa_report ADD fpreapprovedepartmentid VARCHAR(32) NULL AFTER fattachments;
 ALTER TABLE t_oa_report ADD fpreapprovedepartmentleaderid VARCHAR(32) NULL AFTER fattachments;
+
+CREATE TABLE t_oa_purchasereqbill_report (
+  fid int(11) NOT NULL AUTO_INCREMENT,
+  freqbillid varchar(32),
+  freportdetail text,
+  freportuserid varchar(32),
+  freportdate datetime,
+  PRIMARY KEY (fid)
+);
+
+ALTER TABLE t_oa_purchasereqentry ADD factualquantity decimal(13,2) default 0 AFTER fdepotamount;
+update t_oa_purchasereqentry set factualquantity = fquantity - fdepotamount where fquantity > fdepotamount;

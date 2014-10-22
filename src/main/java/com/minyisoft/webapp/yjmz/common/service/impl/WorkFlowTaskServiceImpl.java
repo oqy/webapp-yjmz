@@ -76,19 +76,13 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 	}
 
 	@Override
-	public void completeTask(Task task, WorkFlowBusinessModel businessModel) {
-		Assert.notNull(task);
+	public void completeTask(Task task, Map<String, Object> variables, Map<String, Object> variablesLocal,
+			WorkFlowBusinessModel businessModel) {
 		// 更新业务对象
 		if (businessModel != null) {
 			ServiceUtils.getService(businessModel.getClass()).save(businessModel);
 		}
 
-		// 若任务未签收，先进行任务签收操作
-		HistoricTaskInstance historicTask = historyService.createHistoricTaskInstanceQuery().taskId(task.getId())
-				.singleResult();
-		if (historicTask == null || historicTask.getClaimTime() == null) {
-			taskService.claim(task.getId(), SecurityUtils.getCurrentUser().getCellPhoneNumber());
-		}
-		taskService.complete(task.getId());
+		completeTask(task, variables, variablesLocal);
 	}
 }

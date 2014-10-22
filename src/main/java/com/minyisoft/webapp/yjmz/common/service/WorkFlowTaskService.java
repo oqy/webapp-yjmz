@@ -59,7 +59,10 @@ public interface WorkFlowTaskService {
 	 * 完成任务并更新业务对象
 	 * 
 	 * @param task
+	 * @param variables
+	 * @param variablesLocal
 	 * @param businessModel
 	 */
-	void completeTask(Task task, WorkFlowBusinessModel businessModel);
+	void completeTask(Task task, Map<String, Object> variables, Map<String, Object> variablesLocal,
+			WorkFlowBusinessModel businessModel);
 }

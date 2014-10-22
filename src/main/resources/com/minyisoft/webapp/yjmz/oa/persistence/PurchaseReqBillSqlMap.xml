@@ -23,6 +23,11 @@
 		   <idArg column="fpurchasereqentryid" javaType="String"/>
 		</constructor>
 	  </collection>
+	  <collection property="processReports" column="fid" ofType="PurchaseProcessReportInfo">
+		<result property="reportDetail" column="freportdetail" />
+		<result property="reportUser" column="freportuserid" typeHandler="bizModelHandler" />
+		<result property="reportDate" column="freportdate" />
+	  </collection>
     </resultMap>
   
   <resultMap id="PurchaseReqBillDetailResult" type="PurchaseReqBillInfo" extends="PurchaseReqBillResult">
@@ -48,9 +53,14 @@
       	p.flastupdatedate ,
       	p.fid ,
       	p.fversion ,
-      	e.fid as fpurchasereqentryid
+      	e.fid as fpurchasereqentryid ,
+      	r.freportdetail ,
+      	r.freportuserid ,
+      	r.freportdate
     from t_oa_purchasereqbill p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
+    		left join t_oa_purchasereqbill_report r on p.fid = r.freqbillid
     where p.fid = #{id}
+    order by r.fid asc
   </select>
   
   <!-- 查询条件SQL -->
@@ -105,7 +115,10 @@
       	p.flastupdatedate ,
       	p.fid ,
       	p.fversion ,
-      	e.fid as fpurchasereqentryid
+      	e.fid as fpurchasereqentryid ,
+      	r.freportdetail ,
+      	r.freportuserid ,
+      	r.freportdate
     from 
     (select * from t_oa_purchasereqbill p
     <include refid="getCriteriaCondition"/>
@@ -114,7 +127,8 @@
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) p left join t_oa_purchasereqentry e on p.fid = e.freqbillid
-	order by p.fcreatedate desc, p.fid
+		left join t_oa_purchasereqbill_report r on p.fid = r.freqbillid
+	order by p.fcreatedate desc, p.fid, r.fid asc
   </select>
   
   <!-- 通用记录插入操作 --> 
@@ -133,4 +147,9 @@
   <delete id="batchDelete" parameterType="list">
     delete from t_oa_purchasereqbill where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
   </delete>
+  
+  <insert id="addProcessReport">
+    insert into t_oa_purchasereqbill_report(freqbillid,freportdetail,freportuserid,freportdate) 
+    values(#{reqBill.id},#{processReport.reportDetail},#{processReport.reportUser.id},#{processReport.reportDate})
+  </insert>
 </mapper>

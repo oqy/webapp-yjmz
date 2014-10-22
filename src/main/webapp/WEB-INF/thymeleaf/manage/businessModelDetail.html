@@ -108,7 +108,7 @@
     <tr>
       <th>品名</th>
       <th>规格</th>
-      <th>数量</th>
+      <th>申请采购量</th>
       <th>单价</th>
       <th>已有仓储量</th>
       <th>实际采购量</th>
@@ -133,6 +133,19 @@
       </div>
     </div>
   </div>
+  <h4 th:if="${!#lists.isEmpty(purchaseReqBill.processReports)}">采购进度</h4>
+  <table class="table table-bordered" th:if="${!#lists.isEmpty(purchaseReqBill.processReports)}">
+    <tr>
+      <th>报告时间</th>
+      <th>报告人</th>
+      <th>内容</th>
+    </tr>
+    <tr th:each="report:${purchaseReqBill.processReports}">
+      <td th:text="${#dates.format(report.reportDate,'yyyy-MM-dd')}">&nbsp;</td>
+      <td th:text="${report.reportUser.name}">&nbsp;</td>
+      <td th:text="${report.reportDetail}">&nbsp;</td>
+    </tr>
+  </table>
 </div>
 <div th:fragment="personnelChangeBill">
   <table class="table table-bordered">

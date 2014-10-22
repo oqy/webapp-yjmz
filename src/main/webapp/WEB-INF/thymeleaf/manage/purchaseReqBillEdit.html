@@ -39,9 +39,9 @@
       <table class="table table-hover table-striped">
         <thead>
           <tr>
-            <th>品名</th>
+            <th><span class="text-danger">*</span>&nbsp;品名</th>
             <th>规格</th>
-            <th>数量</th>
+            <th><span class="text-danger">*</span>&nbsp;申请采购量</th>
             <th>单价（元）</th>
             <th>备注</th>
             <th><a role="button" href="#" id="add-entry" class="btn btn-success btn-sm" title="添加采购项"><span class="icon-plus"></span></a></th>
@@ -52,7 +52,7 @@
             <td class="col-md-3"><input type="text" class="form-control required" id="name0" name="entry[0].name" placeholder="请输入品名"/></td>
             <td class="col-md-2"><input type="text" class="form-control" id="standard0" name="entry[0].standard" placeholder="请输入规格"/></td>
             <td class="col-md-2"><input type="text" class="form-control required number" id="quantity0" name="entry[0].quantity" placeholder="请输入数量"/></td>
-            <td class="col-md-2"><input type="text" class="form-control required number" id="unitPrice0" name="entry[0].unitPrice" placeholder="请输入单价"/></td>
+            <td class="col-md-2"><input type="text" class="form-control number" id="unitPrice0" name="entry[0].unitPrice" placeholder="请输入单价"/></td>
             <td class="col-md-2"><input type="text" class="form-control" id="remark0" name="entry[0].remark" placeholder="请输入备注"/></td>
             <td class="col-md-1"><a role="button" href="#" class="btn btn-danger btn-sm rm-entry" title="删除采购项"><span class="icon-minus"></span></a></td>
           </tr>
@@ -62,7 +62,7 @@
             <td class="col-md-3"><input type="text" class="form-control required" th:id="'name'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].name'" placeholder="请输入品名" th:value="${entry.name}"/></td>
             <td class="col-md-3"><input type="text" class="form-control" th:id="'standard'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].standard'" placeholder="请输入规格" th:value="${entry.standard}"/></td>
             <td class="col-md-2"><input type="text" class="form-control required number" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" placeholder="请输入数量" th:value="${entry.quantity}"/></td>
-            <td class="col-md-2"><input type="text" class="form-control required number" th:id="'unitPrice'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" placeholder="请输入单价" th:value="${entry.unitPrice}"/></td>
+            <td class="col-md-2"><input type="text" class="form-control number" th:id="'unitPrice'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" placeholder="请输入单价" th:value="${entry.unitPrice}"/></td>
             <td class="col-md-2"><input type="text" class="form-control" th:id="'remark'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].remark'" placeholder="请输入备注" th:value="${entry.remark}"/></td>
             <td class="col-md-1"><a role="button" href="#" class="btn btn-danger btn-sm rm-entry" title="删除采购项"><span class="icon-minus"></span></a></td>
           </tr>

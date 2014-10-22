@@ -15,6 +15,7 @@ import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.form.BooleanFormType;
 import org.activiti.engine.impl.form.DateFormType;
+import org.activiti.engine.impl.form.StringFormType;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -78,7 +79,7 @@ public class WorkFlowController extends ManageBaseController {
 		if (businessModel == null) {
 			return "redirect:myTodoTasks.html";
 		}
-		
+
 		model.addAttribute("businessModel", businessModel);
 		if (businessModel instanceof MaintainReqBillInfo) {
 			model.addAttribute("maintainTypes", MaintainTypeEnum.values());
@@ -165,37 +166,41 @@ public class WorkFlowController extends ManageBaseController {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		TaskFormData taskFormData = formService.getTaskFormData(task.getId());
 
-		Map<String, Object> variables = Maps.newLinkedHashMap();
 		// 根据formProperties获取对应值
-		if (StringUtils.isBlank(taskFormData.getFormKey())) {
-			Map<String, Object> variablesLocal = Maps.newLinkedHashMap();
-			for (FormProperty property : taskFormData.getFormProperties()) {
-				String propertyVal = request.getParameter(property.getId());
-				if (StringUtils.isNotBlank(propertyVal)) {
-					if (property.getType() instanceof BooleanFormType) {
-						variables.put(property.getId(), Boolean.parseBoolean(propertyVal));
-						variablesLocal.put(property.getName(), Boolean.parseBoolean(propertyVal) ? "是" : "否");
-					} else if (property.getType() instanceof UserFormType) {
-						UserInfo user = userService.getValue(propertyVal);
-						variables.put(property.getId(), user);
-						if (user != null) {
-							variablesLocal.put(property.getName(), user.getName());
-						}
-					} else if (property.getType() instanceof DateFormType) {
-						variables
-								.put(property.getId(), DateUtils.parseDate(propertyVal, new String[] { "yyyy-MM-dd" }));
-						variablesLocal.put(property.getName(), propertyVal);
+		Map<String, Object> variables = Maps.newLinkedHashMap(), variablesLocal = Maps.newLinkedHashMap();
+		for (FormProperty property : taskFormData.getFormProperties()) {
+			String propertyVal = request.getParameter(property.getId());
+			if (StringUtils.isNotBlank(propertyVal)) {
+				if (property.getType() instanceof BooleanFormType) {
+					variables.put(property.getId(), Boolean.parseBoolean(propertyVal));
+					variablesLocal.put(property.getName(), Boolean.parseBoolean(propertyVal) ? "是" : "否");
+				} else if (property.getType() instanceof UserFormType) {
+					UserInfo user = userService.getValue(propertyVal);
+					variables.put(property.getId(), user);
+					if (user != null) {
+						variablesLocal.put(property.getName(), user.getName());
 					}
+				} else if (property.getType() instanceof DateFormType) {
+					variables.put(property.getId(), DateUtils.parseDate(propertyVal, new String[] { "yyyy-MM-dd" }));
+					variablesLocal.put(property.getName(), propertyVal);
+				} else if (property.getType() instanceof StringFormType) {
+					variables.put(property.getId(), propertyVal);
+					variablesLocal.put(property.getName(), propertyVal);
 				}
 			}
-			if (StringUtils.isNotBlank(description)) {
-				variablesLocal.put("处理备注", description);
-			}
+		}
+		if (StringUtils.isNotBlank(description)) {
+			variables.put("description", description);
+			variablesLocal.put("处理备注", description);
+		}
+
+		// 无fromKey时，无需对业务对象进行更新操作
+		if (StringUtils.isBlank(taskFormData.getFormKey())) {
 			workFlowTaskService.completeTask(task, variables, variablesLocal);
 		}
-		// 根据fromKey获取对应值
+		// 根据fromKey获取的对应值更新业务对象
 		else {
-			workFlowTaskService.completeTask(task, workFlowBusinessModel);
+			workFlowTaskService.completeTask(task, variables, variablesLocal, workFlowBusinessModel);
 		}
 		return "redirect:myTodoTasks.html";
 	}

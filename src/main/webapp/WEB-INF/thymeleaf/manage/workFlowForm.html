@@ -80,8 +80,7 @@
         <th>#</th>
         <th>品名</th>
         <th>规格</th>
-        <th>数量</th>
-        <th>单价</th>
+        <th>申请采购量</th>
         <th>已有仓储量</th>
         <th>备注</th>
       </tr>
@@ -94,8 +93,7 @@
         <td class="col-md-2"><span th:text="${entry.standard}" th:remove="tag"></span>
           <input type="hidden" th:id="'standard'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].standard'" th:value="${entry.standard}"/></td>
         <td class="col-md-2"><span th:text="${entry.quantity}" th:remove="tag"></span>
-          <input type="hidden" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" th:value="${entry.quantity}"/></td>
-        <td class="col-md-2"><span th:text="${entry.unitPrice}" th:remove="tag"></span>
+          <input type="hidden" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" th:value="${entry.quantity}"/>
           <input type="hidden" th:id="'price'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" th:value="${entry.unitPrice}"/></td>
         <td class="col-md-2"><input type="text" class="form-control required number" th:id="'depotAmount'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].depotAmount'" th:value="${entry.depotAmount}"/></td>
         <td class="col-md-2"><span th:text="${entry.remark}" th:remove="tag"></span>
@@ -103,6 +101,67 @@
       </tr>
     </tbody>
   </table>
+</div>
+<div th:fragment="purchaseReqBuyerReport">
+  <div class="form-group">
+    <label for="purchaseFinishd" class="col-md-2 control-label">采购进度：</label>
+    <div class="col-md-6">
+      <label class="radio-inline">
+      <input type="radio" name="purchaseFinished" value="true" checked="checked"/>
+      已完成 </label>
+      <label class="radio-inline">
+      <input type="radio" name="purchaseFinished" value="false"/>
+      采购中 </label>
+    </div>
+  </div>
+  <div class="process-report-wrapper form-group" style="display: none;">
+    <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;进度报告：</label>
+    <div class="col-md-6">
+      <textarea class="form-control required" rows="3" id="processReport" name="processReport" placeholder="请填写进度报告"></textarea>
+    </div>
+  </div>
+  <div class="process-finish-wrapper form-group">
+    <label for="reportTitle" class="col-md-2 control-label">采购信息：</label>
+    <div class="col-md-10">
+      <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>品名</th>
+            <th>规格</th>
+            <th>单价</th>
+            <th>实际采购量</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="entry:${purchaseReqBill.entry}">
+            <td th:text="${entryStat.count}"></td>
+            <td class="col-md-3"><span th:text="${entry.name}" th:remove="tag"></span>
+              <input type="hidden" th:id="'name'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].name'" th:value="${entry.name}"/></td>
+            <td class="col-md-3"><span th:text="${entry.standard}" th:remove="tag"></span>
+              <input type="hidden" th:id="'standard'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].standard'" th:value="${entry.standard}"/></td>
+            <td class="col-md-3"><input type="text" class="form-control required number" th:id="'price'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" th:value="${entry.unitPrice}"/></td>
+            <td class="col-md-3"><input type="text" class="form-control required number" th:id="'actualQuantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].actualQuantity'" th:value="${entry.actualQuantity}"/>
+              <input type="hidden" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" th:value="${entry.quantity}"/>
+              <input type="hidden" th:id="'depotAmount'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].depotAmount'" th:value="${entry.depotAmount}"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script type="text/javascript">
+  	jQuery(document).ready(function() {
+		jQuery('input[name="purchaseFinished"]').click(function(){
+			if(jQuery(this).val()=='true'){
+				jQuery('.process-report-wrapper').hide();
+				jQuery('.process-finish-wrapper').show();
+			}else{
+				jQuery('.process-report-wrapper').show();
+				jQuery('.process-finish-wrapper').hide();
+			}
+		});
+	});
+  </script>
 </div>
 <div th:fragment="personnelChangeBillModify">
   <link href="http://cdn.bootcss.com/bootstrap-datetimepicker/2.1.30/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>

@@ -28,7 +28,8 @@ public class PurchaseReqEntryInfo extends EntryBaseInfo {
 	private String name;
 	// 规格
 	private String standard;
-	// 数量
+	@Label("申请采购量")
+	@NotNull
 	private BigDecimal quantity = BigDecimal.ZERO;
 	// 单价
 	private BigDecimal unitPrice = BigDecimal.ZERO;
@@ -36,13 +37,6 @@ public class PurchaseReqEntryInfo extends EntryBaseInfo {
 	private String remark;
 	// 已有仓储量
 	private BigDecimal depotAmount = BigDecimal.ZERO;
-
-	/**
-	 * 获取实际采购量
-	 * 
-	 * @return
-	 */
-	public BigDecimal getActualQuantity() {
-		return quantity.compareTo(depotAmount) > 0 ? quantity.subtract(depotAmount) : BigDecimal.ZERO;
-	}
+	// 实际采购量
+	private BigDecimal actualQuantity = BigDecimal.ZERO;
 }

@@ -54,12 +54,12 @@ public class PurchaseReqBillExcelView extends AbstractExcelView {
 			for (int i = 0; i < purchaseReqBill.getEntry().size(); i++) {
 				setText(getCell(sheet, 4 + i, 0), purchaseReqBill.getEntry().get(i).getName());
 				setText(getCell(sheet, 4 + i, 4), purchaseReqBill.getEntry().get(i).getStandard());
-				setText(getCell(sheet, 4 + i, 6), String.valueOf(purchaseReqBill.getEntry().get(i).getQuantity()));
+				setText(getCell(sheet, 4 + i, 6), String.valueOf(purchaseReqBill.getEntry().get(i).getActualQuantity()));
 				setText(getCell(sheet, 4 + i, 7), String.valueOf(purchaseReqBill.getEntry().get(i).getUnitPrice()));
 				setText(getCell(sheet, 4 + i, 8), purchaseReqBill.getEntry().get(i).getRemark());
 
 				totalPrice = totalPrice.add(purchaseReqBill.getEntry().get(i).getUnitPrice()
-						.multiply(purchaseReqBill.getEntry().get(i).getQuantity())
+						.multiply(purchaseReqBill.getEntry().get(i).getActualQuantity())
 						.setScale(2, BigDecimal.ROUND_HALF_UP));
 			}
 			setText(getCell(sheet, 10, 6), StringUtils.convert2RMB(totalPrice));

@@ -41,7 +41,7 @@
           <td class="hidden-xs" th:text="${#dates.format(purchaseReqBill.createDate,'yyyy-MM-dd HH:mm')}" th:if="${entryStat.first}" th:rowspan="${purchaseReqBill.entry.size()}"></td>
           <td th:text="${entry.name}"></td>
           <td class="hidden-xs" th:text="${entry.standard}"></td>
-          <td th:text="${entry.quantity}"></td>
+          <td th:text="${entry.actualQuantity}"></td>
           <td th:text="${entry.unitPrice}"></td>
           <td class="hidden-xs" th:text="${entry.remark}"></td>
           <td style="text-align:center;" th:if="${entryStat.first}" th:rowspan="${purchaseReqBill.entry.size()}"><i th:class="${purchaseReqBill.processStatus.value eq 0}?'icon-circle-blank':'icon-circle'" th:classappend="${purchaseReqBill.processStatus.value eq 2}?'text-success':(${purchaseReqBill.processStatus.value eq 1}?'text-primary')"></i></td>
