@@ -164,6 +164,9 @@ public class WorkFlowController extends ManageBaseController {
 			@RequestParam String taskId, HttpServletRequest request, @RequestParam(required = false) String description)
 			throws Exception {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		if (task == null) {
+			return "redirect:myTodoTasks.html";
+		}
 		TaskFormData taskFormData = formService.getTaskFormData(task.getId());
 
 		// 根据formProperties获取对应值
@@ -189,13 +192,13 @@ public class WorkFlowController extends ManageBaseController {
 				}
 			}
 		}
-		if (StringUtils.isNotBlank(description)) {
-			variables.put("description", description);
-			variablesLocal.put("处理备注", description);
-		}
 
 		// 无fromKey时，无需对业务对象进行更新操作
 		if (StringUtils.isBlank(taskFormData.getFormKey())) {
+			if (StringUtils.isNotBlank(description)) {
+				variables.put("description", description);
+				variablesLocal.put("处理备注", description);
+			}
 			workFlowTaskService.completeTask(task, variables, variablesLocal);
 		}
 		// 根据fromKey获取的对应值更新业务对象
