@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>发送系统私信-敏易在线办公系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css"></style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3 style="border-bottom:#ccc solid 1px;">发送系统私信<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/messageSendList.html'}"><span class="icon-share-alt"></span>&nbsp;返回列表</a></h3>
+    <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/messageEdit.html'}" method="post" style="margin-top:20px;">
+      <div class="form-group">
+        <label class="col-md-2 control-label">所属部门：</label>
+        <div class="col-md-6">
+          <p class="form-control-static" th:text="${currentDepartment!=null}?${currentDepartment.name}"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="messageTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;消息标题：</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control required" id="messageTitle" name="messageTitle" placeholder="请输入消息标题"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="messageTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;发送对象：</label>
+        <div class="col-md-8">
+          <label class="radio-inline">
+          <input type="radio" name="massSending" value="true" checked="checked"/>
+          公司全体用户 </label>
+          <label class="radio-inline">
+          <input id="select-department" type="radio" name="massSending" value="false"/>
+          指定部门 </label>
+          <label class="radio-inline">
+          <input id="select-user" type="radio" name="massSending" value="false"/>
+          指定用户 </label>
+        </div>
+      </div>
+      <div class="department-selection form-group" style="display:none;">
+        <label for="description" class="col-md-2 control-label">选定部门：</label>
+        <div class="col-md-10">
+          <div class="checkbox col-xs-4 col-md-3" th:each="department : ${currentCompany.departments}">
+            <label th:inline="text">
+            <input name="targetDepartments" type="checkbox" th:value="${department.id}" disabled="disabled" class="required"/>
+            [[${department.name}]] </label>
+          </div>
+        </div>
+      </div>
+      <div class="user-selection form-group" style="display:none;">
+        <label for="description" class="col-md-2 control-label">选定用户：</label>
+        <div class="col-md-10">
+          <div class="checkbox col-xs-4 col-md-3" th:each="relation : ${currentCompany.userOrgRelations}" th:if="${!currentUser.equals(relation.user)}">
+            <label th:inline="text">
+            <input name="targetUsers" type="checkbox" th:value="${relation.user.id}" disabled="disabled" class="required"/>
+            [[${relation.user.name}]] </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;消息内容：</label>
+        <div class="col-md-8">
+          <textarea class="form-control required" rows="5" id="description" name="description" placeholder="请输入消息内容"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+          <button type="submit" class="btn btn-primary">提交</button>
+          <button type="reset" class="btn btn-info">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:include="component/resource::js" th:remove="tag"></script>
+<script type="text/javascript" th:include="component/resource::formValidateJs" th:with="formId=form1" th:remove="tag"></script>
+<script type="text/javascript" th:src="@{'/resource/js/manage/messageEdit.js'}"></script>
+</body>
+</html>

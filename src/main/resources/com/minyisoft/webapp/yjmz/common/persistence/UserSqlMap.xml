@@ -101,11 +101,11 @@
 	from 
     (select * from t_common_user
     <include refid="getCriteriaCondition"/>
+    order by hex(u.fname) desc, u.fid
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>
 	) u left join t_common_userorgrelation r on u.fid=r.fuserid
-	order by hex(u.fname) desc, u.fid
   </select>
   
   <!-- 通用记录插入操作 --> 

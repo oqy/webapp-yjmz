@@ -14,7 +14,11 @@ public class UserOrgRelationCriteria extends BaseCriteria {
 	// 所属组织
 	private ISystemOrgObject org;
 	// 部门
-	private DepartmentInfo department;
+	private DepartmentInfo[] departments;
 	// 上级用户
 	private UserInfo upperUser;
+
+	public void setDepartments(DepartmentInfo... departments) {
+		this.departments = departments;
+	}
 }

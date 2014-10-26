@@ -34,7 +34,7 @@
         <label for="maintainTypes" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;类型：</label>
         <div class="col-md-6">
           <label class="checkbox-inline" th:each="type : ${maintainTypes}">
-          <input type="checkbox" name="maintainTypes" th:id="'maintainTypes_'+${typeStat.count}" th:value="${type.value}" th:checked="${maintainReqBill.maintainTypes!=null} and ${#arrays.contains(maintainReqBill.maintainTypes,type)}" th:text="${type.description}"/>
+          <input class="required" type="checkbox" name="maintainTypes" th:id="'maintainTypes_'+${typeStat.count}" th:value="${type.value}" th:checked="${maintainReqBill.maintainTypes!=null} and ${#arrays.contains(maintainReqBill.maintainTypes,type)}" th:text="${type.description}"/>
           </label>
         </div>
       </div>

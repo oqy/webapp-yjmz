@@ -4,23 +4,24 @@
 <body>
 <!-- 顶部导航栏 -->
 <header th:fragment="header" class="navbar navbar-inverse" role="banner">
-  <div class="navbar-header">
+  <div class="navbar-header pull-left">
     <button class="navbar-toggle" type="button" data-toggle="collapse" id="menu-toggler"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
     <a class="navbar-brand" href="index.html"><img src="img/logo.png" th:src="@{'/resource/img/logo.png'}"/></a> </div>
-  <ul class="nav navbar-nav pull-right hidden-xs">
-    <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span th:text="'您好，'+(${currentUser!=null}?${currentUser.name}:${T(com.minyisoft.webapp.yjmz.common.security.SecurityUtils).currentUser.name})" th:remove="tag">账号管理</span> <b class="caret"></b> </a>
+  <ul class="nav navbar-nav pull-right">
+    <li class="dropdown hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span th:text="'您好，'+(${currentUser!=null}?${currentUser.name}:${T(com.minyisoft.webapp.yjmz.common.security.SecurityUtils).currentUser.name})" th:remove="tag">账号管理</span> <b class="caret"></b> </a>
       <ul class="dropdown-menu">
         <li th:if="${currentUser!=null}"><a href="personal-info.html" th:href="@{'/manage/userInfo.html'}">个人信息</a></li>
         <li><a href="#" th:href="@{'/share/passwordReset.html'}">修改密码</a></li>
       </ul>
     </li>
-    <li th:if="${currentCompany!=null}"> <a href="#"> 当前公司：<span th:text="${currentCompany.name}" th:remove="tag"></span></a> </li>
-    <li class="dropdown" th:if="${currentUser!=null and currentUser.orgRelations.size() gt 1}"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 切换组织 <b class="caret"></b> </a>
+    <li class="hidden-xs" th:if="${currentCompany!=null}"> <a href="#"> 当前公司：<span th:text="${currentCompany.name}" th:remove="tag"></span></a> </li>
+    <li class="hidden-xs dropdown" th:if="${currentUser!=null and currentUser.orgRelations.size() gt 1}"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 切换组织 <b class="caret"></b> </a>
       <ul class="dropdown-menu">
         <li th:each="orgRelation : ${currentUser.orgRelations}" th:if="${!orgRelation.org.equals(currentCompany)}"><a href="personal-info.html" th:href="@{'/manage/switchOrg.html?orgId='+${orgRelation.org.id}}" th:text="${orgRelation.org.name}">个人信息</a></li>
       </ul>
     </li>
-    <li class="settings"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-signout"></i> </a> </li>
+    <li th:if="${currentCompany!=null}" class="notification-dropdown"> <a th:href="@{'/manage/messageReceiveList.html'}" class="trigger active"> <i class="icon-envelope"></i> </a> </li>
+    <li class=" settings"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-signout"></i> </a> </li>
   </ul>
 </header>
 <!-- 普通用户左侧主菜单 -->
@@ -37,7 +38,6 @@
     <li id="menu_personnelChangeBill"> <a th:href="@{'/manage/personnelChangeBillList.html'}"> <i class="icon-th-large"></i> <span>人事变动单</span> </a> </li>
     <li id="menu_purchaseReqBill"> <a th:href="@{'/manage/purchaseReqBillList.html'}"> <i class="icon-shopping-cart"></i> <span>采购单</span> </a> </li>
     <li id="menu_maintainReqBill"> <a th:href="@{'/manage/maintainReqBillList.html'}"> <i class="icon-wrench"></i> <span>工程维修单</span> </a> </li>
-    <li class="visible-xs-block"> <a th:href="@{'/logout.html'}"> <i class="icon-signout"></i> <span>退出系统</span> </a> </li>
   </ul>
 </div>
 <!-- 系统管理员页面左侧主菜单 -->

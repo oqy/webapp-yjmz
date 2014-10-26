@@ -12,7 +12,7 @@
 <link href="http://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet"/>
 </head>
 <body th:fragment="js" th:remove="tag">
-<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://apps.bdimg.com/libs/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="js/theme.js" th:src="@{'/resource/js/theme.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
@@ -24,6 +24,16 @@ jQuery(document).ready(function() {
 		jQuery('#sidebar-nav li:first').addClass('active').append('<div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>');
 	}
 	jQuery('#sidebar-nav li.active ul.submenu').show();
+});
+</script>
+<script type="text/javascript" th:inline="javascript" th:if="${currentCompany!=null}">
+jQuery(document).ready(function() {
+	jQuery.getJSON('countUnreadMessages.do',function(data){
+		var unReadMessageCount = Number(data);
+		if(data > 0){
+			jQuery('.navbar .icon-envelope').after('<span class="count">'+data+'</span>');
+		}
+	});
 });
 </script>
 </body>

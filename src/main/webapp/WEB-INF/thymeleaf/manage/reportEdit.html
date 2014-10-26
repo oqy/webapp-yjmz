@@ -37,13 +37,13 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;档案编号：</label>
+        <label for="fileNumber" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;档案编号：</label>
         <div class="col-md-6">
           <input type="text" class="form-control required" id="fileNumber" name="fileNumber" placeholder="请输入档案编号" th:value="${report.fileNumber}"/>
         </div>
       </div>
       <div class="form-group">
-        <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;文件编号：</label>
+        <label for="billNumber" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;文件编号：</label>
         <div class="col-md-6">
           <input type="text" class="form-control required" id="billNumber" name="billNumber" placeholder="请输入文件编号" th:value="${report.billNumber}"/>
         </div>
@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;报告内容：</label>
+        <label for="description" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;报告内容：</label>
         <div class="col-md-8">
           <textarea class="form-control required ckeditor" rows="3" id="description" name="description" placeholder="请输入报告内容" th:text="${report.description}">
           </textarea>

@@ -15,7 +15,7 @@ import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqEntryInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.PurchaseReqBillCriteria;
-import com.minyisoft.webapp.yjmz.oa.model.entity.PurchaseProcessReportInfo;
+import com.minyisoft.webapp.yjmz.oa.model.entity.PurchaseProcessReportEntity;
 import com.minyisoft.webapp.yjmz.oa.persistence.PurchaseReqBillDao;
 import com.minyisoft.webapp.yjmz.oa.persistence.PurchaseReqEntryDao;
 import com.minyisoft.webapp.yjmz.oa.service.PurchaseReqBillService;
@@ -83,7 +83,7 @@ public class PurchaseReqBillServiceImpl extends
 		UserInfo currentUser = null;
 		if (!purchaseFinished && StringUtils.isNotBlank(reportDetail)
 				&& (currentUser = SecurityUtils.getCurrentUser()) != null) {
-			PurchaseProcessReportInfo processReport = new PurchaseProcessReportInfo();
+			PurchaseProcessReportEntity processReport = new PurchaseProcessReportEntity();
 			processReport.setReportDate(new Date());
 			processReport.setReportDetail(reportDetail);
 			processReport.setReportUser(currentUser);

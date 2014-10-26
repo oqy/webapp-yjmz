@@ -86,7 +86,7 @@ public class UserOrgRelationServiceImpl extends
 	public Optional<UserInfo> getDepartmentLeader(DepartmentInfo department) {
 		Assert.notNull(department, "部门不能为空");
 		UserOrgRelationCriteria criteria = new UserOrgRelationCriteria();
-		criteria.setDepartment(department);
+		criteria.setDepartments(department);
 		UserOrgRelationInfo userOrgRelation = find(criteria);
 		if (userOrgRelation != null) {
 			return Optional.of(userOrgRelation.getUser());

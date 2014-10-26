@@ -1,7 +1,5 @@
 package com.minyisoft.webapp.yjmz.common.util.workflow;
 
-import java.util.Map;
-
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
@@ -12,16 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.model.IModelObject;
 import com.minyisoft.webapp.core.service.utils.ServiceUtils;
-import com.minyisoft.webapp.weixin.common.model.dto.send.TemplateMessageData;
-import com.minyisoft.webapp.weixin.common.service.WeixinCommonService;
-import com.minyisoft.webapp.weixin.common.service.WeixinPostService;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
+import com.minyisoft.webapp.yjmz.common.model.entity.WeixinTemplateMessage;
+import com.minyisoft.webapp.yjmz.common.service.MessageService;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
-import com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor;
 
 @SuppressWarnings("serial")
 @Component
@@ -29,11 +24,7 @@ public class UserTaskCreateListener implements TaskListener {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private WeixinCommonService weixinCommonService;
-	@Autowired
-	private WeixinPostService weixinPostService;
-	@Value("${weixin.notify_template_id}")
-	private String weixinNotifyTemplateId;
+	private MessageService messageService;
 	@Value("${web.domain}")
 	private String webDomain;
 
@@ -46,23 +37,23 @@ public class UserTaskCreateListener implements TaskListener {
 		}
 
 		// 微信模板消息待发送内容
-		Map<String, TemplateMessageData> data = Maps.newHashMap();
-		data.put("first", new TemplateMessageData("您好，您有一条新的待处理工作流任务\n"));
-		data.put("keyword1", new TemplateMessageData(((WorkFlowBusinessModel) model).getProcessInstanceName()));
-		data.put("keyword2", new TemplateMessageData(delegateTask.getName()));
-		data.put("keyword3",
-				new TemplateMessageData(DateFormatUtils.format(delegateTask.getCreateTime(), "yyyy年M月d日HH时mm分")));
-		data.put("remark", new TemplateMessageData("\n请您及时处理"));
+		String[] weixinTemplateMessages = new String[5];
+		weixinTemplateMessages[0] = "您好，您有一条新的待处理工作流任务\n";
+		weixinTemplateMessages[1] = ((WorkFlowBusinessModel) model).getProcessInstanceName();
+		weixinTemplateMessages[2] = delegateTask.getName();
+		weixinTemplateMessages[3] = DateFormatUtils.format(delegateTask.getCreateTime(), "yyyy年M月d日HH时mm分");
+		weixinTemplateMessages[4] = "\n请您及时处理";
 
 		// 若任务存在指定执行者，向执行者发送通知消息
 		if (delegateTask.getAssignee() != null) {
 			_sendWeixinNotifyMessage(userService.getValue(delegateTask.getAssignee()), (WorkFlowBusinessModel) model,
-					data);
+					weixinTemplateMessages);
 		}
 		// 若任务存在候选执行者，向候选执行者发送通知消息
 		else if (!delegateTask.getCandidates().isEmpty()) {
 			for (IdentityLink link : delegateTask.getCandidates()) {
-				_sendWeixinNotifyMessage(userService.getValue(link.getUserId()), (WorkFlowBusinessModel) model, data);
+				_sendWeixinNotifyMessage(userService.getValue(link.getUserId()), (WorkFlowBusinessModel) model,
+						weixinTemplateMessages);
 			}
 		}
 	}
@@ -74,12 +65,10 @@ public class UserTaskCreateListener implements TaskListener {
 	 * @param model
 	 * @param messageData
 	 */
-	private void _sendWeixinNotifyMessage(UserInfo user, WorkFlowBusinessModel model,
-			Map<String, TemplateMessageData> messageData) {
+	private void _sendWeixinNotifyMessage(UserInfo user, WorkFlowBusinessModel model, String[] weixinTemplateMessages) {
 		if (user != null && StringUtils.isNotBlank(user.getWeixinOpenId())) {
-			weixinPostService.postTemplateMessage(user.getWeixinOpenId(), weixinNotifyTemplateId,
-					WeixinOAuthInterceptor.appendWeixinTicket(webDomain + "/viewDetail.html?billId=" + model.getId(),
-							weixinCommonService.genWeixinTicket(user.getWeixinOpenId())), messageData);
+			messageService.sendWeixinTemplateMessage(user.getWeixinOpenId(), WeixinTemplateMessage.ORDER_STATUS_NOTIFY,
+					webDomain + "/viewDetail.html?billId=" + model.getId(), weixinTemplateMessages);
 		}
 	}
 }

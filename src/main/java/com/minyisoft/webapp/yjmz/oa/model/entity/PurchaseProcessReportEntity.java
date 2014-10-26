@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class PurchaseProcessReportInfo {
+public class PurchaseProcessReportEntity {
 	// 报告内容
 	private String reportDetail;
 	// 报告人

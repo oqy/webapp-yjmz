@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minyisoft.webapp.yjmz.common.persistence.MessageDao">
+  <!-- ResultMap基础定义，可根据实际情况进行修改或扩展 -->
+  <resultMap id="MessageResult" type="MessageInfo">
+  	<id property="id" column="fid" />
+    <result property="messageTitle" column="fmessagetitle" />
+    <result property="company" column="fcompanyid" typeHandler="bizModelHandler" />
+    <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
+    <result property="billNumber" column="fbillnumber" />
+    <result property="description" column="fdescription" />
+    <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
+    <result property="createUser" column="fcreateuserid" typeHandler="bizModelHandler" />
+    <result property="createDate" column="fcreatedate" />
+    <result property="lastUpdateUser" column="flastupdateuserid" typeHandler="bizModelHandler" />
+    <result property="lastUpdateDate" column="flastupdatedate" />
+    <result property="version" column="fversion" />
+    <collection property="receiveTargets" column="fid" ofType="MessageReceiveEntity">
+		<result property="receiver" column="freceiverid" typeHandler="bizModelHandler" />
+		<result property="readDate" column="freaddate" />
+  	</collection>
+  </resultMap>
+
+  <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
+
+  <!-- 根据ID查询记录 -->
+  <select id="getEntity" parameterType="String" resultMap="MessageResult">
+    select
+      	m.fmessagetitle ,
+      	m.fcompanyid ,
+      	m.fdepartmentid ,
+      	m.fbillnumber ,
+      	m.fdescription ,
+      	m.fsourcebillid ,
+      	m.fcreateuserid ,
+      	m.fcreatedate ,
+      	m.flastupdateuserid ,
+      	m.flastupdatedate ,
+      	m.fid ,
+      	m.fversion ,
+      	r.freceiverid ,
+      	r.freaddate
+    from t_common_message m left join t_common_message_receive r on m.fid = r.fmessageid
+    where m.fid = #{id}
+  </select>
+  
+  <!-- 查询条件SQL -->
+  <sql id="getCriteriaCondition">
+  	<where>
+		<if test="ids!=null">
+            m.fid in <foreach collection="ids" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+		<if test="excludeIds!=null">
+            and m.fid not in <foreach collection="excludeIds" item="item" open="(" close=")" separator=",">#{item}</foreach>
+        </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(sender)">
+            and m.fcreateuserid = #{sender.id}
+        </if>
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(receiver)">
+            and m.fid in (select fmessageid from t_common_message_receive where freceiverid=#{receiver.id}
+            	<if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(receiverRead)">
+            		and freaddate is <if test="receiverRead">not</if>null
+        		</if>
+            )
+        </if>
+        <if test="queryBeginDate!=null">
+            and date(fcreatedate) >= #{queryBeginDate}
+        </if>
+        <if test="queryEndDate!=null">
+            and #{queryEndDate} >= date(fcreatedate)
+        </if>
+	</where>
+  </sql>
+  
+  <!-- 获取满足指定过滤条件的记录数 -->
+  <select id="countEntity" parameterType="MessageCriteria" resultType="int">
+    select count(*) from t_common_message m
+    <include refid="getCriteriaCondition"/>
+  </select>
+  
+  <!-- 获取满足指定过滤条件的记录 -->
+  <select id="getEntityCollection" parameterType="MessageCriteria" resultMap="MessageResult">
+  	select
+      	m.fmessagetitle ,
+      	m.fcompanyid ,
+      	m.fdepartmentid ,
+      	m.fbillnumber ,
+      	m.fdescription ,
+      	m.fsourcebillid ,
+      	m.fcreateuserid ,
+      	m.fcreatedate ,
+      	m.flastupdateuserid ,
+      	m.flastupdatedate ,
+      	m.fid ,
+      	m.fversion ,
+      	r.freceiverid ,
+      	r.freaddate
+    from (
+	select
+      	*
+    from t_common_message m
+    <include refid="getCriteriaCondition"/>
+    order by m.fcreatedate desc
+	<if test="pageDevice!=null">
+	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
+	</if>
+	) m left join t_common_message_receive r on m.fid = r.fmessageid
+	order by m.fcreatedate desc
+  </select>
+  
+  <!-- 通用记录插入操作 --> 
+  <insert id="insertEntity" parameterType="MessageInfo">
+    insert into t_common_message (fmessagetitle,fcompanyid,fdepartmentid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{messageTitle},#{company.id},#{department.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+  </insert>
+
+  <!-- 通用记录更新操作 --> 
+  <update id="updateEntity" parameterType="MessageInfo">
+    update t_common_message set fmessagetitle=#{messageTitle},fcompanyid=#{company.id},fdepartmentid=#{department.id},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},
+    fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+  </update>
+
+  <!-- 通用记录删除操作 -->
+  <delete id="batchDelete" parameterType="list">
+    delete from t_common_message where fid in <foreach collection="list" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  
+  <insert id="addMessageReceiver">
+  	insert into t_common_message_receive(fmessageid, freceiverid) values(#{message.id},#{receiver.id})
+  </insert>
+  
+  <update id="updateMessageReadDate">
+  	update t_common_message_receive set freaddate=now() where fmessageid = #{message.id} and freceiverid = #{receiver.id} and freaddate is null
+  </update>
+</mapper>

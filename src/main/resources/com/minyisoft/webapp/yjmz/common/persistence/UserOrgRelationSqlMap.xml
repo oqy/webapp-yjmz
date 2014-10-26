@@ -49,8 +49,8 @@
         <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(upperUser)">
             and u.fupperuserid = #{upperUser.id}
         </if>
-        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(department)">
-            and u.fdepartmentid = #{department.id}
+        <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(departments)">
+            and u.fdepartmentid in <foreach collection="departments" item="item" open="(" close=")" separator=",">#{item.id}</foreach>
         </if>
 	</where>
   </sql>

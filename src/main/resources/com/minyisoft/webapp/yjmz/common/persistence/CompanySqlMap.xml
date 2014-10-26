@@ -31,19 +31,19 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="CompanyResult">
     select
-    			c.fstatus ,
-            	c.fname ,
-            	c.fdescription ,
-            	c.fcreateuserid ,
-            	c.fcreatedate ,
-            	c.flastupdateuserid ,
-            	c.flastupdatedate ,
-            	c.fid ,
-            	c.fversion ,
-            	d.fid as fdepartmentid,
-            	r.fid as fuserorgrelationid
-          from t_common_company c left join t_common_department d on c.fid = d.forgid 
-          		left join t_common_userorgrelation r on c.fid=r.forgid
+		c.fstatus ,
+      	c.fname ,
+      	c.fdescription ,
+      	c.fcreateuserid ,
+      	c.fcreatedate ,
+      	c.flastupdateuserid ,
+      	c.flastupdatedate ,
+      	c.fid ,
+      	c.fversion ,
+      	d.fid as fdepartmentid,
+      	r.fid as fuserorgrelationid
+    from t_common_company c left join t_common_department d on c.fid = d.forgid 
+    		left join t_common_userorgrelation r on c.fid=r.forgid
     where c.fid = #{id}
     order by d.fseq asc, r.fuserpath asc
   </select>
@@ -86,6 +86,7 @@
     from 
     (select * from t_common_company
     <include refid="getCriteriaCondition"/>
+    order by fstatus asc, fcreatedate asc, fid
 	<if test="pageDevice!=null">
 	limit #{pageDevice.startRowIndexOfCurrentPage},#{pageDevice.recordsPerPage}
 	</if>

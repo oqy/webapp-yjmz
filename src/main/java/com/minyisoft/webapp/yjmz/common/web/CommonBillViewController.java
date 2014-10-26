@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.minyisoft.webapp.core.model.IModelObject;
 import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.core.web.BaseController;
+import com.minyisoft.webapp.yjmz.common.model.MessageInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 
 /**
@@ -30,6 +31,8 @@ public class CommonBillViewController extends BaseController {
 			IModelObject modelObject = ObjectUuidUtils.getObject(billId);
 			if (modelObject instanceof WorkFlowBusinessModel) {
 				return "redirect:" + webDomain + "/manage/workFlowDetail.html?workFlowModelId=" + billId;
+			} else if (modelObject instanceof MessageInfo) {
+				return "redirect:" + webDomain + "/manage/messageReceiveList.html";
 			}
 		}
 		return "redirect:" + webDomain + "/manage/index.html";

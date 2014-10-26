@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>发送的私信-敏易在线办公系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style type="text/css" th:substituteby="component/resource::css"></style>
+</head>
+<body>
+<!-- navbar -->
+<div th:substituteby="component/layout::header"></div>
+<!-- end navbar -->
+<!-- sidebar -->
+<div th:substituteby="component/layout::sidebar"></div>
+<!-- end sidebar -->
+<!-- main container -->
+<div class="content">
+  <div id="pad-wrapper">
+    <h3>系统私信</h3>
+    <ul class="nav nav-tabs" role="tablist">
+      <li><a th:href="@{'/manage/messageReceiveList.html'}" role="tab">收到的私信</a></li>
+      <li class="active"><a th:href="@{'/manage/messageSendList.html'}" role="tab">发出的私信</a></li>
+      <li class="pull-right"><a th:href="@{'/manage/messageEdit.html'}" role="tab">发送私信</a></li>
+    </ul>
+    <table class="table table-hover mt10">
+      <thead>
+        <tr>
+          <th class="hidden-xs">#</th>
+          <th>消息标题</th>
+          <th>发送时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody th:if="${!#lists.isEmpty(sendMessages)}">
+      <tbody th:each="message :${sendMessages}" th:remove="tag">
+        <tr>
+          <td class="hidden-xs" th:text="${(filter.criteria.pageDevice.currentPage - 1)*filter.criteria.pageDevice.recordsPerPage+messageStat.count}"></td>
+          <td th:text="${message.messageTitle}"></td>
+          <td th:text="${#dates.format(message.createDate,'yyyy-MM-dd HH:mm')}"></td>
+          <td><button type="button" class="btn btn-primary" data-toggle="collapse" th:attr="data-target='#collapse_'+${message.id},aria-controls='collapse_'+${message.id}" aria-expanded="true">查看内容</button></td>
+        </tr>
+        <tr th:id="'collapse_'+${message.id}" class="collapse">
+          <td colspan="4"><div class="panel panel-default">
+              <div class="panel-heading">消息详细内容</div>
+              <div class="panel-body" th:utext="${message.description}"> Basic panel example </div>
+              <table class="table table-bordered">
+                <tr>
+                  <td width="75">接收人：</td>
+                  <td class="row"><div class="col-xs-4 col-md-2" th:each="target : ${message.receiveTargets}"><span th:text="${target.receiver.name}" th:remove="tag"></span>&nbsp;<span class="badge" th:classappend="${target.readDate==null}?'badge-info':'badge-success'" th:text="${target.readDate==null}?'未读':'已读'">未读</span></div></td>
+                </tr>
+              </table>
+            </div></td>
+        </tr>
+      </tbody>
+      </tbody>
+      
+    </table>
+    <div th:if="${!#lists.isEmpty(sendMessages)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},requestQueryString=${filter.requestQueryString},url='messageReceiveList.html'+(${#strings.isEmpty(requestQueryString)}?'':'?'+${requestQueryString})"></div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(sendMessages)}">您暂没有发送系统私信</div>
+  </div>
+</div>
+<!-- end main container -->
+<script type="text/javascript" th:include="component/resource::js" th:remove="tag"></script>
+</body>
+</html>

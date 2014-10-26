@@ -23,7 +23,7 @@
 		   <idArg column="fpurchasereqentryid" javaType="String"/>
 		</constructor>
 	  </collection>
-	  <collection property="processReports" column="fid" ofType="PurchaseProcessReportInfo">
+	  <collection property="processReports" column="fid" ofType="PurchaseProcessReportEntity">
 		<result property="reportDetail" column="freportdetail" />
 		<result property="reportUser" column="freportuserid" typeHandler="bizModelHandler" />
 		<result property="reportDate" column="freportdate" />
