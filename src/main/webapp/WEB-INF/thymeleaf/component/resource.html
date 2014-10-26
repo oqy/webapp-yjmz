@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
 </script>
 <script type="text/javascript" th:inline="javascript" th:if="${currentCompany!=null}">
 jQuery(document).ready(function() {
-	jQuery.getJSON('countUnreadMessages.do',function(data){
+	jQuery.getJSON('countUnreadMessages.do?timestamp='+(new Date()).valueOf(),function(data){
 		var unReadMessageCount = Number(data);
 		if(data > 0){
 			jQuery('.navbar .icon-envelope').after('<span class="count">'+data+'</span>');

@@ -99,7 +99,7 @@
 	    u.fversion ,
 	    r.fid as forgrelationid 
 	from 
-    (select * from t_common_user
+    (select * from t_common_user u
     <include refid="getCriteriaCondition"/>
     order by hex(u.fname) desc, u.fid
 	<if test="pageDevice!=null">

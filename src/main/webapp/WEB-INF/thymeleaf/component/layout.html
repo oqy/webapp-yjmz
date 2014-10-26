@@ -21,7 +21,7 @@
       </ul>
     </li>
     <li th:if="${currentCompany!=null}" class="notification-dropdown"> <a th:href="@{'/manage/messageReceiveList.html'}" class="trigger active"> <i class="icon-envelope"></i> </a> </li>
-    <li class=" settings"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-signout"></i> </a> </li>
+    <li class="hidden-xs settings"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-signout"></i> </a> </li>
   </ul>
 </header>
 <!-- 普通用户左侧主菜单 -->
@@ -38,6 +38,7 @@
     <li id="menu_personnelChangeBill"> <a th:href="@{'/manage/personnelChangeBillList.html'}"> <i class="icon-th-large"></i> <span>人事变动单</span> </a> </li>
     <li id="menu_purchaseReqBill"> <a th:href="@{'/manage/purchaseReqBillList.html'}"> <i class="icon-shopping-cart"></i> <span>采购单</span> </a> </li>
     <li id="menu_maintainReqBill"> <a th:href="@{'/manage/maintainReqBillList.html'}"> <i class="icon-wrench"></i> <span>工程维修单</span> </a> </li>
+    <li class="visible-xs-block"> <a th:href="@{'/logout.html'}"> <i class="icon-signout"></i> <span>退出系统</span> </a> </li>
   </ul>
 </div>
 <!-- 系统管理员页面左侧主菜单 -->
