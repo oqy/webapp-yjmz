@@ -37,12 +37,13 @@ public class UserTaskCreateListener implements TaskListener {
 		}
 
 		// 微信模板消息待发送内容
-		String[] weixinTemplateMessages = new String[5];
+		String[] weixinTemplateMessages = new String[6];
 		weixinTemplateMessages[0] = "您好，您有一条新的待处理工作流任务\n";
 		weixinTemplateMessages[1] = ((WorkFlowBusinessModel) model).getProcessInstanceName();
 		weixinTemplateMessages[2] = delegateTask.getName();
-		weixinTemplateMessages[3] = DateFormatUtils.format(delegateTask.getCreateTime(), "yyyy年M月d日HH时mm分");
-		weixinTemplateMessages[4] = "\n请您及时处理";
+		weixinTemplateMessages[3] = ((WorkFlowBusinessModel) model).getCreateUser().getName();
+		weixinTemplateMessages[4] = DateFormatUtils.format(delegateTask.getCreateTime(), "yyyy年M月d日HH时mm分");
+		weixinTemplateMessages[5] = "\n请您及时处理";
 
 		// 若任务存在指定执行者，向执行者发送通知消息
 		if (delegateTask.getAssignee() != null) {
@@ -67,7 +68,8 @@ public class UserTaskCreateListener implements TaskListener {
 	 */
 	private void _sendWeixinNotifyMessage(UserInfo user, WorkFlowBusinessModel model, String[] weixinTemplateMessages) {
 		if (user != null && StringUtils.isNotBlank(user.getWeixinOpenId())) {
-			messageService.sendWeixinTemplateMessage(user.getWeixinOpenId(), WeixinTemplateMessage.ORDER_STATUS_NOTIFY,
+			messageService.sendWeixinTemplateMessage(user.getWeixinOpenId(),
+					WeixinTemplateMessage.PENDING_TRANSACTION_NOTIFY,
 					webDomain + "/viewDetail.html?billId=" + model.getId(), weixinTemplateMessages);
 		}
 	}

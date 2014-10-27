@@ -169,11 +169,11 @@ public class MessageController extends ManageBaseController {
 		for (MessageReceiveEntity entity : message.getReceiveTargets()) {
 			if (StringUtils.isNotBlank(entity.getReceiver().getWeixinOpenId())) {
 				messageService.sendWeixinTemplateMessage(entity.getReceiver().getWeixinOpenId(),
-						WeixinTemplateMessage.ORDER_STATUS_NOTIFY,
-						webDomain + "/viewDetail.html?billId=" + message.getId(), message.getCreateUser().getName()
-								+ "向您发送了一条新的系统私信\n", message.getMessageTitle(), "未读",
-						DateFormatUtils.format(message.getCreateDate(), "yyyy年M月d日HH时mm分"),
-						"\n消息内容：" + StringUtils.abbreviate(message.getDescription(), 50) + "\n\n请点击查看详细内容");
+						WeixinTemplateMessage.PENDING_TRANSACTION_NOTIFY, webDomain + "/viewDetail.html?billId="
+								+ message.getId(), "您有一条新的系统私信\n", message.getMessageTitle(), "系统私信", message
+								.getCreateUser().getName(), DateFormatUtils.format(message.getCreateDate(),
+								"yyyy年M月d日HH时mm分"), "\n消息内容：" + StringUtils.abbreviate(message.getDescription(), 50)
+								+ "\n\n请点击查看详细内容");
 			}
 		}
 		return "redirect:messageSendList.html";

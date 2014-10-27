@@ -3,6 +3,7 @@ package com.minyisoft.webapp.yjmz.common.model;
 import java.util.Date;
 
 import com.minyisoft.webapp.core.model.IModelObject;
+import com.minyisoft.webapp.core.model.ISystemUserObject;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 
 /**
@@ -64,4 +65,11 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	 * @return
 	 */
 	Date getCreateDate();
+
+	/**
+	 * 获取业务创建人
+	 * 
+	 * @return
+	 */
+	ISystemUserObject getCreateUser();
 }

@@ -61,11 +61,11 @@ public class MessageServiceImpl extends BaseServiceImpl<MessageInfo, MessageCrit
 			String... params) {
 		if (StringUtils.isNotBlank(weixinOpenId)
 				&& templateMessage != null
-				&& (templateMessage.getParams() == null || (params != null && params.length == templateMessage
-						.getParams().length))) {
+				&& (templateMessage.getPlaceholders() == null || (params != null && params.length == templateMessage
+						.getPlaceholders().length))) {
 			Map<String, TemplateMessageData> messageData = Maps.newHashMap();
-			for (int i = 0; i < templateMessage.getParams().length; i++) {
-				messageData.put(templateMessage.getParams()[i], new TemplateMessageData(params[i]));
+			for (int i = 0; i < templateMessage.getPlaceholders().length; i++) {
+				messageData.put(templateMessage.getPlaceholders()[i], new TemplateMessageData(params[i]));
 			}
 
 			weixinPostService.postTemplateMessage(
