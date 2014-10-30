@@ -79,7 +79,10 @@
                 <th class="col-md-3" style="text-align:center;">至</th>
               </tr>
               <tr>
-                <td th:text="${personnelChangeBill.department!=null}?${personnelChangeBill.department.name}:(${currentDepartment!=null}?${currentDepartment.name})"></td>
+                <td th:if="${crossDepartmentAddEnabled==null or !crossDepartmentAddEnabled}" th:text="${personnelChangeBill.department!=null}?${personnelChangeBill.department.name}:(${currentDepartment!=null}?${currentDepartment.name})"></td>
+                <td th:if="${crossDepartmentAddEnabled!=null and crossDepartmentAddEnabled}"><select class="form-control" id="department" name="department">
+                    <option th:each="department : ${currentCompany.departments}" th:selected="${personnelChangeBill.department!=null}?${department.equals(personnelChangeBill.department)}:${department.equals(currentDepartment)}" th:value="${department.id}" th:text="${department.name}"></option>
+                  </select></td>
                 <td><select class="form-control" id="newDepartment" name="newDepartment">
                     <option th:each="department : ${currentCompany.departments}" th:selected="${personnelChangeBill.newDepartment!=null}?${department.equals(personnelChangeBill.newDepartment)}:${department.equals(currentDepartment)}" th:value="${department.id}" th:text="${department.name}"></option>
                   </select></td>

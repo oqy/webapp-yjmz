@@ -1,6 +1,7 @@
 package com.minyisoft.webapp.yjmz.common.util.workflow;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import org.activiti.engine.ProcessEngine;
@@ -17,7 +18,9 @@ import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.util.Assert;
@@ -209,5 +212,12 @@ public final class ActivitiHelper {
 	 */
 	public static String formatDuration(long durationInMillis) {
 		return durationFormatter.print(new Duration(durationInMillis).toPeriod().normalizedStandard());
+	}
+
+	public static String formatDuration(Date beginDate, Date endDate) {
+		if (beginDate == null || endDate == null || beginDate.after(endDate)) {
+			return null;
+		}
+		return durationFormatter.print(new Period(new DateTime(beginDate), new DateTime(endDate)).normalizedStandard());
 	}
 }

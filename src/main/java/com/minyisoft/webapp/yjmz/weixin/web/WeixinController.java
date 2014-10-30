@@ -199,7 +199,7 @@ public class WeixinController extends BaseController {
 		messageService.sendWeixinTemplateMessage(weixinOpenId, WeixinTemplateMessage.ORDER_STATUS_NOTIFY, webDomain
 				+ "/viewDetail.html?billId=" + model.getId(), "工作流任务概况\n", ((WorkFlowBusinessModel) model)
 				.getProcessInstanceName(), ((WorkFlowBusinessModel) model).getProcessStatus().getDescription(),
-				DateFormatUtils.format(((WorkFlowBusinessModel) model).getCreateDate(), "yyyy年M月d日HH时mm分"),
+				DateFormatUtils.format(((WorkFlowBusinessModel) model).getProcessBeginDate(), "yyyy年M月d日HH时mm分"),
 				"\n点击查看工作流任务详情");
 	}
 }

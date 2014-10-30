@@ -23,7 +23,7 @@
     </h3>
     <ul class="nav nav-tabs" role="tablist">
       <li class="active"><a href="#businessModelDetail" role="tab" data-toggle="tab" th:text="${classLabel}">工作报告</a></li>
-      <li><a href="#workFlowDetail" role="tab" data-toggle="tab">处理明细&nbsp;&nbsp;<span class="label" th:classappend="${businessModel.processStatus.value==1}?'label-primary':'label-success'" th:text="${businessModel.processStatus.description}">运行中</span></a></li>
+      <li><a href="#workFlowDetail" role="tab" data-toggle="tab">处理明细</a></li>
     </ul>
     <div class="tab-content mt10">
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::report" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E1C6843F')}" th:with="report=${businessModel}"> </div>
@@ -69,6 +69,26 @@
         </div>
       </div>
     </div>
+    <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">流程处理概况</div>
+
+  <table class="table table-hover table-striped">
+            <tr>
+              <th>状态</th>
+              <th>提交审批时间</th>
+              <th>结束时间</th>
+              <th>总耗时</th>
+            </tr>
+            <tr>
+              <td><span class="label" th:classappend="${businessModel.processStatus.value==1}?'label-primary':(${businessModel.processStatus.value==2}?'label-success':'label-default')" th:text="${businessModel.processStatus.description}">运行中</span></td>
+              <td th:text="${businessModel.processBeginDate!=null}?${#dates.format(businessModel.processBeginDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+              <td th:text="${businessModel.processEndDate!=null}?${#dates.format(businessModel.processEndDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+              <td th:text="${businessModel.processEndDate!=null and businessModel.processBeginDate!=null}?${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).formatDuration(businessModel.processBeginDate,businessModel.processEndDate)}"></td>
+            </tr>
+            </table>
+</div>
+    
     <h4 th:if="${taskFormData!=null}">处理任务：<span th:text="${taskFormData.task.name}"></span></h4>
     <form th:if="${taskFormData!=null}" id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/processTodoTask.html'}" method="post" style="margin-top:20px;">
       <div class="form-group" th:each="formProperty : ${taskFormData.formProperties}" th:if="${#strings.isEmpty(taskFormData.formKey)}">

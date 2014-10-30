@@ -81,22 +81,27 @@ public class PersonnelChangeBillController extends ManageBaseController {
 	 * 删除人事变动单
 	 */
 	@RequestMapping(value = "personnelChangeBillDelete.html", method = RequestMethod.GET)
-	public String deletePersonnelChangeBill(@ModelAttribute("personnelChangeBill") PersonnelChangeBillInfo personnelChangeBill) {
+	public String deletePersonnelChangeBill(
+			@ModelAttribute("personnelChangeBill") PersonnelChangeBillInfo personnelChangeBill) {
 		personnelChangeBillService.delete(personnelChangeBill);
 		return "redirect:personnelChangeBillList.html";
 	}
+
+	private final static String PERMISSION_CROSS_DEPARTMENT_ADD = "crossDepartmentAddEnabled";//跨部门添加人事变动单
 
 	/**
 	 * 获取人事变动单编辑界面
 	 */
 	@RequestMapping(value = "personnelChangeBillEdit.html", method = RequestMethod.GET)
-	public String getPersonnelChangeBillEditForm(@ModelAttribute("personnelChangeBill") PersonnelChangeBillInfo personnelChangeBill,
-			Model model) {
+	public String getPersonnelChangeBillEditForm(
+			@ModelAttribute("personnelChangeBill") PersonnelChangeBillInfo personnelChangeBill, Model model) {
 		// 人事变动单已进入工作流程，不允许编辑
 		if (!personnelChangeBill.isProcessUnStarted()) {
 			return "redirect:personnelChangeBillList.html";
 		}
 		model.addAttribute("personnelChangeBill", personnelChangeBill);
+		// 是否允许为其他部门创建人事变动单
+		model.addAttribute("crossDepartmentAddEnabled", PermissionUtils.hasPermission(PERMISSION_CROSS_DEPARTMENT_ADD));
 		return "manage/personnelChangeBillEdit";
 	}
 
@@ -112,7 +117,10 @@ public class PersonnelChangeBillController extends ManageBaseController {
 			return "redirect:personnelChangeBillList.html";
 		}
 		personnelChangeBill.setCompany(currentCompany);
-		personnelChangeBill.setDepartment(optionalOrgRelation.get().getDepartment());
+		if (!PermissionUtils.hasPermission(PERMISSION_CROSS_DEPARTMENT_ADD)
+				|| personnelChangeBill.getDepartment() == null) {
+			personnelChangeBill.setDepartment(optionalOrgRelation.get().getDepartment());
+		}
 		personnelChangeBillService.submit(personnelChangeBill);
 		return "redirect:personnelChangeBillList.html";
 	}

@@ -9,17 +9,14 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
-import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
+import com.minyisoft.webapp.yjmz.common.model.CompanyWorkFlowBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
-import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
-import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 
 /**
@@ -29,7 +26,7 @@ import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 @Getter
 @Setter
 @ModelKey(0x147E24CEB79L)
-public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlowBusinessModel {
+public class MaintainReqBillInfo extends CompanyWorkFlowBillBaseInfo {
 	@Label("位置")
 	@NotNull
 	private String location;
@@ -47,10 +44,6 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 	private UserInfo receiver;
 	// 验收人
 	private UserInfo examiner;
-	// 工作流流程实例id
-	private String processInstanceId;
-	// 工作流程状态
-	private WorkFlowProcessStatusEnum processStatus = WorkFlowProcessStatusEnum.UNSTARTED;
 
 	/**
 	 * 获取维修材料总数量
@@ -91,11 +84,6 @@ public class MaintainReqBillInfo extends CompanyBillBaseInfo implements WorkFlow
 			sb.append(getDepartment().getName());
 		}
 		return sb.append("工程维修单").toString();
-	}
-
-	@Override
-	public boolean isProcessUnStarted() {
-		return StringUtils.isBlank(processInstanceId);
 	}
 
 	private static final String PROCESS_VARIABLE_NAME = "maintainReqBill";

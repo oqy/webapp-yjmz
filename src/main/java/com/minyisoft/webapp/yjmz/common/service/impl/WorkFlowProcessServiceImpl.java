@@ -22,10 +22,12 @@ import org.springframework.util.Assert;
 
 import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.exception.ServiceException;
+import com.minyisoft.webapp.core.model.IModelObject;
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.service.utils.ServiceUtils;
 import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
+import com.minyisoft.webapp.yjmz.common.model.CompanyWorkFlowBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.WorkFlowConfigCriteria;
@@ -57,7 +59,7 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 
 		// 获取包含相同processDefinitionKey的所有历史流程，避免流程重新发布后无法获取前一版本流程定义的实例
 		HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery()
-				.processDefinitionKey(processDefinition.getKey()).finished().orderByProcessDefinitionId().desc();
+				.processDefinitionKey(processDefinition.getKey()).finished().orderByProcessInstanceStartTime().desc();
 		if (pageDevice != null) {
 			pageDevice.setTotalRecords((int) query.count());
 			return query.listPage(pageDevice.getStartRowNumberOfCurrentPage() - 1, pageDevice.getRecordsPerPage());
@@ -118,12 +120,11 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 		HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
 				.processInstanceId(processInstanceId).singleResult();
 		if (processInstance != null) {
-			// 清空WorkFlowBusinessModel的processInstanceId字段
-			WorkFlowBusinessModel model = (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
-					.getBusinessKey());
-			if (model != null) {
-				model.setProcessInstanceId(null);
-				model.setProcessStatus(WorkFlowProcessStatusEnum.UNSTARTED);
+			// 清空CompanyWorkFlowBillBaseInfo的processInstanceId字段
+			IModelObject model = ServiceUtils.getModel(processInstance.getBusinessKey());
+			if (model instanceof CompanyWorkFlowBillBaseInfo) {
+				((CompanyWorkFlowBillBaseInfo) model).setProcessInstanceId(null);
+				((CompanyWorkFlowBillBaseInfo) model).setProcessStatus(WorkFlowProcessStatusEnum.UNSTARTED);
 				ServiceUtils.getService(model.getClass()).save(model);
 			}
 			runtimeService.deleteProcessInstance(processInstanceId, deleteReason);

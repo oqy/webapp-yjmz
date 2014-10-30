@@ -91,7 +91,7 @@ public class PurchaseReqBillController extends ManageBaseController {
 	@RequestMapping(value = "purchaseReqBillEdit.html", method = RequestMethod.GET)
 	public String getPurchaseReqBillEditForm(@ModelAttribute("purchaseReqBill") PurchaseReqBillInfo purchaseReqBill,
 			Model model) {
-		// 工作报告已进入工作流程，不允许编辑
+		// 采购单已进入工作流程，不允许编辑
 		if (!purchaseReqBill.isProcessUnStarted()) {
 			return "redirect:purchaseReqBillList.html";
 		}

@@ -25,25 +25,11 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	String getProcessInstanceId();
 
 	/**
-	 * 设置对应流程实例ID
-	 * 
-	 * @return
-	 */
-	void setProcessInstanceId(String processInstanceId);
-
-	/**
 	 * 获取工作流程状态
 	 * 
 	 * @return
 	 */
 	WorkFlowProcessStatusEnum getProcessStatus();
-
-	/**
-	 * 设置工作流程状态
-	 * 
-	 * @param status
-	 */
-	void setProcessStatus(WorkFlowProcessStatusEnum status);
 
 	/**
 	 * 获取业务对象对应的工作流程变量名
@@ -60,11 +46,18 @@ public interface WorkFlowBusinessModel extends IModelObject {
 	boolean isProcessUnStarted();
 
 	/**
-	 * 获取创建时间
+	 * 获取工作流程创建时间
 	 * 
 	 * @return
 	 */
-	Date getCreateDate();
+	Date getProcessBeginDate();
+
+	/**
+	 * 获取工作流程结束时间
+	 * 
+	 * @return
+	 */
+	Date getProcessEndDate();
 
 	/**
 	 * 获取业务创建人

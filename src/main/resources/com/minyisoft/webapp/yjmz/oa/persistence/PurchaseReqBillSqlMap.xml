@@ -10,6 +10,8 @@
       <result property="department" column="fdepartmentid" typeHandler="bizModelHandler" />
       <result property="processInstanceId" column="fprocessinstanceid" />
       <result property="processStatus" column="fprocessstatus" />
+      <result property="processBeginDate" column="fprocessbegindate" />
+      <result property="processEndDate" column="fprocessenddate" />
       <result property="billNumber" column="fbillnumber" />
       <result property="description" column="fdescription" />
       <result property="sourceBill" column="fsourcebillid" typeHandler="bizModelHandler" />
@@ -44,6 +46,8 @@
       	p.fprocessinstanceid ,
       	p.fprocessstatus ,
       	p.fattachments ,
+      	p.fprocessbegindate ,
+      	p.fprocessenddate ,
       	p.fbillnumber ,
       	p.fdescription ,
       	p.fsourcebillid ,
@@ -106,6 +110,8 @@
       	p.fdepartmentid ,
       	p.fprocessinstanceid ,
       	p.fprocessstatus ,
+      	p.fprocessbegindate ,
+      	p.fprocessenddate ,
       	p.fbillnumber ,
       	p.fdescription ,
       	p.fsourcebillid ,
@@ -133,14 +139,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="PurchaseReqBillInfo">
-    insert into t_oa_purchasereqbill (fcompanyid,fdepartmentid,fprocessinstanceid,fprocessstatus,fattachments,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{company.id},#{department.id},#{processInstanceId},#{processStatus},#{attachments,typeHandler=attachmentListHandler},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_purchasereqbill (fcompanyid,fdepartmentid,fprocessinstanceid,fprocessstatus,fattachments,fprocessbegindate,fprocessenddate,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{processInstanceId},#{processStatus},#{attachments,typeHandler=attachmentListHandler},#{processBeginDate},#{processEndDate},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="PurchaseReqBillInfo">
-    update t_oa_purchasereqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fattachments=#{attachments,typeHandler=attachmentListHandler},fbillnumber=#{billNumber},
-    fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_oa_purchasereqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fattachments=#{attachments,typeHandler=attachmentListHandler},fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},
+    fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

@@ -316,3 +316,17 @@ CREATE TABLE t_common_message_receive (
   freaddate datetime,
   PRIMARY KEY  (fid)
 );
+
+ALTER TABLE t_oa_report ADD fprocessbegindate datetime AFTER fpreapprovedepartmentid;
+ALTER TABLE t_oa_report ADD fprocessenddate datetime AFTER fprocessbegindate;
+ALTER TABLE t_oa_maintainreqbill ADD fprocessbegindate datetime AFTER fprocessstatus;
+ALTER TABLE t_oa_maintainreqbill ADD fprocessenddate datetime AFTER fprocessbegindate;
+ALTER TABLE t_oa_personnelchangebill ADD fprocessbegindate datetime AFTER fprocessstatus;
+ALTER TABLE t_oa_personnelchangebill ADD fprocessenddate datetime AFTER fprocessbegindate;
+ALTER TABLE t_oa_purchasereqbill ADD fprocessbegindate datetime AFTER fprocessstatus;
+ALTER TABLE t_oa_purchasereqbill ADD fprocessenddate datetime AFTER fprocessbegindate;
+
+update t_oa_report r set r.fprocessbegindate=(select START_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid),r.fprocessenddate=(select END_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid);
+update t_oa_maintainreqbill r set r.fprocessbegindate=(select START_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid),r.fprocessenddate=(select END_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid);
+update t_oa_personnelchangebill r set r.fprocessbegindate=(select START_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid),r.fprocessenddate=(select END_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid);
+update t_oa_purchasereqbill r set r.fprocessbegindate=(select START_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid),r.fprocessenddate=(select END_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid);

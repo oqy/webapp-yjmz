@@ -34,7 +34,7 @@ public class PurchaseReqBillServiceImpl extends
 	protected void _validateDataBeforeDelete(PurchaseReqBillInfo info) {
 		Assert.isTrue(info.getCreateUser() != null && info.getCreateUser().equals(SecurityUtils.getCurrentUser()),
 				"当前用户并非采购单创建者，不允许删除采购单");
-		Assert.isTrue(info.isProcessUnStarted(), "不允许删除已提交审批流程的工作报告");
+		Assert.isTrue(info.isProcessUnStarted(), "不允许删除已提交审批流程的采购单");
 	}
 
 	@Override

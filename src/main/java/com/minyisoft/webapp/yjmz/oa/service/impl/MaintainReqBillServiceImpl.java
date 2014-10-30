@@ -28,7 +28,7 @@ public class MaintainReqBillServiceImpl extends
 	protected void _validateDataBeforeDelete(MaintainReqBillInfo info) {
 		Assert.isTrue(info.getCreateUser() != null && info.getCreateUser().equals(SecurityUtils.getCurrentUser()),
 				"当前用户并非工程维修单创建者，不允许删除维修单");
-		Assert.isTrue(info.isProcessUnStarted(), "不允许删除已提交审批流程的工作报告");
+		Assert.isTrue(info.isProcessUnStarted(), "不允许删除已提交审批流程的工程维修单");
 	}
 
 	@Override

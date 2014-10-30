@@ -5,27 +5,24 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Getter;
 import lombok.Setter;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
-import com.minyisoft.webapp.yjmz.common.model.CompanyBillBaseInfo;
+import com.minyisoft.webapp.yjmz.common.model.CompanyWorkFlowBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
-import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum;
-import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.PersonnelChangeTypeEnum;
 
 @Label("人事变动单")
 @Getter
 @Setter
 @ModelKey(0x14920E2FE89L)
-public class PersonnelChangeBillInfo extends CompanyBillBaseInfo implements WorkFlowBusinessModel {
+public class PersonnelChangeBillInfo extends CompanyWorkFlowBillBaseInfo {
 	@Label("姓名")
 	@NotBlank
 	private String staffName;
@@ -66,10 +63,6 @@ public class PersonnelChangeBillInfo extends CompanyBillBaseInfo implements Work
 	private Date lastWorkDate;
 	// 工资变动原因
 	private String salaryChangeReason;
-	// 工作流流程实例id
-	private String processInstanceId;
-	// 工作流程状态
-	private WorkFlowProcessStatusEnum processStatus = WorkFlowProcessStatusEnum.UNSTARTED;
 
 	public String getChangeTypeDescription() {
 		return changeType == PersonnelChangeTypeEnum.OTHER ? otherChangeType : changeType.getDescription();
@@ -86,11 +79,6 @@ public class PersonnelChangeBillInfo extends CompanyBillBaseInfo implements Work
 			sb.append(getDepartment().getName());
 		}
 		return sb.append("人事变动单").toString();
-	}
-
-	@Override
-	public boolean isProcessUnStarted() {
-		return StringUtils.isBlank(processInstanceId);
 	}
 
 	private static final String PROCESS_VARIABLE_NAME = "personnelChangeBill";
