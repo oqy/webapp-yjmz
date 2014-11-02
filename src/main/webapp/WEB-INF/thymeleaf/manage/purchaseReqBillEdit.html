@@ -4,8 +4,7 @@
 <title>编辑采购单-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css">
-</style>
+<style type="text/css" th:substituteby="component/resource::css"></style>
 <style type="text/css">
 #attachmentWrapper {
 	padding:0px;
@@ -31,45 +30,73 @@
     <h3 style="border-bottom:#ccc solid 1px;">编辑采购单<a role="button" class="btn btn-success btn-sm pull-right" th:href="@{'/manage/purchaseReqBillList.html'}"><span class="icon-share-alt"></span>&nbsp;返回列表</a></h3>
     <form id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/purchaseReqBillEdit.html'}" method="post">
       <div class="form-group">
-        <label class="col-md-2 control-label" style="text-align:left">申请部门：</label>
+        <label class="col-md-2 control-label">申请部门：</label>
         <div class="col-md-6">
           <p class="form-control-static" th:text="${currentDepartment!=null}?${currentDepartment.name}"></p>
         </div>
       </div>
-      <table class="table table-hover table-striped">
-        <thead>
-          <tr>
-            <th><span class="text-danger">*</span>&nbsp;品名</th>
-            <th>规格</th>
-            <th><span class="text-danger">*</span>&nbsp;申请采购量</th>
-            <th>单价（元）</th>
-            <th>备注</th>
-            <th><a role="button" href="#" id="add-entry" class="btn btn-success btn-sm" title="添加采购项"><span class="icon-plus"></span></a></th>
-          </tr>
-        </thead>
-        <tbody th:if="${#lists.isEmpty(purchaseReqBill.entry)}">
-          <tr>
-            <td class="col-md-3"><input type="text" class="form-control required" id="name0" name="entry[0].name" placeholder="请输入品名"/></td>
-            <td class="col-md-2"><input type="text" class="form-control" id="standard0" name="entry[0].standard" placeholder="请输入规格"/></td>
-            <td class="col-md-2"><input type="text" class="form-control required number" id="quantity0" name="entry[0].quantity" placeholder="请输入数量"/></td>
-            <td class="col-md-2"><input type="text" class="form-control number" id="unitPrice0" name="entry[0].unitPrice" placeholder="请输入单价"/></td>
-            <td class="col-md-2"><input type="text" class="form-control" id="remark0" name="entry[0].remark" placeholder="请输入备注"/></td>
-            <td class="col-md-1"><a role="button" href="#" class="btn btn-danger btn-sm rm-entry" title="删除采购项"><span class="icon-minus"></span></a></td>
-          </tr>
-        </tbody>
-        <tbody th:if="${!#lists.isEmpty(purchaseReqBill.entry)}">
-          <tr th:each="entry : ${purchaseReqBill.entry}">
-            <td class="col-md-3"><input type="text" class="form-control required" th:id="'name'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].name'" placeholder="请输入品名" th:value="${entry.name}"/></td>
-            <td class="col-md-3"><input type="text" class="form-control" th:id="'standard'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].standard'" placeholder="请输入规格" th:value="${entry.standard}"/></td>
-            <td class="col-md-2"><input type="text" class="form-control required number" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" placeholder="请输入数量" th:value="${entry.quantity}"/></td>
-            <td class="col-md-2"><input type="text" class="form-control number" th:id="'unitPrice'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" placeholder="请输入单价" th:value="${entry.unitPrice}"/></td>
-            <td class="col-md-2"><input type="text" class="form-control" th:id="'remark'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].remark'" placeholder="请输入备注" th:value="${entry.remark}"/></td>
-            <td class="col-md-1"><a role="button" href="#" class="btn btn-danger btn-sm rm-entry" title="删除采购项"><span class="icon-minus"></span></a></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="form-group" th:if="${#lists.isEmpty(purchaseReqBill.entry)}">
+        <label class="col-md-2 control-label">采购产品：</label>
+        <div class="col-md-6">
+          <table class="table table-hover">
+            <tr>
+              <td>品名&nbsp;<span class="text-danger">*</span></td>
+              <td><input type="text" class="form-control required" id="name0" name="entry[0].name" placeholder="请输入品名"/></td>
+            </tr>
+            <tr>
+              <td>规格</td>
+              <td><input type="text" class="form-control" id="standard0" name="entry[0].standard" placeholder="请输入规格"/></td>
+            </tr>
+            <tr>
+              <td>申请采购量&nbsp;<span class="text-danger">*</span></td>
+              <td><input type="text" class="form-control required number" id="quantity0" name="entry[0].quantity" placeholder="请输入数量"/></td>
+            </tr>
+            <tr>
+              <td>单价（元）</td>
+              <td><input type="text" class="form-control number" id="unitPrice0" name="entry[0].unitPrice" placeholder="请输入单价"/></td>
+            </tr>
+            <tr>
+              <td>备注</td>
+              <td><input type="text" class="form-control" id="remark0" name="entry[0].remark" placeholder="请输入备注"/></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="form-group" th:if="${!#lists.isEmpty(purchaseReqBill.entry)}" th:each="entry : ${purchaseReqBill.entry}">
+        <label class="col-md-2 control-label">采购产品：</label>
+        <div class="col-md-6">
+          <table class="table table-hover">
+            <tr>
+              <td>品名&nbsp;<span class="text-danger">*</span></td>
+              <td th:if="${entryStat.first}?'2':'1'"><input type="hidden" th:name="'entry['+${entryStat.index}+'].id'" th:value="${entry.id}"/><input type="hidden" th:name="'entry['+${entryStat.index}+'].version'" th:value="${entry.version}"/><input type="text" class="form-control required" th:id="'name'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].name'" placeholder="请输入品名" th:value="${entry.name}"/></td>
+              <td width="38" th:if="${!entryStat.first}"><button title="删除采购项" class="btn btn-danger btn-small rm-entry"><span class="icon-remove"></span></button></td>
+            </tr>
+            <tr>
+              <td>规格</td>
+              <td colspan="2"><input type="text" class="form-control" th:id="'standard'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].standard'" placeholder="请输入规格" th:value="${entry.standard}"/></td>
+            </tr>
+            <tr>
+              <td>申请采购量&nbsp;<span class="text-danger">*</span></td>
+              <td colspan="2"><input type="text" class="form-control required number" th:id="'quantity'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].quantity'" placeholder="请输入数量" th:value="${entry.quantity}"/></td>
+            </tr>
+            <tr>
+              <td>单价（元）</td>
+              <td colspan="2"><input type="text" class="form-control number" th:id="'unitPrice'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].unitPrice'" placeholder="请输入单价" th:value="${entry.unitPrice}"/></td>
+            </tr>
+            <tr>
+              <td>备注</td>
+              <td colspan="2"><input type="text" class="form-control" th:id="'remark'+${entryStat.index}" th:name="'entry['+${entryStat.index}+'].remark'" placeholder="请输入备注" th:value="${entry.remark}"/></td>
+            </tr>
+          </table>
+        </div>
+      </div>
       <div class="form-group">
-        <label for="attachmentUploadNode" class="col-md-2 control-label" style="text-align:left">附件资源：</label>
+        <div class="col-md-4 col-md-offset-2">
+          <button id="add-entry" class="btn btn-success"><span class="icon-plus"></span>&nbsp;添加采购项</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="attachmentUploadNode" class="col-md-2 control-label">附件资源：</label>
         <div class="col-md-8">
           <ul id="attachmentWrapper" class="pull-left">
             <li th:if="${!#lists.isEmpty(purchaseReqBill.attachments)}" th:each="attachment : ${purchaseReqBill.attachments}"><span th:class="${attachment.image}?'icon-picture':'icon-file-text'"></span>&nbsp;<a target="_blank" th:href="${attachment.url}" th:text="${attachment.name}"></a>
@@ -97,6 +124,6 @@
 var entryIndex=/*[[${#lists.isEmpty(purchaseReqBill.entry)}?0:${purchaseReqBill.entry.size()}]]*/;
 </script>
 <script type="text/javascript" th:src="@{'/resource/js/manage/attachmentUploader.js'}"></script>
-<script src="js/manage/purchaseReqBillEdit.js" th:src="@{'/resource/js/manage/purchaseReqBillEdit.js'}"></script>
+<script src="js/manage/purchaseReqBillEdit.js" th:src="@{'/resource/js/manage/purchaseReqBillEdit_20141102.js'}"></script>
 </body>
 </html>

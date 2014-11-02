@@ -12,27 +12,20 @@ import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.model.IModelObject;
-import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.service.utils.ServiceUtils;
 import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.yjmz.common.model.CompanyWorkFlowBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
-import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
-import com.minyisoft.webapp.yjmz.common.model.criteria.WorkFlowConfigCriteria;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
-import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowStatusEnum;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowProcessService;
@@ -69,47 +62,25 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 	}
 
 	@Override
-	public void startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessModel) {
-		Assert.notNull(owner, "未指定工作流程定义所属组织");
+	public void startProcess(WorkFlowBusinessModel businessModel) {
 		Assert.notNull(businessModel, "不存在指定的待启动工作流业务对象");
 		Assert.isTrue(businessModel.isProcessUnStarted(), "指定业务对象已启动工作流，无需重复启动");
 
-		WorkFlowConfigCriteria criteria = new WorkFlowConfigCriteria();
-		criteria.setWorkFlowStatus(WorkFlowStatusEnum.NORMAL);
-		criteria.setDefineOrg(owner);
-		criteria.setWorkFlowType(businessModel.getClass());
-		List<WorkFlowConfigInfo> configs = workFlowConfigService.getCollection(criteria);
-
-		WorkFlowConfigInfo targetCoinfig = null;// 待启动的工作流配置信息
-		StandardEvaluationContext context = new StandardEvaluationContext(businessModel);
-		ExpressionParser parser = new SpelExpressionParser();
-		for (WorkFlowConfigInfo config : configs) {
-			if (StringUtils.isNotBlank(config.getProcessDefinitionId())// 当前流程id不为空
-					&& (StringUtils.isBlank(config.getTriggerExpression()) || parser.parseExpression(
-							config.getTriggerExpression()).getValue(context, Boolean.class))// 当前流程无触发条件或当前业务对象符合触发条件
-					&& (targetCoinfig == null// 待启动流程为空
-							|| (StringUtils.isBlank(targetCoinfig.getTriggerExpression()) && !StringUtils
-									.isBlank(config.getTriggerExpression())) // 或待启动流程无触发条件，现流程存在触发条件
-					|| (targetCoinfig.getCreateDate().before(config.getCreateDate()))))// 或待启动流程创建时间早于当前流程创建时间
-			{
-				targetCoinfig = config;
-			}
-		}
-
-		if (targetCoinfig != null) {
+		Optional<String> processDefinitionId = workFlowConfigService.getProcessDefinitionId(businessModel);
+		if (processDefinitionId.isPresent()) {
 			// 启动工作流
 			try {
 				Map<String, Object> processVariables = Maps.newHashMap();
 				processVariables.put(businessModel.getBusinessModelProcessVariableName(), businessModel);
 				identityService.setAuthenticatedUserId(SecurityUtils.getCurrentUser().getCellPhoneNumber());
-				runtimeService.startProcessInstanceById(targetCoinfig.getProcessDefinitionId(), businessModel.getId(),
+				runtimeService.startProcessInstanceById(processDefinitionId.get(), businessModel.getId(),
 						processVariables);
 				return;
 			} finally {
 				identityService.setAuthenticatedUserId(null);
 			}
 		}
-		throw new ServiceException(owner.getName() + "并没有为指定的"
+		throw new ServiceException(businessModel.getCompany().getName() + "并没有为指定的"
 				+ ObjectUuidUtils.getClassLabel(businessModel.getClass()) + "设置满足启动条件的工作流程");
 	}
 

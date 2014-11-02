@@ -30,13 +30,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
-import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
+import com.minyisoft.webapp.yjmz.common.service.WorkFlowConfigService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowProcessService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
+import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper.ProcessResourceType;
 import com.minyisoft.webapp.yjmz.common.util.workflow.UserFormType;
 import com.minyisoft.webapp.yjmz.oa.model.MaintainReqBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
@@ -52,6 +53,8 @@ public class WorkFlowController extends ManageBaseController {
 	@Autowired
 	private WorkFlowTaskService workFlowTaskService;
 	@Autowired
+	private WorkFlowConfigService workFlowConfigService;
+	@Autowired
 	private TaskService taskService;
 	@Autowired
 	private FormService formService;
@@ -64,9 +67,9 @@ public class WorkFlowController extends ManageBaseController {
 	 * 启动工作流
 	 */
 	@RequestMapping(value = "startWorkFlow.html", method = RequestMethod.GET, params = "workFlowModelId")
-	public String startWorkFlow(@ModelAttribute("currentCompany") CompanyInfo currentCompany,
+	public String startWorkFlow(
 			@RequestParam(value = "workFlowModelId", required = false) WorkFlowBusinessModel businessModel) {
-		workFlowProcessService.startProcess(currentCompany, businessModel);
+		workFlowProcessService.startProcess(businessModel);
 		return "redirect:workFlowDetail.html?workFlowModelId=" + businessModel.getId();
 	}
 
@@ -101,17 +104,27 @@ public class WorkFlowController extends ManageBaseController {
 				}
 				model.addAttribute("taskFormData", taskFormData);
 			}
+		} else {
+			model.addAttribute("processDefinitionId", workFlowConfigService.getProcessDefinitionId(businessModel)
+					.orNull());
 		}
 		return "manage/workFlowDetail";
 	}
 
 	/**
-	 * 获取流程实例运行图
+	 * 获取流程运行图
 	 */
-	@RequestMapping(value = "processInstanceDiagram.html", method = RequestMethod.GET, params = "processInstanceId")
-	public void getProcessInstanceDiagram(@RequestParam String processInstanceId, HttpServletResponse response)
-			throws Exception {
-		Optional<InputStream> imageStream = ActivitiHelper.getProcessInstanceDiagram(processInstanceId);
+	@RequestMapping(value = "processInstanceDiagram.html", method = RequestMethod.GET)
+	public void getProcessInstanceDiagram(
+			@RequestParam(value = "processInstanceId", required = false) String processInstanceId,
+			@RequestParam(value = "processDefinitionId", required = false) String processDefinitionId,
+			HttpServletResponse response) throws Exception {
+		Optional<InputStream> imageStream = Optional.absent();
+		if (StringUtils.isNotBlank(processDefinitionId)) {
+			imageStream = ActivitiHelper.getProcessDefinitionResource(processDefinitionId, ProcessResourceType.IMAGE);
+		} else if (StringUtils.isNotBlank(processInstanceId)) {
+			imageStream = ActivitiHelper.getProcessInstanceDiagram(processInstanceId);
+		}
 		if (imageStream.isPresent()) {
 			byte[] b = new byte[1024];
 			int len;

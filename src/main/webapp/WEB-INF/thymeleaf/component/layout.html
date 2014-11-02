@@ -15,9 +15,9 @@
       </ul>
     </li>
     <li class="hidden-xs" th:if="${currentCompany!=null}"> <a href="#"> 当前公司：<span th:text="${currentCompany.name}" th:remove="tag"></span></a> </li>
-    <li class="hidden-xs dropdown" th:if="${currentUser!=null and currentUser.orgRelations.size() gt 1}"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 切换组织 <b class="caret"></b> </a>
+    <li class="hidden-xs dropdown" th:if="${currentUser!=null and currentUser.getOrgList(T(com.minyisoft.webapp.yjmz.common.model.CompanyInfo)).size() gt 1}"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 切换组织 <b class="caret"></b> </a>
       <ul class="dropdown-menu">
-        <li th:each="orgRelation : ${currentUser.orgRelations}" th:if="${!orgRelation.org.equals(currentCompany)}"><a href="personal-info.html" th:href="@{'/manage/switchOrg.html?orgId='+${orgRelation.org.id}}" th:text="${orgRelation.org.name}">个人信息</a></li>
+        <li th:each="org : ${currentUser.getOrgList(T(com.minyisoft.webapp.yjmz.common.model.CompanyInfo))}" th:if="${!org.equals(currentCompany)}"><a href="personal-info.html" th:href="@{'/manage/switchOrg.html?orgId='+${org.id}}" th:text="${org.name}">个人信息</a></li>
       </ul>
     </li>
     <li th:if="${currentCompany!=null}" class="notification-dropdown"> <a th:href="@{'/manage/messageReceiveList.html'}" class="trigger active"> <i class="icon-envelope"></i> </a> </li>

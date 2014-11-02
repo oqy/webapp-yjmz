@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +39,7 @@ import com.minyisoft.webapp.yjmz.oa.web.view.PurchaseReqBillExcelView;
 public class PurchaseReqBillController extends ManageBaseController {
 	@Autowired
 	private PurchaseReqBillService purchaseReqBillService;
-	
+
 	private static final String PERMISSION_READ_ALL = "PurchaseReqBill:readAll";// 查看全部采购单的权限
 
 	/**
@@ -44,7 +47,8 @@ public class PurchaseReqBillController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "purchaseReqBillList.html", method = RequestMethod.GET)
 	public String getPurchaseReqBillList(@ModelAttribute("currentUser") UserInfo currentUser,
-			@ModelAttribute("currentCompany") CompanyInfo currentCompany, PurchaseReqBillCriteria criteria, Model model) throws Exception {
+			@ModelAttribute("currentCompany") CompanyInfo currentCompany, PurchaseReqBillCriteria criteria, Model model)
+			throws Exception {
 		if (criteria.getPageDevice() == null) {
 			criteria.setPageDevice(new PageDevice());
 		}
@@ -71,9 +75,13 @@ public class PurchaseReqBillController extends ManageBaseController {
 	}
 
 	@ModelAttribute("purchaseReqBill")
-	public PurchaseReqBillInfo populatePurchaseReqBill(
+	public PurchaseReqBillInfo populatePurchaseReqBill(HttpServletRequest request,
 			@RequestParam(value = "purchaseReqBillId", required = false) PurchaseReqBillInfo purchaseReqBill) {
-		return purchaseReqBill != null ? purchaseReqBill : new PurchaseReqBillInfo();
+		purchaseReqBill = purchaseReqBill != null ? purchaseReqBill : new PurchaseReqBillInfo();
+		if (StringUtils.equalsIgnoreCase(request.getMethod(), "post")) {
+			purchaseReqBill.setEntry(null);
+		}
+		return purchaseReqBill;
 	}
 
 	/**
@@ -115,7 +123,7 @@ public class PurchaseReqBillController extends ManageBaseController {
 		purchaseReqBillService.submit(purchaseReqBill);
 		return "redirect:purchaseReqBillList.html";
 	}
-	
+
 	@Autowired
 	private PurchaseReqBillExcelView purchaseReqBillExcelView;
 
@@ -123,7 +131,8 @@ public class PurchaseReqBillController extends ManageBaseController {
 	 * 导出Excel文档
 	 */
 	@RequestMapping(value = "exportPurchaseReqBillExcel.do", method = RequestMethod.GET)
-	public ModelAndView exportReoprtExcel(@RequestParam(value = "exportIds", required = false) PurchaseReqBillInfo[] purchaseReqBills) {
+	public ModelAndView exportReoprtExcel(
+			@RequestParam(value = "exportIds", required = false) PurchaseReqBillInfo[] purchaseReqBills) {
 		Map<String, Object> model = Maps.newHashMap();
 		model.put("purchaseReqBills", purchaseReqBills);
 		return new ModelAndView(purchaseReqBillExcelView, model);

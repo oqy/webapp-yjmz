@@ -23,6 +23,7 @@ import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.ISystemUserObject;
 import com.minyisoft.webapp.core.security.utils.DigestUtils;
 import com.minyisoft.webapp.core.security.utils.EncodeUtils;
+import com.minyisoft.webapp.yjmz.common.model.enumField.CompanyStatusEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserStatusEnum;
 import com.minyisoft.webapp.yjmz.common.security.ShiroDbRealm;
@@ -171,7 +172,9 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 			Class<?> userClass = ClassUtils.getUserClass(orgClazz);
 			List<T> orgList = Lists.newArrayList();
 			for (UserOrgRelationInfo userOrg : orgRelations) {
-				if (userOrg != null && userClass.isAssignableFrom(userOrg.getOrg().getClass())) {
+				if (userOrg != null
+						&& userClass.isAssignableFrom(userOrg.getOrg().getClass())
+						&& (!(userOrg.getOrg() instanceof CompanyInfo) || ((CompanyInfo) userOrg.getOrg()).getStatus() == CompanyStatusEnum.NORMAL)) {
 					orgList.add((T) userOrg.getOrg());
 				}
 			}

@@ -5,7 +5,6 @@ import java.util.List;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 
-import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 
@@ -17,7 +16,7 @@ public interface WorkFlowProcessService {
 	 * @param businessModel
 	 * @return 若存在匹配流程且成功启动，返回流程id
 	 */
-	void startProcess(ISystemOrgObject owner, WorkFlowBusinessModel businessModel);
+	void startProcess(WorkFlowBusinessModel businessModel);
 
 	/**
 	 * 删除运行中的工作流实例

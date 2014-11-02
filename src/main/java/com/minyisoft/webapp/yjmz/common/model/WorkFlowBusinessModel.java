@@ -11,6 +11,13 @@ import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnu
  */
 public interface WorkFlowBusinessModel extends IModelObject {
 	/**
+	 * 业务所属公司
+	 * 
+	 * @return
+	 */
+	CompanyInfo getCompany();
+
+	/**
 	 * 流程实例名称
 	 * 
 	 * @return

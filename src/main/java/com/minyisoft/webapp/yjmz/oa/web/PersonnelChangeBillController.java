@@ -87,7 +87,7 @@ public class PersonnelChangeBillController extends ManageBaseController {
 		return "redirect:personnelChangeBillList.html";
 	}
 
-	private final static String PERMISSION_CROSS_DEPARTMENT_ADD = "crossDepartmentAddEnabled";//跨部门添加人事变动单
+	private final static String PERMISSION_CROSS_DEPARTMENT_ADD = "PersonnelChangeBill:crossDepartmentAdd";//跨部门添加人事变动单
 
 	/**
 	 * 获取人事变动单编辑界面

@@ -21,6 +21,7 @@ import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
+import com.minyisoft.webapp.yjmz.common.model.enumField.UserStatusEnum;
 import com.minyisoft.webapp.yjmz.common.persistence.RoleDao;
 import com.minyisoft.webapp.yjmz.common.persistence.UserDao;
 import com.minyisoft.webapp.yjmz.common.security.ShiroDbRealm;
@@ -41,7 +42,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 		}
 
 		UserInfo loginUser = getValue(userLoginInputString);
-		if (loginUser == null) {
+		if (loginUser == null || loginUser.getStatus() == UserStatusEnum.DIMISSION) {
 			throw new ServiceException("不存在指定的系统用户信息");
 		}
 

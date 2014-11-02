@@ -36,9 +36,9 @@
           <th>登录总数</th>
           <td th:text="${currentUser.loginCount}"></td>
         </tr>
-        <tr th:each="orgRelation : ${currentUser.orgRelations}">
-          <th th:if="${orgRelationStat.first}" th:rowspan="${currentUser.orgRelations.size()}">从属组织</th>
-          <td><span th:text="${orgRelation.org.name}" th:remove="tag"></span><span th:if="${orgRelation.org.equals(currentUser.defaultLoginOrg)}" class="label label-success pull-right">默认登录组织</span><a th:if="${!orgRelation.org.equals(currentUser.defaultLoginOrg)}" role="button" class="btn btn-primary btn-xs pull-right" th:href="@{'/manage/setDefaultLoginOrg.html?orgId='+${orgRelation.org.id}}">设为默认登录组织</a></td>
+        <tr th:each="org : ${currentUser.getOrgList(T(com.minyisoft.webapp.yjmz.common.model.CompanyInfo))}">
+          <th th:if="${orgStat.first}" th:rowspan="${currentUser.getOrgList(T(com.minyisoft.webapp.yjmz.common.model.CompanyInfo)).size()}">从属组织</th>
+          <td><span th:text="${org.name}" th:remove="tag"></span><span th:if="${org.equals(currentUser.defaultLoginOrg)}" class="label label-success pull-right">默认登录组织</span><a th:if="${!org.equals(currentUser.defaultLoginOrg)}" role="button" class="btn btn-primary btn-xs pull-right" th:href="@{'/manage/setDefaultLoginOrg.html?orgId='+${org.id}}">设为默认登录组织</a></td>
         </tr>
       </table>
     </div>
@@ -71,6 +71,5 @@
 </div>
 <!-- end main container -->
 <script type="text/javascript" th:substituteby="component/resource::js"></script>
->
 </body>
 </html>
