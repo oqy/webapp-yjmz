@@ -5,13 +5,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.google.common.base.Optional;
+import com.minyisoft.webapp.core.exception.ServiceException;
+import com.minyisoft.webapp.core.model.IBillObject;
 import com.minyisoft.webapp.core.service.impl.BillBaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
+import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.common.service.UserOrgRelationService;
+import com.minyisoft.webapp.yjmz.oa.model.AcceptanceBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.ReportInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.ReportCriteria;
+import com.minyisoft.webapp.yjmz.oa.model.enumField.AcceptanceStatusEnum;
 import com.minyisoft.webapp.yjmz.oa.persistence.ReportDao;
 import com.minyisoft.webapp.yjmz.oa.service.ReportService;
 
@@ -48,5 +53,18 @@ public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCri
 	@Override
 	protected boolean useModelCache() {
 		return true;
+	}
+
+	@Override
+	public void processAfterTargetBillAdded(ReportInfo sourceBill, IBillObject targetBill) {
+		if (targetBill instanceof AcceptanceBillInfo) {
+			if (sourceBill.getProcessStatus() == WorkFlowProcessStatusEnum.FINISHED
+					&& sourceBill.getAcceptanceStatus() == AcceptanceStatusEnum.UNCOMMITTED) {
+				sourceBill.setAcceptanceStatus(AcceptanceStatusEnum.RUNNING);
+				save(sourceBill);
+			} else {
+				throw new ServiceException(sourceBill.getProcessInstanceName() + "无需验收");
+			}
+		}
 	}
 }

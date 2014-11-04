@@ -16,29 +16,29 @@
   <!-- 根据目标单查询记录 -->
   <select id="getRelation" resultMap="BillRelationResult">
     select
-            	ftargetbillid ,
-            	fsourcebillid ,
-            	fversion ,
-            	fid
-          from t_common_billrelation
+      	ftargetbillid ,
+      	fsourcebillid ,
+      	fversion ,
+      	fid
+    from t_common_billrelation
     where ftargetbillid = #{targetBill.id}
   </select>
   
   <!-- 根据源单查询记录 -->
   <select id="getRelations" resultMap="BillRelationResult">
     select
-            	ftargetbillid ,
-            	fsourcebillid ,
-            	fversion ,
-            	fid
-          from t_common_billrelation
+    	ftargetbillid ,
+      	fsourcebillid ,
+      	fversion ,
+      	fid
+    from t_common_billrelation
     where fsourcebillid = #{sourceBill.id}
   </select>
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertRelation" parameterType="com.minyisoft.webapp.core.model.BillRelationInfo">
     insert into t_common_billrelation (fid,fsourcebillid,ftargetbillid,fsourcebillclasskey,ftargetbillclasskey) 
-    values(sys_guid(),#{sourceBill.id},#{targetBill.id},#{sourceBillClassKey},#{targetBillClassKey})
+    values(#{id},#{sourceBill.id},#{targetBill.id},#{sourceBillClassKey},#{targetBillClassKey})
   </insert>
 
   <!-- 通用记录更新操作 --> 

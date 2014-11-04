@@ -28,12 +28,13 @@
           <th>部门</th>
           <th>报告标题</th>
           <th>创建人</th>
-          <th style="text-align:center;">流程状态</th>
+          <th style="text-align:center;">审批状态</th>
+          <th style="text-align:center;">验收状态</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody th:if="${!#lists.isEmpty(reports)}">
-        <tr th:each="report :${reports}" th:with="editable = ${currentUser.equals(report.createUser) and report.processUnStarted}">
+        <tr th:each="report :${reports}" th:with="editable = ${currentUser.equals(report.createUser) and report.processUnStarted}, needAcceptance = ${report.acceptanceStatus!=null} and ${report.acceptanceStatus.value!=0}, optionalAcceptanceBill=${report.acceptanceBill}">
           <td class="hidden-xs"><input type="checkbox" name="exportIds" th:value="${report.id}"/></td>
           <td class="hidden-xs" th:text="${#dates.format(report.createDate,'yyyy-MM-dd HH:mm')}"></td>
           <td class="hidden-xs" th:text="${report.fileNumber}"></td>
@@ -42,11 +43,12 @@
           <td th:text="${report.reportTitle}"></td>
           <td th:text="${report.createUser.name}"></td>
           <td style="text-align:center;"><i th:class="${report.processStatus.value eq 0}?'icon-circle-blank':'icon-circle'" th:classappend="${report.processStatus.value eq 2}?'text-success':(${report.processStatus.value eq 1}?'text-primary')"></i></td>
-          <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${report.id}}" class="btn btn-default btn-sm" role="button">详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/reportEdit.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${report.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a onclick="return window.confirm('确定删除所选工作报告?')" th:if="${editable}" th:href="@{'/manage/reportDelete.html?reportId='+${report.id}}" class="btn btn-warning btn-sm" role="button">删除</a></td>
+          <td style="text-align:center;"><span th:text="'-'" th:if="${!needAcceptance}"></span><i th:if="${needAcceptance}" th:class="${report.acceptanceStatus.value eq 1}?'icon-circle-blank':'icon-circle'" th:classappend="${report.acceptanceStatus.value eq 3}?'text-success':(${report.acceptanceStatus.value eq 2}?'text-primary')"></i></td>
+          <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${report.id}}" class="btn btn-default btn-sm" role="button">报告详情</a>&nbsp;<a th:if="${editable}" th:href="@{'/manage/reportEdit.html?reportId='+${report.id}}" class="btn btn-default btn-sm" role="button">编辑</a>&nbsp;<a onclick="return window.confirm('确定提交所选工作报告?')" th:if="${editable}" th:href="@{'/manage/startWorkFlow.html?workFlowModelId='+${report.id}}" class="btn btn-primary btn-sm" role="button">提交审批</a>&nbsp;<a onclick="return window.confirm('确定删除所选工作报告?')" th:if="${editable}" th:href="@{'/manage/reportDelete.html?reportId='+${report.id}}" class="btn btn-warning btn-sm" role="button">删除</a> &nbsp;<a th:if="${optionalAcceptanceBill.isPresent()}" th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${optionalAcceptanceBill.get().id}}" class="btn btn-default btn-sm" role="button">验收详情</a>&nbsp;<a th:if="${!optionalAcceptanceBill.isPresent()}" th:href="@{'/manage/acceptanceBillAdd.html?sourceBill='+${report.id}}" class="btn btn-primary btn-sm" role="button">申请验收</a> </td>
         </tr>
       </tbody>
     </table>
-    <p th:if="${!#lists.isEmpty(reports)}" class="pull-left"><i class="icon-circle-blank"></i>&nbsp;未启动&nbsp;&nbsp;<i class="icon-circle text-primary"></i>&nbsp;运行中&nbsp;&nbsp;<i class="icon-circle text-success"></i>&nbsp;已结束</p>
+    <p th:if="${!#lists.isEmpty(reports)}" class="pull-left"><i class="icon-circle-blank"></i>&nbsp;未提交&nbsp;&nbsp;<i class="icon-circle text-primary"></i>&nbsp;审批中&nbsp;&nbsp;<i class="icon-circle text-success"></i>&nbsp;已结束</p>
     <div th:if="${!#lists.isEmpty(reports)}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${filter.criteria.pageDevice},requestQueryString=${filter.requestQueryString},url='reportList.html'+(${#strings.isEmpty(requestQueryString)}?'':'?'+${requestQueryString})"></div>
     <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(reports)}">暂没有可供您浏览的工作报告</div>
   </div>

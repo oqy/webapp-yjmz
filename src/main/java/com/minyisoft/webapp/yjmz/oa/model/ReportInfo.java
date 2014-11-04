@@ -7,12 +7,14 @@ import lombok.Setter;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.yjmz.common.model.AttachmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.CompanyWorkFlowBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.DepartmentInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.oa.model.enumField.AcceptanceStatusEnum;
 
 /**
  * @author qingyong_ou 工作报告
@@ -33,6 +35,8 @@ public class ReportInfo extends CompanyWorkFlowBillBaseInfo {
 	private DepartmentInfo preApproveDepartment;
 	// 前置审批部门负责人
 	private UserInfo preApproveDepartmentLeader;
+	// 验收状态
+	private AcceptanceStatusEnum acceptanceStatus = AcceptanceStatusEnum.NO_NEED;
 
 	@Override
 	public String getProcessInstanceName() {
@@ -48,5 +52,14 @@ public class ReportInfo extends CompanyWorkFlowBillBaseInfo {
 	@Override
 	public String getBusinessModelProcessVariableName() {
 		return PROCESS_VARIABLE_NAME;
+	}
+
+	/**
+	 * 获取由报告单引申的验收单
+	 * 
+	 * @return
+	 */
+	public Optional<AcceptanceBillInfo> getAcceptanceBill() {
+		return getChildBill(AcceptanceBillInfo.class);
 	}
 }

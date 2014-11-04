@@ -330,3 +330,24 @@ update t_oa_report r set r.fprocessbegindate=(select START_TIME_ from act_hi_pro
 update t_oa_maintainreqbill r set r.fprocessbegindate=(select START_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid),r.fprocessenddate=(select END_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid);
 update t_oa_personnelchangebill r set r.fprocessbegindate=(select START_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid),r.fprocessenddate=(select END_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid);
 update t_oa_purchasereqbill r set r.fprocessbegindate=(select START_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid),r.fprocessenddate=(select END_TIME_ from act_hi_procinst where BUSINESS_KEY_=r.fid);
+
+ALTER TABLE t_oa_report ADD facceptancestatus int default 0 AFTER fpreapprovedepartmentleaderid;
+
+create table t_oa_acceptancebill(
+  fprocessinstanceid varchar(32),
+  fprocessstatus int default 0,
+  fprocessbegindate datetime,
+  fprocessenddate datetime,
+  fcompanyid varchar(32),
+  fdepartmentid varchar(32),
+  fbillnumber varchar(32),
+  fdescription varchar(32),
+  fsourcebillid varchar(32),
+  fcreateuserid varchar(32),
+  fcreatedate datetime,
+  flastupdateuserid varchar(32),
+  flastupdatedate datetime,
+  fid varchar(32) not null,
+  fversion int default 1, 
+  primary key (fid)
+);

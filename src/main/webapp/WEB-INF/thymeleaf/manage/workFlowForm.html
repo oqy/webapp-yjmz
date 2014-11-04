@@ -18,6 +18,19 @@
     </div>
   </div>
 </div>
+<div th:fragment="reportMark">
+  <div class="form-group">
+    <label for="acceptanceStatus" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;是否需后续验收：</label>
+    <div class="col-md-6">
+      <label class="radio-inline">
+      <input type="radio" name="acceptanceStatus" value="0" checked="checked"/>
+      无需验收 </label>
+      <label class="radio-inline">
+      <input type="radio" name="acceptanceStatus" value="1"/>
+      需验收 </label>
+    </div>
+  </div>
+</div>
 <div th:fragment="maintainExecute">
   <table class="table table-hover table-bordered">
     <thead>

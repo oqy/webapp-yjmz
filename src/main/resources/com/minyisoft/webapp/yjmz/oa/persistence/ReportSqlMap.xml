@@ -13,6 +13,7 @@
       <result property="processStatus" column="fprocessstatus" />
       <result property="preApproveDepartment" column="fpreapprovedepartmentid" typeHandler="bizModelHandler" />
       <result property="preApproveDepartmentLeader" column="fpreapprovedepartmentleaderid" typeHandler="bizModelHandler" />
+      <result property="acceptanceStatus" column="facceptancestatus" />
       <result property="processBeginDate" column="fprocessbegindate" />
       <result property="processEndDate" column="fprocessenddate" />
       <result property="billNumber" column="fbillnumber" />
@@ -44,6 +45,7 @@
       	fattachments ,
       	fpreapprovedepartmentid ,
       	fpreapprovedepartmentleaderid ,
+      	facceptancestatus ,
       	fprocessbegindate ,
       	fprocessenddate ,
       	fbillnumber ,
@@ -106,6 +108,7 @@
       	fprocessstatus ,
       	fpreapprovedepartmentid ,
       	fpreapprovedepartmentleaderid ,
+      	facceptancestatus ,
       	fprocessbegindate ,
       	fprocessenddate ,
       	fbillnumber ,
@@ -127,14 +130,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="ReportInfo">
-    insert into t_oa_report (fcompanyid,fdepartmentid,ffilenumber,freporttitle,fprocessinstanceid,fprocessstatus,fattachments,fpreapprovedepartmentid,fpreapprovedepartmentleaderid,fprocessbegindate,fprocessenddate,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{company.id},#{department.id},#{fileNumber},#{reportTitle},#{processInstanceId},#{processStatus},#{attachments,typeHandler=attachmentListHandler},#{preApproveDepartment.id},#{preApproveDepartmentLeader.id},#{processBeginDate},#{processEndDate},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_report (fcompanyid,fdepartmentid,ffilenumber,freporttitle,fprocessinstanceid,fprocessstatus,fattachments,fpreapprovedepartmentid,fpreapprovedepartmentleaderid,facceptancestatus,fprocessbegindate,fprocessenddate,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{fileNumber},#{reportTitle},#{processInstanceId},#{processStatus},#{attachments,typeHandler=attachmentListHandler},#{preApproveDepartment.id},#{preApproveDepartmentLeader.id},#{acceptanceStatus},#{processBeginDate},#{processEndDate},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="ReportInfo">
     update t_oa_report set fcompanyid=#{company.id},fdepartmentid=#{department.id},ffilenumber=#{fileNumber},freporttitle=#{reportTitle},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fattachments=#{attachments,typeHandler=attachmentListHandler},fpreapprovedepartmentid=#{preApproveDepartment.id},fpreapprovedepartmentleaderid=#{preApproveDepartmentLeader.id},
-    fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    facceptancestatus=#{acceptanceStatus},fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->
