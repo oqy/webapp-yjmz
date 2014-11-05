@@ -33,7 +33,7 @@ public class PasswordController extends BaseController {
 	 */
 	@RequestMapping(value = "passwordReset.html", method = RequestMethod.GET)
 	public String getPasswordResetForm(Model model) {
-		model.addAttribute("adminPage", SecurityUtils.isCurrentUserAdministrator());
+		model.addAttribute("currentCompany", SecurityUtils.getCurrentCompany());
 		return "share/passwordReset";
 	}
 

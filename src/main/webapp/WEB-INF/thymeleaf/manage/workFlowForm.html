@@ -190,5 +190,15 @@
   <div th:replace="manage/personnelChangeBillEdit::personnelChangeBillStaffInfo"></div>
   <div th:replace="manage/personnelChangeBillEdit::personnelChangeBillChangeInfo"></div>
 </div>
+<div th:fragment="acceptanceBillModify">
+  <script th:src="@{'/resource/js/ckeditor/ckeditor.js'}"></script>
+  <div class="form-group">
+    <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;实施情况简述：</label>
+    <div class="col-md-8">
+      <textarea class="form-control required ckeditor" rows="3" id="description" name="description" placeholder="请输入实施情况简述" th:text="${acceptanceBill.description}">
+          </textarea>
+    </div>
+  </div>
+</div>
 </body>
 </html>

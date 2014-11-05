@@ -44,7 +44,7 @@ public class ReportInfo extends CompanyWorkFlowBillBaseInfo {
 		if (getDepartment() != null) {
 			sb.append(getDepartment().getName());
 		}
-		return sb.append("工作报告[").append(getBillNumber()).append("]").toString();
+		return sb.append("工作报告[").append(reportTitle).append("]").toString();
 	}
 
 	private static final String PROCESS_VARIABLE_NAME = "report";

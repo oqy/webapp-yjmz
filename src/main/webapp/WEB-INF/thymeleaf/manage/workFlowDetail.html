@@ -29,9 +29,8 @@
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::maintainReqBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E24CEB79')}" th:with="maintainReqBill=${businessModel}"> </div>
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::purchaseReqBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('147E349704C')}" th:with="purchaseReqBill=${businessModel}"> </div>
       <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::personnelChangeBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('14920E2FE89')}" th:with="personnelChangeBill=${businessModel}"> </div>
-      <div class="tab-pane" id="workFlowDetail">
-        <img alt="" class="img-responsive" th:if="${businessModel.processUnStarted} and ${!#strings.isEmpty(processDefinitionId)}" th:src="@{'/manage/processInstanceDiagram.html?processDefinitionId='+${processDefinitionId}}"/>
-        <img alt="" class="img-responsive" th:if="${!businessModel.processUnStarted}" th:src="@{'/manage/processInstanceDiagram.html?processInstanceId='+${businessModel.processInstanceId}}"/>
+      <div class="tab-pane active" id="businessModelDetail" th:include="manage/businessModelDetail::acceptanceBill" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(businessModel.class).equals('1497AE4915C')}" th:with="acceptanceBill=${businessModel}"> </div>
+      <div class="tab-pane" id="workFlowDetail"> <img alt="" class="img-responsive" th:if="${businessModel.processUnStarted} and ${!#strings.isEmpty(processDefinitionId)}" th:src="@{'/manage/processInstanceDiagram.html?processDefinitionId='+${processDefinitionId}}"/> <img alt="" class="img-responsive" th:if="${!businessModel.processUnStarted}" th:src="@{'/manage/processInstanceDiagram.html?processInstanceId='+${businessModel.processInstanceId}}"/>
         <div th:if="${!businessModel.processUnStarted}">
           <table class="table table-hover table-striped">
             <tr>
@@ -68,24 +67,7 @@
         </div>
       </div>
     </div>
-    <div class="panel panel-default">
-      <!-- Default panel contents -->
-      <div class="panel-heading">流程处理概况</div>
-      <table class="table table-hover table-striped">
-        <tr>
-          <th>状态</th>
-          <th>提交审批时间</th>
-          <th>结束时间</th>
-          <th th:text="${businessModel.processStatus.value==2}?'总耗时':'已耗时'">总耗时</th>
-        </tr>
-        <tr>
-          <td><span class="label" th:classappend="${businessModel.processStatus.value==1}?'label-primary':(${businessModel.processStatus.value==2}?'label-success':'label-default')" th:text="${businessModel.processStatus.description}">运行中</span></td>
-          <td th:text="${businessModel.processBeginDate!=null}?${#dates.format(businessModel.processBeginDate,'yyyy-MM-dd HH:mm:ss')}"></td>
-          <td th:text="${businessModel.processEndDate!=null}?${#dates.format(businessModel.processEndDate,'yyyy-MM-dd HH:mm:ss')}"></td>
-          <td th:text="${businessModel.processBeginDate!=null}?${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).formatDuration(businessModel.processBeginDate,businessModel.processEndDate!=null?businessModel.processEndDate:#dates.createNow())}"></td>
-        </tr>
-      </table>
-    </div>
+    <div th:remove="tag" th:include="manage/businessModelDetail::workFlowProcessSummary" th:with="businessModel=${businessModel}"></div>
     <h4 th:if="${taskFormData!=null}">处理任务：<span th:text="${taskFormData.task.name}"></span></h4>
     <form th:if="${taskFormData!=null}" id="form1" name="form1" role="form" class="form-horizontal" th:action="@{'/manage/processTodoTask.html'}" method="post" style="margin-top:20px;">
       <div class="form-group" th:each="formProperty : ${taskFormData.formProperties}" th:if="${#strings.isEmpty(taskFormData.formKey)}">

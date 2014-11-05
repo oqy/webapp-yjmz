@@ -36,7 +36,7 @@
       <div class="panel-heading">
         <h4 style="font-style:normal;"><strong class="text-primary" th:text="${currentCompany.name}"></strong>·企业通讯录</h4>
       </div>
-      <div class="panel-body"> <strong class="text-primary" th:text="${currentUser.name}"></strong>您好，欢迎使用敏易在线办公系统。今天是<span th:text="${#dates.format(#dates.createToday(),'yyyy年M月d日')}"></span>。 </div>
+      <div class="panel-body"> <p><strong class="text-primary" th:text="${currentUser.name}"></strong>您好，欢迎使用敏易在线办公系统，今天是<span th:text="${#dates.format(#dates.createToday(),'yyyy年M月d日')}"></span>。</p> <p th:if="${currentUser.isPasswordCorrect(currentUser.cellPhoneNumber)}">您当前使用系统初始密码登录系统，为保障账户安全，建议您&nbsp;<a role="button" class="btn btn-sm btn-primary" th:href="@{'/share/passwordReset.html'}">修改密码</a></p></div>
       <!-- Table -->
       <table class="table table-hover">
         <thead>

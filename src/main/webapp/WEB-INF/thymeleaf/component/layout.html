@@ -6,7 +6,7 @@
 <header th:fragment="header" class="navbar navbar-inverse" role="banner">
   <div class="navbar-header pull-left">
     <button class="navbar-toggle" type="button" data-toggle="collapse" id="menu-toggler"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-    <a class="navbar-brand" href="index.html"><img src="img/logo.png" th:src="@{'/resource/img/logo.png'}"/></a> </div>
+    <a class="navbar-brand" th:href="${currentCompany==null}?@{'/admin/index.html'}:@{'/manage/index.html'}"><img src="img/logo.png" th:src="@{'/resource/img/logo.png'}"/></a> </div>
   <ul class="nav navbar-nav pull-right">
     <li class="dropdown hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span th:text="'您好，'+(${currentUser!=null}?${currentUser.name}:${T(com.minyisoft.webapp.yjmz.common.security.SecurityUtils).currentUser.name})" th:remove="tag">账号管理</span> <b class="caret"></b> </a>
       <ul class="dropdown-menu">

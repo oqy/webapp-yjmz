@@ -21,12 +21,17 @@
       <result property="id" column="fid" />
       <result property="version" column="fversion" />
     </resultMap>
+    
+  <resultMap id="AcceptanceBillDetailResult" type="AcceptanceBillInfo" extends="AcceptanceBillResult">
+  	  <result property="attachments" column="fattachments" typeHandler="attachmentListHandler" />
+  </resultMap>
 
   <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
 
   <!-- 根据ID查询记录 -->
-  <select id="getEntity" parameterType="String" resultMap="AcceptanceBillResult">
+  <select id="getEntity" parameterType="String" resultMap="AcceptanceBillDetailResult">
     select
+        fattachments ,
       	fprocessinstanceid ,
       	fprocessstatus ,
       	fprocessbegindate ,
@@ -91,13 +96,13 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="AcceptanceBillInfo">
-    insert into t_oa_acceptancebill (fprocessinstanceid,fprocessstatus,fprocessbegindate,fprocessenddate,fcompanyid,fdepartmentid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{processInstanceId},#{processStatus},#{processBeginDate},#{processEndDate},#{company.id},#{department.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_acceptancebill (fattachments,fprocessinstanceid,fprocessstatus,fprocessbegindate,fprocessenddate,fcompanyid,fdepartmentid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{attachments,typeHandler=attachmentListHandler},#{processInstanceId},#{processStatus},#{processBeginDate},#{processEndDate},#{company.id},#{department.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="AcceptanceBillInfo">
-    update t_oa_acceptancebill set fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},fcompanyid=#{company.id},fdepartmentid=#{department.id},
+    update t_oa_acceptancebill set fattachments=#{attachments,typeHandler=attachmentListHandler},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},fcompanyid=#{company.id},fdepartmentid=#{department.id},
     fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 

@@ -201,5 +201,41 @@
   <p>其他意见：<span th:text="${personnelChangeBill.description}"></span></p>
   <p>制单人：<span th:text="${personnelChangeBill.createUser.name}"></span></p>
 </div>
+<div th:fragment="acceptanceBill">
+  <div th:remove="tag" th:include="manage/businessModelDetail::report" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(acceptanceBill.sourceBill.class).equals('147E1C6843F')}" th:with="report=${acceptanceBill.sourceBill}"> </div>
+  <div th:remove="tag" th:include="manage/businessModelDetail::workFlowProcessSummary" th:with="businessModel=${acceptanceBill.sourceBill}"></div>
+  <div class="panel panel-default">
+    <div class="panel-heading">实施情况简述</div>
+    <div class="panel-body" th:utext="${acceptanceBill.description}"> </div>
+  </div>
+  <div class="row" th:if="${!#lists.isEmpty(acceptanceBill.attachments)}">
+    <div class="col-xs-6 col-md-3" th:each="attachment : ${acceptanceBill.attachments}">
+      <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?@{'/resource/img/file-icon.jpg'}:${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>
+        <div class="caption">
+          <p style="margin:0px;"><a th:href="${attachment.url}" th:text="${attachment.name}" target="_blank">Thumbnail label</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:fragment="workFlowProcessSummary">
+  <div class="panel panel-default">
+    <div class="panel-heading" th:inline="text">[[${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassLabel(businessModel.class)}]]审批处理概况</div>
+    <table class="table table-hover table-striped">
+      <tr>
+        <th>状态</th>
+        <th>提交审批时间</th>
+        <th>结束时间</th>
+        <th th:text="${businessModel.processStatus.value==2}?'总耗时':'已耗时'">总耗时</th>
+      </tr>
+      <tr>
+        <td><span class="label" th:classappend="${businessModel.processStatus.value==1}?'label-primary':(${businessModel.processStatus.value==2}?'label-success':'label-default')" th:text="${businessModel.processStatus.description}">运行中</span></td>
+        <td th:text="${businessModel.processBeginDate!=null}?${#dates.format(businessModel.processBeginDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${businessModel.processEndDate!=null}?${#dates.format(businessModel.processEndDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${businessModel.processBeginDate!=null}?${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).formatDuration(businessModel.processBeginDate,businessModel.processEndDate!=null?businessModel.processEndDate:#dates.createNow())}"></td>
+      </tr>
+    </table>
+  </div>
+</div>
 </body>
 </html>

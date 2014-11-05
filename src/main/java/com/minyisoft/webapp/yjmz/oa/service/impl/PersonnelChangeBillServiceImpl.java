@@ -3,7 +3,7 @@ package com.minyisoft.webapp.yjmz.oa.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
+import com.minyisoft.webapp.core.service.impl.BillBaseServiceImpl;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.oa.model.PersonnelChangeBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.PersonnelChangeBillCriteria;
@@ -13,7 +13,7 @@ import com.minyisoft.webapp.yjmz.oa.service.PersonnelChangeBillService;
 
 @Service("personnelChangeBillService")
 public class PersonnelChangeBillServiceImpl extends
-		BaseServiceImpl<PersonnelChangeBillInfo, PersonnelChangeBillCriteria, PersonnelChangeBillDao> implements
+		BillBaseServiceImpl<PersonnelChangeBillInfo, PersonnelChangeBillCriteria, PersonnelChangeBillDao> implements
 		PersonnelChangeBillService {
 	@Override
 	protected void _validateDataBeforeSubmit(PersonnelChangeBillInfo info) {

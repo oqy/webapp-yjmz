@@ -27,7 +27,7 @@
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow6" sourceRef="usertask3" targetRef="exclusivegateway3"></sequenceFlow>
-    <userTask id="usertask4" name="财务总监审批" activiti:assignee="13827731266">
+    <userTask id="usertask4" name="财务总监审批" activiti:candidateUsers="13827731266,13928693383">
       <extensionElements>
         <activiti:formProperty id="auditPass" name="审批是否通过" type="boolean"></activiti:formProperty>
       </extensionElements>

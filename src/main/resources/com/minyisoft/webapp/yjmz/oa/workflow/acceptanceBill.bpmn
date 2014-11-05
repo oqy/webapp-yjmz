@@ -17,13 +17,13 @@
     <sequenceFlow id="flow3" sourceRef="exclusivegateway1" targetRef="usertask2">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditPass}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask3" name="财务总监审批" activiti:assignee="13827731266">
+    <userTask id="usertask3" name="财务总监审批" activiti:candidateUsers="13827731266,13928693383">
       <extensionElements>
         <activiti:formProperty id="auditPass" name="审批是否通过" type="boolean"></activiti:formProperty>
       </extensionElements>
     </userTask>
     <endEvent id="endevent1" name="End"></endEvent>
-    <userTask id="usertask4" name="报告提交人修改报告" activiti:assignee="${applyUserId}" activiti:formKey="reportModify"></userTask>
+    <userTask id="usertask4" name="报告提交人修改报告" activiti:assignee="${applyUserId}" activiti:formKey="acceptanceBillModify"></userTask>
     <sequenceFlow id="flow7" sourceRef="exclusivegateway1" targetRef="usertask4">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!auditPass}]]></conditionExpression>
     </sequenceFlow>

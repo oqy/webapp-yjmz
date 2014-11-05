@@ -334,6 +334,7 @@ update t_oa_purchasereqbill r set r.fprocessbegindate=(select START_TIME_ from a
 ALTER TABLE t_oa_report ADD facceptancestatus int default 0 AFTER fpreapprovedepartmentleaderid;
 
 create table t_oa_acceptancebill(
+  fattachments varchar(320),
   fprocessinstanceid varchar(32),
   fprocessstatus int default 0,
   fprocessbegindate datetime,
@@ -341,7 +342,7 @@ create table t_oa_acceptancebill(
   fcompanyid varchar(32),
   fdepartmentid varchar(32),
   fbillnumber varchar(32),
-  fdescription varchar(32),
+  fdescription text,
   fsourcebillid varchar(32),
   fcreateuserid varchar(32),
   fcreatedate datetime,

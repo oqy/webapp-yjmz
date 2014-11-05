@@ -67,4 +67,13 @@ public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCri
 			}
 		}
 	}
+
+	@Override
+	public void processAfterTargetBillUpdated(ReportInfo sourceBill, IBillObject targetBill) {
+		if (targetBill instanceof AcceptanceBillInfo
+				&& ((AcceptanceBillInfo) targetBill).getProcessStatus() == WorkFlowProcessStatusEnum.FINISHED) {
+			sourceBill.setAcceptanceStatus(AcceptanceStatusEnum.FINISHED);
+			save(sourceBill);
+		}
+	}
 }

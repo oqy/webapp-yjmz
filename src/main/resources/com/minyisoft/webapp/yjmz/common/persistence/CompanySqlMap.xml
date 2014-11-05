@@ -44,8 +44,9 @@
       	r.fid as fuserorgrelationid
     from t_common_company c left join t_common_department d on c.fid = d.forgid 
     		left join t_common_userorgrelation r on c.fid=r.forgid
+    		left join t_common_department d2 on r.fdepartmentid = d2.fid
     where c.fid = #{id}
-    order by d.fseq asc, r.fuserpath asc
+    order by d.fseq asc, d2.fseq asc, r.fuserpath asc
   </select>
   
   <!-- 查询条件SQL -->
@@ -92,7 +93,8 @@
 	</if>
 	) c left join t_common_department d on c.fid = d.forgid
 		left join t_common_userorgrelation r on c.fid=r.forgid
-	order by c.fstatus asc, c.fcreatedate asc, c.fid, d.fseq asc, r.fuserpath asc
+		left join t_common_department d2 on r.fdepartmentid = d2.fid
+	order by c.fstatus asc, c.fcreatedate asc, c.fid, d.fseq asc, d2.fseq desc, r.fuserpath asc
   </select>
   
   <!-- 通用记录插入操作 --> 
