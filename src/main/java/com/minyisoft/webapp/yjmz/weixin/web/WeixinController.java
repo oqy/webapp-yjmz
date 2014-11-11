@@ -145,7 +145,7 @@ public class WeixinController extends BaseController {
 			}
 		}
 		// 点击菜单
-		else if (message instanceof MenuMessage) {
+		else if (message instanceof MenuMessage && ((MenuMessage) message).getEvent() != EventType.VIEW) {
 			WeixinMenu menu = WeixinMenu.valueOf(StringUtils.upperCase(((MenuMessage) message).getEventKey()));
 			switch (menu) {
 			case WEBOA:

@@ -2,25 +2,17 @@
     "button": [
 	{
            "type":"click",
-           "name":"酒店服务",
-           "key":"hotel"
+           "name":"微办公",
+           "key":"weboa"
       },
 		 {
-           "type":"click",
-           "name":"餐饮服务",
-           "key":"repast"
+           "type":"scancode_waitmsg",
+           "name":"扫一扫",
+           "key":"scan_code"
       }, {
-           "name":"我的",
-           "sub_button":[
-            {
-               "type":"click",
-               "name":"微办公",
-               "key":"weboa"
-            },{
-               "type":"scancode_waitmsg",
-               "name":"扫一扫",
-               "key":"scan_code"
-            }]
+           "type":"view",
+           "name":"使用帮助",
+           "url":"http://121.40.182.160/resource/help.html"
       }
     ]
 }
