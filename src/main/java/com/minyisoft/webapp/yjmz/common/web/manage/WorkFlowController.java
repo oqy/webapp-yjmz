@@ -155,6 +155,15 @@ public class WorkFlowController extends ManageBaseController {
 	}
 
 	/**
+	 * 获取由我发起正在审批的流程列表
+	 */
+	@RequestMapping(value = "myRunningProcesses.html", method = RequestMethod.GET)
+	public String getMyRunningProcesses(@ModelAttribute("currentUser") UserInfo currentUser, Model model) {
+		model.addAttribute("myRunningProcesses", workFlowProcessService.getProcessInstances(currentUser));
+		return "manage/myRunningProcesses";
+	}
+
+	/**
 	 * 签收任务
 	 */
 	@RequestMapping(value = "claimTodoTask.html", method = RequestMethod.GET, params = "taskId")

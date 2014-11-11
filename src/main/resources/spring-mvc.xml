@@ -78,6 +78,11 @@
 		<property name="templateEngine" ref="templateEngine" />
 		<property name="characterEncoding" value="UTF-8" />
 		<property name="contentType" value="text/html; charset=UTF-8" />
+		<property name="staticVariables">
+			<map>
+				<entry key="resourceUrlRoot" value="#{applicationProperties['web.resource_url_root']}"></entry>
+			</map>
+		</property>
 	</bean>
 
 	<!-- 出错页面设置 -->

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>已处理任务-敏易在线办公系统</title>
+<title>我发起的流程-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style type="text/css" th:substituteby="component/resource::css"></style>
@@ -18,26 +18,23 @@
   <div id="pad-wrapper">
     <h3>任务中心</h3>
     <ul class="nav nav-tabs" role="tablist">
-      <li class="active"><a th:href="@{'/manage/myTodoTasks.html'}">待处理任务</a></li>
-      <li><a th:href="@{'/manage/myDoneTasks.html'}">已处理任务</a></li>
+      <li  class="active"><a th:href="@{'/manage/myDoneTasks.html'}">我的待审批流程</a></li>
     </ul>
     <table class="table table-hover table-striped mt10">
       <tr>
         <th class="hidden-xs">序号</th>
         <th>流程名称</th>
-        <th>节点名称</th>
-        <th>开始时间</th>
+        <th>当前节点名称</th>
         <th>操作</th>
       </tr>
-      <tr th:each="task : ${todoTasks}" th:with="businessModel=${@workFlowTaskService.getBusinessModel(task)}">
-        <td class="hidden-xs" th:text="${taskStat.count}"></td>
+      <tr th:each="process : ${myRunningProcesses}" th:with="businessModel=${T(com.minyisoft.webapp.core.service.utils.ServiceUtils).getModel(process.businessKey)}">
+        <td class="hidden-xs" th:text="${processStat.count}"></td>
         <td th:text="${businessModel.processInstanceName}"></td>
-        <td th:text="${task.name}"></td>
-        <td th:text="${#dates.format(task.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
-        <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-primary btn-sm" role="button">处理任务</a></td>
+        <td><div th:each="task : ${@workFlowTaskService.getProcessInstanceActiveTasks(process.id)}" th:text="${task.name}"></div></td>
+        <td><a th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-primary btn-sm" role="button">详情</a></td>
       </tr>
     </table>
-    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(todoTasks)}">暂没有待您处理的任务信息</div>
+    <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(myRunningProcesses)}">您还没有发起任何审批流程</div>
   </div>
 </div>
 <!-- end main container -->

@@ -17,7 +17,6 @@ import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Period;
@@ -27,8 +26,6 @@ import org.springframework.util.Assert;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
-import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 
 /**
  * @author qingyong_ou Activiti工具类
@@ -157,34 +154,6 @@ public final class ActivitiHelper {
 			}
 		}
 		return highLightedFlows;
-	}
-
-	/**
-	 * 由任务对象获取流程实例businessKey
-	 * 
-	 * @param task
-	 * @return
-	 */
-	public static WorkFlowBusinessModel getBusinessModel(Task task) {
-		Assert.notNull(task);
-		ProcessInstance processInstance = PROCESS_ENGINE.getRuntimeService().createProcessInstanceQuery()
-				.processInstanceId(task.getProcessInstanceId()).singleResult();
-		return processInstance != null ? (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
-				.getBusinessKey()) : null;
-	}
-
-	/**
-	 * 由历史任务对象获取流程实例businessKey
-	 * 
-	 * @param task
-	 * @return
-	 */
-	public static WorkFlowBusinessModel getBusinessModel(HistoricTaskInstance task) {
-		Assert.notNull(task);
-		HistoricProcessInstance processInstance = PROCESS_ENGINE.getHistoryService()
-				.createHistoricProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
-		return processInstance != null ? (WorkFlowBusinessModel) ObjectUuidUtils.getObject(processInstance
-				.getBusinessKey()) : null;
 	}
 
 	/**

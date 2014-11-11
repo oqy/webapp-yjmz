@@ -26,7 +26,7 @@
   </table>
   <div class="row" th:if="${!#lists.isEmpty(report.attachments)}">
     <div class="col-xs-6 col-md-3" th:each="attachment : ${report.attachments}">
-      <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?@{'/resource/img/file-icon.jpg'}:${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>
+      <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?${resourceUrlRoot}+'/img/file-icon.jpg':${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>
         <div class="caption">
           <p style="margin:0px;"><a th:href="${attachment.url}" th:text="${attachment.name}" target="_blank">Thumbnail label</a></p>
         </div>
@@ -126,7 +126,7 @@
   </table>
   <div class="row" th:if="${!#lists.isEmpty(purchaseReqBill.attachments)}">
     <div class="col-xs-6 col-md-3" th:each="attachment : ${purchaseReqBill.attachments}">
-      <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?@{'/resource/img/file-icon.jpg'}:${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>
+      <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?${resourceUrlRoot}+'/img/file-icon.jpg':${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>
         <div class="caption">
           <p style="margin:0px;"><a th:href="${attachment.url}" th:text="${attachment.name}" target="_blank">Thumbnail label</a></p>
         </div>
@@ -210,7 +210,7 @@
   </div>
   <div class="row" th:if="${!#lists.isEmpty(acceptanceBill.attachments)}">
     <div class="col-xs-6 col-md-3" th:each="attachment : ${acceptanceBill.attachments}">
-      <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?@{'/resource/img/file-icon.jpg'}:${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>
+      <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?${resourceUrlRoot}+'/img/file-icon.jpg':${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>
         <div class="caption">
           <p style="margin:0px;"><a th:href="${attachment.url}" th:text="${attachment.name}" target="_blank">Thumbnail label</a></p>
         </div>

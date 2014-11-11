@@ -82,6 +82,6 @@
 <!-- end main container -->
 <script type="text/javascript" th:include="component/resource::js" th:remove="tag"></script>
 <script type="text/javascript" th:include="component/resource::formValidateJs" th:with="formId=form1" th:remove="tag"></script>
-<script type="text/javascript" th:src="@{'/resource/js/manage/messageEdit.js'}"></script>
+<script type="text/javascript" th:src="${resourceUrlRoot}+'/js/manage/messageEdit.js'"></script>
 </body>
 </html>

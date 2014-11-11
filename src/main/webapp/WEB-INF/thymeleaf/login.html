@@ -4,13 +4,13 @@
 <title>敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link th:href="@{'/resource/img/favicon.ico'}" rel="icon" type="image/x-icon" />
-<link th:href="@{'/resource/img/favicon.ico'}" rel="shortcut icon" type="image/x-icon" />
+<link th:href="${resourceUrlRoot}+'/img/favicon.ico'" rel="icon" type="image/x-icon" />
+<link th:href="${resourceUrlRoot}+'/img/favicon.ico'" rel="shortcut icon" type="image/x-icon" />
 <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="css/compiled/signin.css" type="text/css" media="screen" th:href="@{'/resource/css/compiled/signin.css'}"/>
+<link rel="stylesheet" href="css/compiled/signin.css" type="text/css" media="screen" th:href="${resourceUrlRoot}+'/css/compiled/signin.css'"/>
 </head>
 <body>
-<div class="login-wrapper"> <a href="index.html"> <img class="logo" src="img/logo-white.png" th:src="@{'/resource/img/logo-white.png'}"/> </a>
+<div class="login-wrapper"> <a href="index.html"> <img class="logo" src="img/logo-white.png" th:src="${resourceUrlRoot}+'/img/logo-white.png'"/> </a>
   <div class="box">
     <div class="content-wrap">
       <form role="form" th:action="@{'/login.html'}" method="post">

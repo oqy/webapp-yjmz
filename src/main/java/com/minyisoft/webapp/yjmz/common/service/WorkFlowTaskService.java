@@ -65,4 +65,12 @@ public interface WorkFlowTaskService {
 	 */
 	void completeTask(Task task, Map<String, Object> variables, Map<String, Object> variablesLocal,
 			WorkFlowBusinessModel businessModel);
+
+	/**
+	 * 获取指定流程实例id活跃中的任务
+	 * 
+	 * @param processInstanceId
+	 * @return
+	 */
+	List<Task> getProcessInstanceActiveTasks(String processInstanceId);
 }

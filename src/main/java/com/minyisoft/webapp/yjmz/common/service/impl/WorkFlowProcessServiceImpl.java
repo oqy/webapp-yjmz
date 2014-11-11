@@ -24,6 +24,7 @@ import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.service.utils.ServiceUtils;
 import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.yjmz.common.model.CompanyWorkFlowBillBaseInfo;
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
@@ -119,5 +120,22 @@ public class WorkFlowProcessServiceImpl implements WorkFlowProcessService {
 		} else {
 			return query.list();
 		}
+	}
+
+	private final static String _WF_INITIATOR_LABEL = "applyUserId";
+
+	@Override
+	public long countProcessInstances(UserInfo processInitiator) {
+		Assert.notNull(processInitiator, "未指定流程发起人");
+		return runtimeService.createProcessInstanceQuery()
+				.variableValueEquals(_WF_INITIATOR_LABEL, processInitiator.getCellPhoneNumber()).count();
+	}
+
+	@Override
+	public List<ProcessInstance> getProcessInstances(UserInfo processInitiator) {
+		Assert.notNull(processInitiator, "未指定流程发起人");
+		return runtimeService.createProcessInstanceQuery()
+				.variableValueEquals(_WF_INITIATOR_LABEL, processInitiator.getCellPhoneNumber())
+				.orderByProcessInstanceId().desc().list();
 	}
 }

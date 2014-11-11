@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
+import com.minyisoft.webapp.yjmz.common.service.WorkFlowProcessService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 
 /**
@@ -21,6 +22,8 @@ import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 public class WelcomeController extends ManageBaseController {
 	@Autowired
 	private WorkFlowTaskService workFlowTaskService;
+	@Autowired
+	private WorkFlowProcessService workFlowProcessService;
 	@Autowired
 	private UserService userService;
 
@@ -33,6 +36,9 @@ public class WelcomeController extends ManageBaseController {
 		model.addAttribute("todoTaskCount", workFlowTaskService.countTodoTasks(currentUser));
 		// 已处理任务数
 		model.addAttribute("doneTaskCount", workFlowTaskService.countDoneTasks(currentUser));
+		// 由我发起正在审批中的任务数
+		model.addAttribute("myRunningProcessCount",
+				workFlowProcessService.countProcessInstances(currentUser));
 		return "manage/welcome";
 	}
 

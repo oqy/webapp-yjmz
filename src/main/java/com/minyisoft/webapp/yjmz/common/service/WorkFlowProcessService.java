@@ -6,6 +6,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 
 public interface WorkFlowProcessService {
@@ -25,7 +26,7 @@ public interface WorkFlowProcessService {
 	 * @param deleteReason
 	 */
 	void deleteRunningProcess(String processInstanceId, String deleteReason);
-	
+
 	/**
 	 * 获取指定流程定义的运行流程实例
 	 * 
@@ -34,6 +35,22 @@ public interface WorkFlowProcessService {
 	 * @return
 	 */
 	List<ProcessInstance> getProcessInstances(String processDefinitionId, PageDevice pageDevice);
+
+	/**
+	 * 获取指定流程发起人的流程实例数
+	 * 
+	 * @param processInitiator
+	 * @return
+	 */
+	long countProcessInstances(UserInfo processInitiator);
+
+	/**
+	 * 获取指定流程发起人的流程实例
+	 * 
+	 * @param processInitiator
+	 * @return
+	 */
+	List<ProcessInstance> getProcessInstances(UserInfo processInitiator);
 
 	/**
 	 * 获取指定流程定义的历史流程实例

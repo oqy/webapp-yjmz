@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 	private TaskService taskService;
 	@Autowired
 	private HistoryService historyService;
+	@Autowired
+	private RuntimeService runtimeService;
 
 	@Override
 	public long countTodoTasks(UserInfo user) {
@@ -84,5 +89,39 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 		}
 
 		completeTask(task, variables, variablesLocal);
+	}
+
+	@Override
+	public List<Task> getProcessInstanceActiveTasks(String processInstanceId) {
+		Assert.hasText(processInstanceId, "未指定流程实例id");
+		return taskService.createTaskQuery().processInstanceId(processInstanceId).active().list();
+	}
+
+	/**
+	 * 由任务对象获取流程实例businessKey
+	 * 
+	 * @param task
+	 * @return
+	 */
+	public WorkFlowBusinessModel getBusinessModel(Task task) {
+		Assert.notNull(task);
+		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+				.processInstanceId(task.getProcessInstanceId()).singleResult();
+		return processInstance != null ? (WorkFlowBusinessModel) ServiceUtils
+				.getModel(processInstance.getBusinessKey()) : null;
+	}
+
+	/**
+	 * 由历史任务对象获取流程实例businessKey
+	 * 
+	 * @param task
+	 * @return
+	 */
+	public WorkFlowBusinessModel getBusinessModel(HistoricTaskInstance task) {
+		Assert.notNull(task);
+		HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceId(task.getProcessInstanceId()).singleResult();
+		return processInstance != null ? (WorkFlowBusinessModel) ServiceUtils
+				.getModel(processInstance.getBusinessKey()) : null;
 	}
 }

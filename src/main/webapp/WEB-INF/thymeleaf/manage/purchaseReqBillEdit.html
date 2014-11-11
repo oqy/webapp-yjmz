@@ -123,7 +123,7 @@
 <script type="text/javascript" th:inline="javascript">
 var entryIndex=/*[[${#lists.isEmpty(purchaseReqBill.entry)}?0:${purchaseReqBill.entry.size()}]]*/;
 </script>
-<script type="text/javascript" th:src="@{'/resource/js/manage/attachmentUploader.js'}"></script>
-<script src="js/manage/purchaseReqBillEdit.js" th:src="@{'/resource/js/manage/purchaseReqBillEdit_20141102.js'}"></script>
+<script type="text/javascript" th:src="${resourceUrlRoot}+'/js/manage/attachmentUploader.js'"></script>
+<script src="js/manage/purchaseReqBillEdit.js" th:src="${resourceUrlRoot}+'/js/manage/purchaseReqBillEdit_20141102.js'"></script>
 </body>
 </html>

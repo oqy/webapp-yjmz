@@ -1,20 +1,20 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="css" th:remove="tag">
-<link th:href="@{'/resource/img/favicon.ico'}" rel="icon" type="image/x-icon" />
-<link th:href="@{'/resource/img/favicon.ico'}" rel="shortcut icon" type="image/x-icon" />
+<link th:href="${resourceUrlRoot}+'/img/favicon.ico'" rel="icon" type="image/x-icon" />
+<link th:href="${resourceUrlRoot}+'/img/favicon.ico'" rel="shortcut icon" type="image/x-icon" />
 <!-- bootstrap -->
 <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-overrides.css" th:href="@{'/resource/css/bootstrap/bootstrap-overrides.css'}"/>
+<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-overrides.css" th:href="${resourceUrlRoot}+'/css/bootstrap/bootstrap-overrides.css'"/>
 <!-- global styles -->
-<link rel="stylesheet" type="text/css" href="css/compiled/layout.css" th:href="@{'/resource/css/compiled/layout.css'}"/>
+<link rel="stylesheet" type="text/css" href="css/compiled/layout.css" th:href="${resourceUrlRoot}+'/css/compiled/layout.css'"/>
 <!-- libraries -->
 <link href="http://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet"/>
 </head>
 <body th:fragment="js" th:remove="tag">
 <script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://apps.bdimg.com/libs/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="js/theme.js" th:src="@{'/resource/js/theme.js'}"></script>
+<script src="js/theme.js" th:src="${resourceUrlRoot}+'/js/theme.js'"></script>
 <script type="text/javascript" th:inline="javascript">
 var selected_menu_id=/*[[${menu}]]*/null;
 jQuery(document).ready(function() {
@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
 </body>
 <body th:fragment="formValidateJs" th:remove="tag">
 <script src="http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js"></script>
-<script src="js/validate-message-cn.js" th:src="@{'/resource/js/validate-message-cn.js'}"></script>
+<script src="js/validate-message-cn.js" th:src="${resourceUrlRoot}+'/js/validate-message-cn.js'"></script>
 <script type="text/javascript" th:inline="javascript">
 var formId=/*[[${formId}]]*/null;
 var extendOption=/*[[${extendOption}]]*/null;

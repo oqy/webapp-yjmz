@@ -32,7 +32,7 @@
         <th>任务耗时</th>
         <th>操作</th>
       </tr>
-      <tr th:each="task : ${doneTasks}" th:with="businessModel=${T(com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper).getBusinessModel(task)}">
+      <tr th:each="task : ${doneTasks}" th:with="businessModel=${@workFlowTaskService.getBusinessModel(task)}">
         <td class="hidden-xs" th:text="${taskStat.count + (pageDevice.currentPage - 1) * pageDevice.recordsPerPage}"></td>
         <td th:text="${businessModel.processInstanceName}"></td>
         <td th:text="${task.name}"></td>
