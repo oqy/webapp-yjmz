@@ -20,7 +20,7 @@
 		<zxing.version>2.1</zxing.version>
 
 		<!-- Plugin的属性定义 -->
-		<jdk.version>1.6</jdk.version>
+		<jdk.version>1.7</jdk.version>
 		<encoding>UTF-8</encoding>
 	</properties>
 
