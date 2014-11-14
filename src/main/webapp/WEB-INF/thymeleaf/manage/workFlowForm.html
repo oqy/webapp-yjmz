@@ -17,6 +17,15 @@
           </textarea>
     </div>
   </div>
+  <div class="form-group">
+    <label for="preApproveDepartment" class="col-md-2 control-label">前置审批部门：</label>
+    <div class="col-md-6">
+      <select class="form-control" id="preApproveDepartment" name="preApproveDepartment">
+        <option value="">请选择需要参与审批的部门</option>
+        <option th:each="department : ${currentCompany.departments}" th:if="${!department.equals(currentDepartment)}" th:value="${department.id}" th:text="${department.name}" th:selected="${department.equals(report.preApproveDepartment)}"></option>
+      </select>
+    </div>
+  </div>
 </div>
 <div th:fragment="reportMark">
   <div class="form-group">

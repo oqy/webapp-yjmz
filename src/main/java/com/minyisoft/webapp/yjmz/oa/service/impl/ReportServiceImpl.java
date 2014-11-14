@@ -43,6 +43,10 @@ public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCri
 			Assert.isTrue(orgRelation.isPresent() && info.getDepartment().equals(orgRelation.get().getDepartment()),
 					"工作报告创建者并不隶属于报告所属部门");
 		}
+	}
+
+	@Override
+	protected void _validateDataBeforeSubmit(ReportInfo info) {
 		// 设置了前置审批部门，自动置入对应的部门负责人
 		if (info.getPreApproveDepartment() != null) {
 			info.setPreApproveDepartmentLeader(userOrgRelationService.getDepartmentLeader(
