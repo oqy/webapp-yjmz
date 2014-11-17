@@ -99,7 +99,6 @@ input.search {
 }
 .navbar-inverse .notification-dropdown > a:hover,
 .navbar-inverse .notification-dropdown > a.active {
-  background: #254261 !important;
   box-shadow: inset 1px 0px 1px 0px #3e5a79;
 }
 .navbar-inverse .notification-dropdown i {

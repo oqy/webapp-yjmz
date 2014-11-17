@@ -21,6 +21,7 @@
       </ul>
     </li>
     <li th:if="${currentCompany!=null}" class="notification-dropdown"> <a th:href="@{'/manage/messageReceiveList.html'}" class="trigger active"> <i class="icon-envelope"></i> </a> </li>
+    <li class="hidden-xs settings" th:if="${currentCompany!=null}"> <a href="resource/help.html" target="_blank" title="使用帮助" role="button" th:href="@{'/resource/help.html'}"> <i class="icon-question-sign"></i> </a> </li>  
     <li class="hidden-xs settings"> <a href="signin.html" title="退出系统" role="button" th:href="@{'/logout.html'}"> <i class="icon-signout"></i> </a> </li>
   </ul>
 </header>
