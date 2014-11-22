@@ -70,7 +70,7 @@ public class LoginController extends BaseController {
 					redirectAttributes.addFlashAttribute("errorMsg", "抱歉，您尚不隶属系统内任何公司，暂不能使用系统，请首先联系系统管理员添加组织隶属关系");
 				}
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				logger.error(e.getMessage());
 				redirectAttributes.addFlashAttribute("errorMsg", "抱歉，您输入的用户名和密码有误，请检查");
 			}
 		}

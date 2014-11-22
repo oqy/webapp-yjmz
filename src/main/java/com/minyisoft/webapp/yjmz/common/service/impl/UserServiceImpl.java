@@ -1,5 +1,6 @@
 package com.minyisoft.webapp.yjmz.common.service.impl;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +44,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 
 		UserInfo loginUser = getValue(userLoginInputString);
 		if (loginUser == null || loginUser.getStatus() == UserStatusEnum.DIMISSION) {
-			throw new ServiceException("不存在指定的系统用户信息");
+			throw new ServiceException(MessageFormat.format("不存在登录账号为[{0}]的系统用户信息", userLoginInputString));
 		}
 
 		UsernamePasswordToken token = new UsernamePasswordToken(loginUser.getUserLoginName(), userPassword);
