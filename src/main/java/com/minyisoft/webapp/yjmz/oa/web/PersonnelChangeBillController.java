@@ -1,6 +1,5 @@
 package com.minyisoft.webapp.yjmz.oa.web;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -53,6 +52,9 @@ public class PersonnelChangeBillController extends ManageBaseController {
 				&& criteria.getQueryBeginDate().after(criteria.getQueryEndDate())) {
 			criteria.setQueryEndDate(criteria.getQueryBeginDate());
 		}
+		if (criteria.getProcessStatus() == null) {
+			criteria.setProcessStatus(WorkFlowProcessStatusEnum.RUNNING);
+		}
 		criteria.setCompany(currentCompany);
 		if (!PermissionUtils.hasPermission(PERMISSION_READ_ALL)) {
 			criteria.setViewer(currentUser);
@@ -62,9 +64,10 @@ public class PersonnelChangeBillController extends ManageBaseController {
 				"personnelChangeBills",
 				criteria.getPageDevice().getTotalRecords() == 0 ? Collections.emptyList() : personnelChangeBillService
 						.getCollection(criteria));
+		model.addAttribute("processStatuses", WorkFlowProcessStatusEnum.values());
 
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
-		filter.addField("processStatus", Arrays.asList(WorkFlowProcessStatusEnum.values()));
+		filter.addHiddenField("processStatus");
 		filter.addField("queryBeginDate");
 		filter.addField("queryEndDate");
 		model.addAttribute("filter", filter);
@@ -84,10 +87,11 @@ public class PersonnelChangeBillController extends ManageBaseController {
 	public String deletePersonnelChangeBill(
 			@ModelAttribute("personnelChangeBill") PersonnelChangeBillInfo personnelChangeBill) {
 		personnelChangeBillService.delete(personnelChangeBill);
-		return "redirect:personnelChangeBillList.html";
+		return "redirect:personnelChangeBillList.html?processStatus="
+				+ personnelChangeBill.getProcessStatus().getValue();
 	}
 
-	private final static String PERMISSION_CROSS_DEPARTMENT_ADD = "PersonnelChangeBill:crossDepartmentAdd";//跨部门添加人事变动单
+	private final static String PERMISSION_CROSS_DEPARTMENT_ADD = "PersonnelChangeBill:crossDepartmentAdd";// 跨部门添加人事变动单
 
 	/**
 	 * 获取人事变动单编辑界面
@@ -97,7 +101,8 @@ public class PersonnelChangeBillController extends ManageBaseController {
 			@ModelAttribute("personnelChangeBill") PersonnelChangeBillInfo personnelChangeBill, Model model) {
 		// 人事变动单已进入工作流程，不允许编辑
 		if (!personnelChangeBill.isProcessUnStarted()) {
-			return "redirect:personnelChangeBillList.html";
+			return "redirect:personnelChangeBillList.html?processStatus="
+					+ personnelChangeBill.getProcessStatus().getValue();
 		}
 		model.addAttribute("personnelChangeBill", personnelChangeBill);
 		// 是否允许为其他部门创建人事变动单
@@ -114,7 +119,8 @@ public class PersonnelChangeBillController extends ManageBaseController {
 			@ModelAttribute("personnelChangeBill") PersonnelChangeBillInfo personnelChangeBill) {
 		Optional<UserOrgRelationInfo> optionalOrgRelation = currentUser.getOrgRelation(currentCompany);
 		if (!optionalOrgRelation.isPresent()) {
-			return "redirect:personnelChangeBillList.html";
+			return "redirect:personnelChangeBillList.html?processStatus="
+					+ personnelChangeBill.getProcessStatus().getValue();
 		}
 		personnelChangeBill.setCompany(currentCompany);
 		if (!PermissionUtils.hasPermission(PERMISSION_CROSS_DEPARTMENT_ADD)
@@ -122,7 +128,8 @@ public class PersonnelChangeBillController extends ManageBaseController {
 			personnelChangeBill.setDepartment(optionalOrgRelation.get().getDepartment());
 		}
 		personnelChangeBillService.submit(personnelChangeBill);
-		return "redirect:personnelChangeBillList.html";
+		return "redirect:personnelChangeBillList.html?processStatus="
+				+ personnelChangeBill.getProcessStatus().getValue();
 	}
 
 	@Autowired

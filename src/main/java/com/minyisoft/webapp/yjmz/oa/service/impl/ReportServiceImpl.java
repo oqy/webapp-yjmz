@@ -51,6 +51,8 @@ public class ReportServiceImpl extends BillBaseServiceImpl<ReportInfo, ReportCri
 		if (info.getPreApproveDepartment() != null) {
 			info.setPreApproveDepartmentLeader(userOrgRelationService.getDepartmentLeader(
 					info.getPreApproveDepartment()).orNull());
+		} else {
+			info.setPreApproveDepartmentLeader(null);
 		}
 	}
 

@@ -64,7 +64,7 @@ public class AcceptanceBillController extends ManageBaseController {
 	 */
 	private String _getRedirectUrl(IBillObject sourceBill) {
 		if (sourceBill instanceof ReportInfo) {
-			return "redirect:reportList.html";
+			return "redirect:reportList.html?processStatus=" + ((ReportInfo) sourceBill).getProcessStatus().getValue();
 		} else {
 			return "redirect:index.html";
 		}

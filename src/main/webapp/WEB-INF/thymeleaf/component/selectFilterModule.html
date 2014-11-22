@@ -5,7 +5,7 @@
 <title>分页器通用组件</title>
 </head>
 <body>
-<form th:fragment="selectForm" th:if="${filter}" th:inline="text" role="form" class="form-inline" id="selectForm" name="selectForm" method="get" th:action="${url}" th:style="'margin-bottom:10px; '+(${filter.hideSelectForm}?'display:none;':'')">
+<form th:fragment="selectForm" th:if="${filter}" th:inline="text" role="form" class="form-inline hidden-xs" id="selectForm" name="selectForm" method="get" th:action="${url}" th:style="'margin:10px 0px;'+(${filter.hideSelectForm}?'display:none;':'')">
   <div th:class="${unit.type.equalsIgnoreCase('checkBox')}?'checkbox':'form-group'" th:each="unit : ${filter.unitContentList}" th:classappend="${unit.type.equalsIgnoreCase('hidden')}?'hidden'" style="margin-right:10px;">
     <label th:for="${unit.id}" th:text="${unit.label}+'：'" th:if="${!unit.type.equalsIgnoreCase('checkBox')} and ${!unit.type.equalsIgnoreCase('hidden')}">Email address</label>
     <select th:if="${unit.type.equalsIgnoreCase('select')}" th:id="${unit.id}" th:name="${unit.name}" class="form-control">

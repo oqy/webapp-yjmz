@@ -1,6 +1,5 @@
 package com.minyisoft.webapp.yjmz.oa.web;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ import com.minyisoft.webapp.yjmz.oa.web.view.ReportExcelView;
 public class ReportController extends ManageBaseController {
 	@Autowired
 	private ReportService reportService;
-	
+
 	private static final String PERMISSION_READ_ALL = "Report:readAll";// 查看全部工作报告的权限
 
 	/**
@@ -53,6 +52,9 @@ public class ReportController extends ManageBaseController {
 				&& criteria.getQueryBeginDate().after(criteria.getQueryEndDate())) {
 			criteria.setQueryEndDate(criteria.getQueryBeginDate());
 		}
+		if (criteria.getProcessStatus() == null) {
+			criteria.setProcessStatus(WorkFlowProcessStatusEnum.RUNNING);
+		}
 		criteria.setCompany(currentCompany);
 		if (!PermissionUtils.hasPermission(PERMISSION_READ_ALL)) {
 			criteria.setViewer(currentUser);
@@ -60,9 +62,10 @@ public class ReportController extends ManageBaseController {
 		criteria.getPageDevice().setTotalRecords(reportService.count(criteria));
 		model.addAttribute("reports", criteria.getPageDevice().getTotalRecords() == 0 ? Collections.emptyList()
 				: reportService.getCollection(criteria));
+		model.addAttribute("processStatuses", WorkFlowProcessStatusEnum.values());
 
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
-		filter.addField("processStatus", Arrays.asList(WorkFlowProcessStatusEnum.values()));
+		filter.addHiddenField("processStatus");
 		filter.addField("queryBeginDate");
 		filter.addField("queryEndDate");
 		model.addAttribute("filter", filter);
@@ -80,7 +83,7 @@ public class ReportController extends ManageBaseController {
 	@RequestMapping(value = "reportDelete.html", method = RequestMethod.GET)
 	public String deleteReport(@ModelAttribute("report") ReportInfo report) {
 		reportService.delete(report);
-		return "redirect:reportList.html";
+		return "redirect:reportList.html?processStatus=" + report.getProcessStatus().getValue();
 	}
 
 	/**
@@ -90,7 +93,7 @@ public class ReportController extends ManageBaseController {
 	public String getReportEditForm(@ModelAttribute("report") ReportInfo report, Model model) {
 		// 工作报告已进入工作流程，不允许编辑
 		if (!report.isProcessUnStarted()) {
-			return "redirect:reportList.html";
+			return "redirect:reportList.html?processStatus=" + report.getProcessStatus().getValue();
 		}
 		model.addAttribute("report", report);
 		return "manage/reportEdit";
@@ -104,12 +107,12 @@ public class ReportController extends ManageBaseController {
 			@ModelAttribute("currentCompany") CompanyInfo currentCompany, @ModelAttribute("report") ReportInfo report) {
 		Optional<UserOrgRelationInfo> optionalOrgRelation = currentUser.getOrgRelation(currentCompany);
 		if (!optionalOrgRelation.isPresent()) {
-			return "redirect:reportList.html";
+			return "redirect:reportList.html?processStatus=" + report.getProcessStatus().getValue();
 		}
 		report.setCompany(currentCompany);
 		report.setDepartment(optionalOrgRelation.get().getDepartment());
 		reportService.submit(report);
-		return "redirect:reportList.html";
+		return "redirect:reportList.html?processStatus=" + report.getProcessStatus().getValue();
 	}
 
 	@Autowired

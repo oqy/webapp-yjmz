@@ -1,6 +1,5 @@
 package com.minyisoft.webapp.yjmz.oa.web;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -54,6 +53,9 @@ public class MaintainReqBillController extends ManageBaseController {
 				&& criteria.getQueryBeginDate().after(criteria.getQueryEndDate())) {
 			criteria.setQueryEndDate(criteria.getQueryBeginDate());
 		}
+		if (criteria.getProcessStatus() == null) {
+			criteria.setProcessStatus(WorkFlowProcessStatusEnum.RUNNING);
+		}
 		criteria.setCompany(currentCompany);
 		if (!PermissionUtils.hasPermission(PERMISSION_READ_ALL)) {
 			criteria.setViewer(currentUser);
@@ -63,9 +65,10 @@ public class MaintainReqBillController extends ManageBaseController {
 				"maintainReqBills",
 				criteria.getPageDevice().getTotalRecords() == 0 ? Collections.emptyList() : maintainReqBillService
 						.getCollection(criteria));
+		model.addAttribute("processStatuses", WorkFlowProcessStatusEnum.values());
 
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
-		filter.addField("processStatus", Arrays.asList(WorkFlowProcessStatusEnum.values()));
+		filter.addHiddenField("processStatus");
 		filter.addField("queryBeginDate");
 		filter.addField("queryEndDate");
 		model.addAttribute("filter", filter);
@@ -84,7 +87,7 @@ public class MaintainReqBillController extends ManageBaseController {
 	@RequestMapping(value = "maintainReqBillDelete.html", method = RequestMethod.GET)
 	public String deleteMaintainReqBill(@ModelAttribute("maintainReqBill") MaintainReqBillInfo maintainReqBill) {
 		maintainReqBillService.delete(maintainReqBill);
-		return "redirect:maintainReqBillList.html";
+		return "redirect:maintainReqBillList.html?processStatus=" + maintainReqBill.getProcessStatus().getValue();
 	}
 
 	/**
@@ -95,7 +98,7 @@ public class MaintainReqBillController extends ManageBaseController {
 			Model model) {
 		// 维修通知单已进入工作流程，不允许编辑
 		if (!maintainReqBill.isProcessUnStarted()) {
-			return "redirect:maintainReqBillList.html";
+			return "redirect:maintainReqBillList.html?processStatus=" + maintainReqBill.getProcessStatus().getValue();
 		}
 		model.addAttribute("maintainReqBill", maintainReqBill);
 		// 维修类型
@@ -112,12 +115,12 @@ public class MaintainReqBillController extends ManageBaseController {
 			@ModelAttribute("maintainReqBill") MaintainReqBillInfo maintainReqBill) {
 		Optional<UserOrgRelationInfo> optionalOrgRelation = currentUser.getOrgRelation(currentCompany);
 		if (!optionalOrgRelation.isPresent()) {
-			return "redirect:maintainReqBillList.html";
+			return "redirect:maintainReqBillList.html?processStatus=" + maintainReqBill.getProcessStatus().getValue();
 		}
 		maintainReqBill.setCompany(currentCompany);
 		maintainReqBill.setDepartment(optionalOrgRelation.get().getDepartment());
 		maintainReqBillService.submit(maintainReqBill);
-		return "redirect:maintainReqBillList.html";
+		return "redirect:maintainReqBillList.html?processStatus=" + maintainReqBill.getProcessStatus().getValue();
 	}
 
 	@Autowired

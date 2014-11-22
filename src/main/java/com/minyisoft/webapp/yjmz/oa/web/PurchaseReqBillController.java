@@ -1,6 +1,5 @@
 package com.minyisoft.webapp.yjmz.oa.web;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -56,6 +55,9 @@ public class PurchaseReqBillController extends ManageBaseController {
 				&& criteria.getQueryBeginDate().after(criteria.getQueryEndDate())) {
 			criteria.setQueryEndDate(criteria.getQueryBeginDate());
 		}
+		if (criteria.getProcessStatus() == null) {
+			criteria.setProcessStatus(WorkFlowProcessStatusEnum.RUNNING);
+		}
 		criteria.setCompany(currentCompany);
 		if (!PermissionUtils.hasPermission(PERMISSION_READ_ALL)) {
 			criteria.setViewer(currentUser);
@@ -65,9 +67,10 @@ public class PurchaseReqBillController extends ManageBaseController {
 				"purchaseReqBills",
 				criteria.getPageDevice().getTotalRecords() == 0 ? Collections.emptyList() : purchaseReqBillService
 						.getCollection(criteria));
+		model.addAttribute("processStatuses", WorkFlowProcessStatusEnum.values());
 
 		SelectModuleFilter filter = new SelectModuleFilter(criteria);
-		filter.addField("processStatus", Arrays.asList(WorkFlowProcessStatusEnum.values()));
+		filter.addHiddenField("processStatus");
 		filter.addField("queryBeginDate");
 		filter.addField("queryEndDate");
 		model.addAttribute("filter", filter);
@@ -90,7 +93,7 @@ public class PurchaseReqBillController extends ManageBaseController {
 	@RequestMapping(value = "purchaseReqBillDelete.html", method = RequestMethod.GET)
 	public String deletePurchaseReqBill(@ModelAttribute("purchaseReqBill") PurchaseReqBillInfo purchaseReqBill) {
 		purchaseReqBillService.delete(purchaseReqBill);
-		return "redirect:purchaseReqBillList.html";
+		return "redirect:purchaseReqBillList.html?processStatus=" + purchaseReqBill.getProcessStatus().getValue();
 	}
 
 	/**
@@ -101,7 +104,7 @@ public class PurchaseReqBillController extends ManageBaseController {
 			Model model) {
 		// 采购单已进入工作流程，不允许编辑
 		if (!purchaseReqBill.isProcessUnStarted()) {
-			return "redirect:purchaseReqBillList.html";
+			return "redirect:purchaseReqBillList.html?processStatus=" + purchaseReqBill.getProcessStatus().getValue();
 		}
 		model.addAttribute("purchaseReqBill", purchaseReqBill);
 		return "manage/purchaseReqBillEdit";
@@ -116,12 +119,12 @@ public class PurchaseReqBillController extends ManageBaseController {
 			@ModelAttribute("purchaseReqBill") PurchaseReqBillInfo purchaseReqBill) {
 		Optional<UserOrgRelationInfo> optionalOrgRelation = currentUser.getOrgRelation(currentCompany);
 		if (!optionalOrgRelation.isPresent()) {
-			return "redirect:purchaseReqBillList.html";
+			return "redirect:purchaseReqBillList.html?processStatus=" + purchaseReqBill.getProcessStatus().getValue();
 		}
 		purchaseReqBill.setCompany(currentCompany);
 		purchaseReqBill.setDepartment(optionalOrgRelation.get().getDepartment());
 		purchaseReqBillService.submit(purchaseReqBill);
-		return "redirect:purchaseReqBillList.html";
+		return "redirect:purchaseReqBillList.html?processStatus=" + purchaseReqBill.getProcessStatus().getValue();
 	}
 
 	@Autowired
