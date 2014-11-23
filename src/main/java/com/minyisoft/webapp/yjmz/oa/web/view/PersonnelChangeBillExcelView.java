@@ -108,6 +108,8 @@ public class PersonnelChangeBillExcelView extends AbstractExcelView {
 			}
 			setText(getCell(sheet, 16, 1),
 					personnelChangeBill.getDescription() != null ? personnelChangeBill.getDescription() : "");
+			setText(getCell(sheet, 17, 1),
+					personnelChangeBill.getHrRemark() != null ? personnelChangeBill.getHrRemark() : "");
 
 			// 插入二维码图片
 			patriarch = sheet.createDrawingPatriarch();

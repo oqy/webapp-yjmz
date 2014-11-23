@@ -343,6 +343,9 @@ table th span.line{
 	opacity: 0.5 !important;
 }
 
+/* nav-tabs */
+.nav-tabs li.active a,.nav-tabs li.active a:hover,.nav-tabs li.active a:focus{ border-top: #428bca solid 2px; font-weight:bold;}
+
 
 /* override navbar toggle */
 @media (max-width: 768px) {

@@ -21,6 +21,7 @@
       <result property="newSalary" column="fnewsalary" />
       <result property="lastWorkDate" column="flastworkdate" />
       <result property="salaryChangeReason" column="fsalarychangereason" />
+      <result property="hrRemark" column="fhrremark" />
       <result property="processInstanceId" column="fprocessinstanceid" />
       <result property="processStatus" column="fprocessstatus" />
       <result property="processBeginDate" column="fprocessbegindate" />
@@ -59,6 +60,7 @@
       	fnewsalary ,
       	flastworkdate ,
       	fsalarychangereason ,
+      	fhrremark ,
       	fprocessinstanceid ,
       	fprocessstatus ,
       	fprocessbegindate ,
@@ -133,6 +135,7 @@
       	fnewsalary ,
       	flastworkdate ,
       	fsalarychangereason ,
+      	fhrremark ,
       	fprocessinstanceid ,
       	fprocessstatus ,
       	fprocessbegindate ,
@@ -158,14 +161,14 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="PersonnelChangeBillInfo">
-    insert into t_oa_personnelchangebill (fstaffname,fusermale,fstaffnumber,fentrydate,feffectivedate,fchangetype,fotherchangetype,foriposition,forirank,forisalary,fnewdepartmentid,fnewposition,fnewrank,fnewsalary,flastworkdate,fsalarychangereason,fprocessinstanceid,fprocessstatus,fprocessbegindate,fprocessenddate,fcompanyid,fdepartmentid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{staffName},#{userMale},#{staffNumber},#{entryDate},#{effectiveDate},#{changeType},#{otherChangeType},#{oriPosition},#{oriRank},#{oriSalary},#{newDepartment.id},#{newPosition},#{newRank},#{newSalary},#{lastWorkDate},#{salaryChangeReason},#{processInstanceId},#{processStatus},#{processBeginDate},#{processEndDate},#{company.id},#{department.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_personnelchangebill (fstaffname,fusermale,fstaffnumber,fentrydate,feffectivedate,fchangetype,fotherchangetype,foriposition,forirank,forisalary,fnewdepartmentid,fnewposition,fnewrank,fnewsalary,flastworkdate,fsalarychangereason,fhrremark,fprocessinstanceid,fprocessstatus,fprocessbegindate,fprocessenddate,fcompanyid,fdepartmentid,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{staffName},#{userMale},#{staffNumber},#{entryDate},#{effectiveDate},#{changeType},#{otherChangeType},#{oriPosition},#{oriRank},#{oriSalary},#{newDepartment.id},#{newPosition},#{newRank},#{newSalary},#{lastWorkDate},#{salaryChangeReason},#{hrRemark},#{processInstanceId},#{processStatus},#{processBeginDate},#{processEndDate},#{company.id},#{department.id},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="PersonnelChangeBillInfo">
     update t_oa_personnelchangebill set fstaffname=#{staffName},fusermale=#{userMale},fstaffnumber=#{staffNumber},fentrydate=#{entryDate},feffectivedate=#{effectiveDate},fchangetype=#{changeType},fotherchangetype=#{otherChangeType},foriposition=#{oriPosition},forirank=#{oriRank},forisalary=#{oriSalary},fnewdepartmentid=#{newDepartment.id},fnewposition=#{newPosition},fnewrank=#{newRank},fnewsalary=#{newSalary},flastworkdate=#{lastWorkDate},fsalarychangereason=#{salaryChangeReason},
-    fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},fcompanyid=#{company.id},fdepartmentid=#{department.id},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    fhrremark=#{hrRemark},fprocessinstanceid=#{processInstanceId},fprocessstatus=#{processStatus},fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},fcompanyid=#{company.id},fdepartmentid=#{department.id},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 
   <!-- 通用记录删除操作 -->

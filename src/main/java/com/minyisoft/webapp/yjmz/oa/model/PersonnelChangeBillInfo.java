@@ -63,6 +63,8 @@ public class PersonnelChangeBillInfo extends CompanyWorkFlowBillBaseInfo {
 	private Date lastWorkDate;
 	// 工资变动原因
 	private String salaryChangeReason;
+	// 人事部备注
+	private String hrRemark;
 
 	public String getChangeTypeDescription() {
 		return changeType == PersonnelChangeTypeEnum.OTHER ? otherChangeType : changeType.getDescription();

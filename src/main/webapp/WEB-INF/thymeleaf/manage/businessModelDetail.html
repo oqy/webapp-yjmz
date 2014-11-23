@@ -194,12 +194,13 @@
       <td><span th:text="${personnelChangeBill.newSalary}"></span>&nbsp;RMB/月</td>
     </tr>
   </table>
-  <p>备注：</p>
-  <p>最后工作日期：<span th:text="${personnelChangeBill.lastWorkDate!=null}?${#dates.format(personnelChangeBill.lastWorkDate,'yyyy年MM月dd日')}"></span></p>
-  <p>增加薪金：RMB<span style="width: 70px; display: inline-block;" th:text="${personnelChangeBill.salaryChangeAmount ge 0}?${personnelChangeBill.salaryChangeAmount}"></span>&nbsp;原因：<span th:text="${personnelChangeBill.salaryChangeAmount ge 0}?${personnelChangeBill.salaryChangeReason}"></span></p>
-  <p>扣除薪金：RMB<span style="width: 70px; display: inline-block;" th:text="${personnelChangeBill.salaryChangeAmount lt 0}?${personnelChangeBill.salaryChangeAmount.abs()}"></span>&nbsp;原因：<span th:text="${personnelChangeBill.salaryChangeAmount lt 0}?${personnelChangeBill.salaryChangeReason}"></span></p>
-  <p>其他意见：<span th:text="${personnelChangeBill.description}"></span></p>
-  <p>制单人：<span th:text="${personnelChangeBill.createUser.name}"></span></p>
+  <p><b>备注：</b></p>
+  <p><b>最后工作日期：</b><span th:text="${personnelChangeBill.lastWorkDate!=null}?${#dates.format(personnelChangeBill.lastWorkDate,'yyyy年MM月dd日')}"></span></p>
+  <p><b>增加薪金：</b>RMB<span style="width: 70px; display: inline-block;" th:text="${personnelChangeBill.salaryChangeAmount ge 0}?${personnelChangeBill.salaryChangeAmount}"></span>&nbsp;<b>原因：</b><span th:text="${personnelChangeBill.salaryChangeAmount ge 0}?${personnelChangeBill.salaryChangeReason}"></span></p>
+  <p><b>扣除薪金：</b>RMB<span style="width: 70px; display: inline-block;" th:text="${personnelChangeBill.salaryChangeAmount lt 0}?${personnelChangeBill.salaryChangeAmount.abs()}"></span>&nbsp;<b>原因：</b><span th:text="${personnelChangeBill.salaryChangeAmount lt 0}?${personnelChangeBill.salaryChangeReason}"></span></p>
+  <p><b>其他意见：</b><span th:text="${personnelChangeBill.description}"></span></p>
+  <p><b>人事部备注：</b><span th:text="${personnelChangeBill.hrRemark}"></span></p>
+  <p><b>制单人：</b><span th:text="${personnelChangeBill.createUser.name}"></span></p>
 </div>
 <div th:fragment="acceptanceBill">
   <div th:remove="tag" th:include="manage/businessModelDetail::report" th:if="${T(com.minyisoft.webapp.core.utils.ObjectUuidUtils).getClassShortKey(acceptanceBill.sourceBill.class).equals('147E1C6843F')}" th:with="report=${acceptanceBill.sourceBill}"> </div>
