@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="personnelChangeBillProcess" name="人事变动单审批流程" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="applyUserId"></startEvent>
-    <userTask id="usertask1" name="人事经理审批" activiti:assignee="13927789337">
+    <userTask id="usertask1" name="人事经理审批" activiti:assignee="13927789337" activiti:formKey="personnelChangeBillHRAudit">
       <extensionElements>
         <activiti:formProperty id="auditPass" name="审批是否通过" type="boolean"></activiti:formProperty>
       </extensionElements>
@@ -16,7 +16,7 @@
     </userTask>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow4" sourceRef="usertask2" targetRef="exclusivegateway2"></sequenceFlow>
-    <userTask id="usertask3" name="董事长审批" activiti:assignee="13925999995">
+    <userTask id="usertask3" name="财务总监审批" activiti:candidateUsers="13827731266,13928693383">
       <extensionElements>
         <activiti:formProperty id="auditPass" name="审批是否通过" type="boolean"></activiti:formProperty>
       </extensionElements>
@@ -26,7 +26,7 @@
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow6" sourceRef="usertask3" targetRef="exclusivegateway3"></sequenceFlow>
-    <userTask id="usertask4" name="财务总监审批" activiti:candidateUsers="13827731266,13928693383">
+    <userTask id="usertask4" name="董事长审批" activiti:assignee="13925999995">
       <extensionElements>
         <activiti:formProperty id="auditPass" name="审批是否通过" type="boolean"></activiti:formProperty>
       </extensionElements>

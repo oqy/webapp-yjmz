@@ -352,3 +352,5 @@ create table t_oa_acceptancebill(
   fversion int default 1, 
   primary key (fid)
 );
+
+ALTER TABLE t_oa_personnelchangebill ADD fhrremark text AFTER fsalarychangereason;
