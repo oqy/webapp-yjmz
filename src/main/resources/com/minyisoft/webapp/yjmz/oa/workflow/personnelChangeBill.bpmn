@@ -9,14 +9,14 @@
     </userTask>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow2" sourceRef="usertask1" targetRef="exclusivegateway1"></sequenceFlow>
-    <userTask id="usertask2" name="总经理审批" activiti:assignee="13927739673">
+    <userTask id="usertask2" name="财务总监审批" activiti:candidateUsers="13827731266,13928693383">
       <extensionElements>
         <activiti:formProperty id="auditPass" name="审批是否通过" type="boolean"></activiti:formProperty>
       </extensionElements>
     </userTask>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow4" sourceRef="usertask2" targetRef="exclusivegateway2"></sequenceFlow>
-    <userTask id="usertask3" name="财务总监审批" activiti:candidateUsers="13827731266,13928693383">
+    <userTask id="usertask3" name="总经理审批" activiti:assignee="13927739673">
       <extensionElements>
         <activiti:formProperty id="auditPass" name="审批是否通过" type="boolean"></activiti:formProperty>
       </extensionElements>
