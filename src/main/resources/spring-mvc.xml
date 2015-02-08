@@ -32,13 +32,6 @@
 	
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/weixin/*" />
-			<bean
-				class="com.minyisoft.webapp.weixin.common.web.interceptor.WeixinMessageReceiveInterceptor">
-				<property name="weixinToken" value="weixinYjmz"/>
-			</bean>
-		</mvc:interceptor>
-		<mvc:interceptor>
 			<mvc:mapping path="/manage/**" />
 			<mvc:mapping path="/login.html" />
 			<mvc:mapping path="/viewDetail.html"/>

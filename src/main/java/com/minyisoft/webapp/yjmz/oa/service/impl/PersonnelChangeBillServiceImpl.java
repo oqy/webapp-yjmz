@@ -28,4 +28,9 @@ public class PersonnelChangeBillServiceImpl extends
 				"当前用户并非人事变动单创建者，不允许删除人事变动单");
 		Assert.isTrue(info.isProcessUnStarted(), "不允许删除已提交审批流程的人事变动单");
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }

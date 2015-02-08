@@ -1,13 +1,10 @@
 package com.minyisoft.webapp.yjmz.common.service.impl;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import com.minyisoft.webapp.core.model.PermissionInfo;
 import com.minyisoft.webapp.core.security.utils.PermissionUtils;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
-import com.minyisoft.webapp.core.utils.spring.cache.ModelObjectCacheManager;
-import com.minyisoft.webapp.core.utils.spring.cache.ModelObjectCacheType;
 import com.minyisoft.webapp.yjmz.common.model.criteria.PermissionCriteria;
 import com.minyisoft.webapp.yjmz.common.persistence.PermissionDao;
 import com.minyisoft.webapp.yjmz.common.service.PermissionService;
@@ -17,8 +14,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionInfo, Permi
 		PermissionService {
 
 	@Override
-	@ModelObjectCacheType(modelType = PermissionInfo.class)
-	@CacheEvict(value = ModelObjectCacheManager.DUMMY_CACHE, allEntries = true)
 	public void initPermission() {
 		// 首先删除现有的所有权限信息
 		getBaseDao().flushPermission();
@@ -28,6 +23,8 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionInfo, Permi
 		}
 		// 删除多余的角色-权限配对信息
 		getBaseDao().deleteUselessRolePermission();
+
+		getCacheManager().getModelCache(PermissionInfo.class).clear();
 	}
 
 	@Override

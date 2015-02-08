@@ -13,7 +13,6 @@ import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.utils.spring.cache.ehcache.EhCacheCacheManager;
 import com.minyisoft.webapp.core.web.BaseController;
 import com.minyisoft.webapp.weixin.mp.dto.MpDevCredential;
-import com.minyisoft.webapp.weixin.mp.service.AbstractMpService;
 import com.minyisoft.webapp.weixin.mp.service.MpJsApiService;
 
 /**
@@ -55,16 +54,6 @@ public class SystemToolController extends BaseController {
 	public String clearModelCache(RedirectAttributes redirectAttributes) {
 		cacheManager.clearAllCache();
 		redirectAttributes.addFlashAttribute("msg", "系统缓存清理完毕");
-		return "redirect:cacheManager.html";
-	}
-
-	/**
-	 * 清理微信access token缓存
-	 */
-	@RequestMapping(value = "cacheClear.html", method = RequestMethod.POST, params = "clearWeixinAccessToken")
-	public String clearWeixinAccessTokenCache(RedirectAttributes redirectAttributes) {
-		cacheManager.getCache(AbstractMpService.CACHE_NAME).clear();
-		redirectAttributes.addFlashAttribute("msg", "微信access token缓存清理完毕");
 		return "redirect:cacheManager.html";
 	}
 }

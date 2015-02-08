@@ -43,6 +43,14 @@
   </div>
 </div>
 <div th:fragment="maintainExecute">
+  <div class="form-group">
+    <label for="maintainReply" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;维修结果：</label>
+    <div class="col-md-6">
+      <label class="radio-inline" th:each="status : ${T(com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainReplyEnum).values()}">
+      <input type="radio" name="maintainReply" th:value="${status.value}" th:checked="${statusStat.first}"/>
+      <span th:text="${status.description}" th:remove="tag">无需验收</span></label>
+    </div>
+  </div>
   <table class="table table-hover table-bordered">
     <thead>
       <tr>

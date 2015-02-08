@@ -61,7 +61,7 @@
       <th>维修技师</th>
       <td th:text="${maintainReqBill.maintenanceMan}?${maintainReqBill.maintenanceMan.name}">&nbsp;</td>
       <th>完成日期</th>
-      <td th:text="${maintainReqBill.finishDate}?${#dates.format(maintainReqBill.finishDate,'yyyy年MM月dd日')}">&nbsp;</td>
+      <td><span th:text="${maintainReqBill.finishDate}?${#dates.format(maintainReqBill.finishDate,'yyyy年MM月dd日')}" th:remove="tag"></span><span th:if="${maintainReqBill.maintainReply!=null and maintainReqBill.maintainReply.value gt 0}" th:remove="tag" th:inline="text">([[${maintainReqBill.maintainReply.description}]])</span></td>
     </tr>
     <tr>
       <th colspan="2">维修材料清单</th>

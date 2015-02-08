@@ -354,3 +354,5 @@ create table t_oa_acceptancebill(
 );
 
 ALTER TABLE t_oa_personnelchangebill ADD fhrremark text AFTER fsalarychangereason;
+
+ALTER TABLE t_oa_maintainreqbill ADD fmaintainreply int AFTER ffinishdate;

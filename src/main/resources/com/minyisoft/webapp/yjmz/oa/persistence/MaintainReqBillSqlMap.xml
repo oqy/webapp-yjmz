@@ -12,6 +12,7 @@
       <result property="maintainTypes" column="fmaintaintypes" typeHandler="describableEnumArrayHandler"/>
       <result property="maintenanceMan" column="fmaintenancemanid" typeHandler="bizModelHandler" />
       <result property="finishDate" column="ffinishdate" />
+      <result property="maintainReply" column="fmaintainreply" />
       <result property="receiver" column="freceiverid" typeHandler="bizModelHandler" />
       <result property="examiner" column="fexaminerid" typeHandler="bizModelHandler" />
       <result property="processInstanceId" column="fprocessinstanceid" />
@@ -44,6 +45,7 @@
       	m.fmaintaintypes ,
       	m.fmaintenancemanid ,
       	m.ffinishdate ,
+      	m.fmaintainreply ,
       	m.freceiverid ,
       	m.fexaminerid ,
       	m.fprocessinstanceid ,
@@ -109,6 +111,7 @@
       	m.fmaintaintypes ,
       	m.fmaintenancemanid ,
       	m.ffinishdate ,
+      	m.fmaintainreply ,
       	m.freceiverid ,
       	m.fexaminerid ,
       	m.fprocessinstanceid ,
@@ -138,13 +141,13 @@
   
   <!-- 通用记录插入操作 --> 
   <insert id="insertEntity" parameterType="MaintainReqBillInfo">
-    insert into t_oa_maintainreqbill (fcompanyid,fdepartmentid,flocation,fmaintaintypes,fmaintenancemanid,ffinishdate,freceiverid,fexaminerid,fprocessinstanceid,fprocessstatus,fprocessbegindate,fprocessenddate,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
-    values(#{company.id},#{department.id},#{location},#{maintainTypes,typeHandler=describableEnumArrayHandler},#{maintenanceMan.id},#{finishDate},#{receiver.id},#{examiner.id},#{processInstanceId},#{processStatus},#{processBeginDate},#{processEndDate},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
+    insert into t_oa_maintainreqbill (fcompanyid,fdepartmentid,flocation,fmaintaintypes,fmaintenancemanid,ffinishdate,fmaintainreply,freceiverid,fexaminerid,fprocessinstanceid,fprocessstatus,fprocessbegindate,fprocessenddate,fbillnumber,fdescription,fsourcebillid,fcreateuserid,fcreatedate,flastupdateuserid,flastupdatedate,fid) 
+    values(#{company.id},#{department.id},#{location},#{maintainTypes,typeHandler=describableEnumArrayHandler},#{maintenanceMan.id},#{finishDate},#{maintainReply},#{receiver.id},#{examiner.id},#{processInstanceId},#{processStatus},#{processBeginDate},#{processEndDate},#{billNumber},#{description},#{sourceBill.id},#{createUser.id},#{createDate},#{lastUpdateUser.id},#{lastUpdateDate},#{id})
   </insert>
 
   <!-- 通用记录更新操作 --> 
   <update id="updateEntity" parameterType="MaintainReqBillInfo">
-    update t_oa_maintainreqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},flocation=#{location},fmaintaintypes=#{maintainTypes,typeHandler=describableEnumArrayHandler},fmaintenancemanid=#{maintenanceMan.id},ffinishdate=#{finishDate},freceiverid=#{receiver.id},fexaminerid=#{examiner.id},fprocessinstanceid=#{processInstanceId},
+    update t_oa_maintainreqbill set fcompanyid=#{company.id},fdepartmentid=#{department.id},flocation=#{location},fmaintaintypes=#{maintainTypes,typeHandler=describableEnumArrayHandler},fmaintenancemanid=#{maintenanceMan.id},ffinishdate=#{finishDate},fmaintainreply=#{maintainReply},freceiverid=#{receiver.id},fexaminerid=#{examiner.id},fprocessinstanceid=#{processInstanceId},
     fprocessstatus=#{processStatus},fprocessbegindate=#{processBeginDate},fprocessenddate=#{processEndDate},fbillnumber=#{billNumber},fdescription=#{description},fsourcebillid=#{sourceBill.id},fcreateuserid=#{createUser.id},fcreatedate=#{createDate},flastupdateuserid=#{lastUpdateUser.id},flastupdatedate=#{lastUpdateDate},fversion=fversion+1 where fid=#{id} and fversion=#{version}
   </update>
 

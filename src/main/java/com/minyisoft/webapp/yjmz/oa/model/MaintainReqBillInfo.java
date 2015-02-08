@@ -17,6 +17,7 @@ import com.minyisoft.webapp.core.annotation.Label;
 import com.minyisoft.webapp.core.annotation.ModelKey;
 import com.minyisoft.webapp.yjmz.common.model.CompanyWorkFlowBillBaseInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
+import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainReplyEnum;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
 
 /**
@@ -38,6 +39,8 @@ public class MaintainReqBillInfo extends CompanyWorkFlowBillBaseInfo {
 	// 完成日期
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date finishDate;
+	// 维修答复
+	private MaintainReplyEnum maintainReply;
 	// 维修材料分录
 	private List<MaintainReqEntryInfo> entry;
 	// 接单人
