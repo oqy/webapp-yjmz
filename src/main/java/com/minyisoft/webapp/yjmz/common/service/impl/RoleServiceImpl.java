@@ -41,4 +41,9 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleCriteria, Rol
 			}
 		}
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }

@@ -39,4 +39,9 @@ public class AcceptanceBillServiceImpl extends
 		super.addNew(info);
 		workFlowProcessService.startProcess(info);
 	}
+	
+	@Override
+	protected boolean useModelCache() {
+		return true;
+	}
 }
