@@ -1,5 +1,7 @@
 package com.minyisoft.webapp.yjmz.weixin.web;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,29 +15,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.common.collect.Lists;
 import com.minyisoft.webapp.core.model.IModelObject;
 import com.minyisoft.webapp.core.security.utils.PermissionUtils;
 import com.minyisoft.webapp.core.utils.ObjectUuidUtils;
 import com.minyisoft.webapp.core.web.BaseController;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.EventMessage;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.EventType;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.MenuMessage;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.Message;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageConverter;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.MessageType;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.ScanCodeMenuMessage;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.TransferCustomerService;
-import com.minyisoft.webapp.weixin.common.model.dto.receive.messagenode.ScanCodeConverter;
-import com.minyisoft.webapp.weixin.common.model.dto.send.Article;
-import com.minyisoft.webapp.weixin.common.service.WeixinCommonService;
-import com.minyisoft.webapp.weixin.common.service.WeixinPostService;
+import com.minyisoft.webapp.weixin.mp.dto.MpDevCredential;
+import com.minyisoft.webapp.weixin.mp.dto.MpEnvelope;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.EventMessage;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.EventType;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.MenuMessage;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.Message;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.MessageType;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.RequestMessage;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.ScanCodeMenuMessage;
+import com.minyisoft.webapp.weixin.mp.dto.message.request.response.TransferCustomerServiceMessage;
+import com.minyisoft.webapp.weixin.mp.dto.message.send.Article;
+import com.minyisoft.webapp.weixin.mp.service.MpPostService;
+import com.minyisoft.webapp.weixin.mp.util.MessageMapper;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.entity.WeixinTemplateMessage;
 import com.minyisoft.webapp.yjmz.common.service.MessageService;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor;
-import com.thoughtworks.xstream.XStream;
 
 /**
  * @author yongan_cui 微信公众平台controller
@@ -43,17 +46,16 @@ import com.thoughtworks.xstream.XStream;
 @Controller
 @RequestMapping("/weixin")
 public class WeixinController extends BaseController {
-	private XStream xStream;
 	@Autowired
 	private TaskExecutor taskExecutor;
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private WeixinCommonService weixinCommonService;
-	@Autowired
-	private WeixinPostService weixinPostService;
+	private MpPostService mpPostService;
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+	private MpDevCredential mpDevCredential;
 
 	// 公众号微信号
 	@Value("#{applicationProperties['weixin.weixinNumber']}")
@@ -74,14 +76,6 @@ public class WeixinController extends BaseController {
 	@Value("#{applicationProperties['weixin.web_oa_pic']}")
 	private String webOAPicPath;
 
-	public WeixinController() {
-		xStream = new XStream();
-		xStream.alias("xml", Message.class);
-		xStream.autodetectAnnotations(true);
-		xStream.registerConverter(new MessageConverter());
-		xStream.registerConverter(new ScanCodeConverter());
-	}
-
 	/**
 	 * 申请接入
 	 */
@@ -97,7 +91,7 @@ public class WeixinController extends BaseController {
 	@RequestMapping(value = "receiveMessage.html", method = RequestMethod.POST)
 	public ResponseEntity<String> receiveMessage(@RequestBody final String messageString) {
 		logger.info("接收来自微信的信息：" + messageString);
-		final Message message = (Message) xStream.fromXML(messageString);
+		final RequestMessage message = MessageMapper.fromXML(messageString);
 		// 只处理系统定义了的消息
 		if (message != null) {
 			taskExecutor.execute(new Runnable() {
@@ -113,13 +107,14 @@ public class WeixinController extends BaseController {
 
 			// 非事件推送消息，将消息转发到多客服
 			if (dkfEnabled && !(message instanceof EventMessage)) {
-				TransferCustomerService tcs = new TransferCustomerService();
+				TransferCustomerServiceMessage tcs = new TransferCustomerServiceMessage();
 				tcs.setFromUserName(weixinNumber);
 				tcs.setToUserName(message.getFromUserName());
 				tcs.setCreateTime(message.getCreateTime());
 				tcs.setMsgType(MessageType.TRANSFER_CUSTOMER_SERVICE);
-				logger.info("转发多客服消息：" + xStream.toXML(tcs));
-				return new ResponseEntity<String>(xStream.toXML(tcs), HttpStatus.OK);
+				String tcsMessage = MessageMapper.toXML(tcs);
+				logger.info("转发多客服消息：" + tcsMessage);
+				return new ResponseEntity<String>(tcsMessage, HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<String>("", HttpStatus.OK);
@@ -129,9 +124,10 @@ public class WeixinController extends BaseController {
 	 * 处理微信消息
 	 */
 	private void _processReceivedMessage(final Message message, final String messageString) {
+		MpEnvelope envelope = new MpEnvelope(mpDevCredential, message.getFromUserName());
 		// 关注
 		if (message instanceof EventMessage && ((EventMessage) message).getEvent() == EventType.SUBSCRIBE) {
-			weixinPostService.postTextMessage(message.getFromUserName(), welcomeSubscribe);
+			mpPostService.postTextMessage(envelope, welcomeSubscribe);
 		}
 		// 取消关注
 		else if (message instanceof EventMessage && ((EventMessage) message).getEvent() == EventType.UNSUBSCRIBE) {
@@ -153,9 +149,11 @@ public class WeixinController extends BaseController {
 				article.setTitle("雍憬明珠微办公系统");
 				article.setDescription("欢迎使用雍憬明珠微办公系统，请点击登录。");
 				article.setURL(WeixinOAuthInterceptor.appendWeixinTicket(webDomain + "/login.html",
-						weixinCommonService.genWeixinTicket(message.getFromUserName())));
+						mpPostService.genWeixinTicket(envelope)));
 				article.setPicurl(webOAPicPath);
-				weixinPostService.postNewsMessage(message.getFromUserName(), article);
+				List<Article> articles = Lists.newArrayList();
+				articles.add(article);
+				mpPostService.postNewsMessage(envelope, articles);
 				break;
 			case SCAN_CODE:
 				if (message instanceof ScanCodeMenuMessage
@@ -167,7 +165,7 @@ public class WeixinController extends BaseController {
 							&& ((WorkFlowBusinessModel) model).getProcessStatus() != null) {
 						_postWorkFlowBusinessModelDetail((WorkFlowBusinessModel) model, message.getFromUserName());
 					} else {
-						weixinPostService.postTextMessage(message.getFromUserName(), "抱歉，不存在指定的工作流任务信息");
+						mpPostService.postTextMessage(envelope, "抱歉，不存在指定的工作流任务信息");
 					}
 				}
 				break;
@@ -176,7 +174,9 @@ public class WeixinController extends BaseController {
 				article.setTitle("栏目建设中");
 				article.setDescription("栏目建设中，敬请期待。");
 				article.setPicurl(buildColumnPicPath);
-				weixinPostService.postNewsMessage(message.getFromUserName(), article);
+				articles = Lists.newArrayList();
+				articles.add(article);
+				mpPostService.postNewsMessage(envelope, articles);
 				break;
 			}
 		}

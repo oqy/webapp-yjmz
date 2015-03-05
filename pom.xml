@@ -8,15 +8,11 @@
 
 	<properties>
 		<!-- 主要依赖库的版本定义 -->
+		<spring-io.version>1.1.0.RELEASE</spring-io.version>
+		<webapp-core.version>1.0.0-SNAPSHOT</webapp-core.version>
 		<weixin-common.version>1.0.0-SNAPSHOT</weixin-common.version>
 		<javax-servlet.version>2.5</javax-servlet.version>
-		<mysql.version>5.1.32</mysql.version>
-		<xstream.version>1.4.5</xstream.version>
-		<spring.version>4.0.1.RELEASE</spring.version>
-		<junit.version>4.11</junit.version>
 		<activiti-spring.version>5.16.1</activiti-spring.version>
-		<commons-fileupload.version>1.3.1</commons-fileupload.version>
-		<poi.version>3.10.1</poi.version>
 		<zxing.version>3.1.0</zxing.version>
 
 		<!-- Plugin的属性定义 -->
@@ -45,8 +41,25 @@
 		</repository>
 	</repositories>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.spring.platform</groupId>
+				<artifactId>platform-bom</artifactId>
+				<version>${spring-io.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<!-- 依赖项定义 -->
 	<dependencies>
+	    <dependency>
+			<groupId>com.minyisoft.webapp</groupId>
+			<artifactId>webapp-core</artifactId>
+			<version>${webapp-core.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.minyisoft.webapp</groupId>
 			<artifactId>weixin-common</artifactId>
@@ -61,12 +74,10 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-			<version>${xstream.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.activiti</groupId>
@@ -90,18 +101,10 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<version>${commons-fileupload.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>${poi.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-codec</artifactId>
-					<groupId>commons-codec</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.google.zxing</groupId>
@@ -113,20 +116,11 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 

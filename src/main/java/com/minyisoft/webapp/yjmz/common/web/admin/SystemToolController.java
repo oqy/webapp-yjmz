@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Maps;
-import com.minyisoft.webapp.core.utils.spring.cache.ModelCacheManager;
+import com.minyisoft.webapp.core.utils.spring.cache.ehcache.EhCacheCacheManager;
 import com.minyisoft.webapp.core.web.BaseController;
-import com.minyisoft.webapp.weixin.common.service.WeixinCommonService;
+import com.minyisoft.webapp.weixin.mp.dto.MpDevCredential;
+import com.minyisoft.webapp.weixin.mp.service.AbstractMpService;
+import com.minyisoft.webapp.weixin.mp.service.MpJsApiService;
 
 /**
  * @author qingyong_ou 系统角色管理controller
@@ -21,9 +23,11 @@ import com.minyisoft.webapp.weixin.common.service.WeixinCommonService;
 @RequestMapping("/admin")
 public class SystemToolController extends BaseController {
 	@Autowired
-	private ModelCacheManager cacheManager;
+	private EhCacheCacheManager cacheManager;
 	@Autowired
-	private WeixinCommonService weixinCommonService;
+	private MpJsApiService mpJsApiService;
+	@Autowired
+	private MpDevCredential mpDevCredential;
 
 	/**
 	 * 获取缓存清理页面
@@ -40,7 +44,7 @@ public class SystemToolController extends BaseController {
 	@ResponseBody
 	public Map<String, String> getWeixinAccessToken() {
 		Map<String, String> accessTokenMap = Maps.newHashMap();
-		accessTokenMap.put("access_token", weixinCommonService.getAccessToken());
+		accessTokenMap.put("access_token", mpJsApiService.getAccessToken(mpDevCredential));
 		return accessTokenMap;
 	}
 
@@ -59,7 +63,7 @@ public class SystemToolController extends BaseController {
 	 */
 	@RequestMapping(value = "cacheClear.html", method = RequestMethod.POST, params = "clearWeixinAccessToken")
 	public String clearWeixinAccessTokenCache(RedirectAttributes redirectAttributes) {
-		weixinCommonService.clearAccessTokenCache();
+		cacheManager.getCache(AbstractMpService.CACHE_NAME).clear();
 		redirectAttributes.addFlashAttribute("msg", "微信access token缓存清理完毕");
 		return "redirect:cacheManager.html";
 	}

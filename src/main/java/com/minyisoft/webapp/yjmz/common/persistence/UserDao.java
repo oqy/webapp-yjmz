@@ -1,10 +1,16 @@
 package com.minyisoft.webapp.yjmz.common.persistence;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+
 import com.minyisoft.webapp.core.persistence.BaseDao;
-import com.minyisoft.webapp.core.utils.spring.cache.annotation.ModelCacheEvict;
+import com.minyisoft.webapp.core.utils.spring.cache.ModelObjectCacheManager;
+import com.minyisoft.webapp.core.utils.spring.cache.ModelObjectCacheType;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
 
+@ModelObjectCacheType(modelType = UserInfo.class)
+@CacheConfig(cacheNames = ModelObjectCacheManager.DUMMY_CACHE)
 public interface UserDao extends BaseDao<UserInfo, UserCriteria> {
 	/**
 	 * 累加用户登录次数
@@ -12,7 +18,7 @@ public interface UserDao extends BaseDao<UserInfo, UserCriteria> {
 	 * @param user
 	 * @return
 	 */
-	@ModelCacheEvict(modelType = UserInfo.class, key = "#p0.id")
+	@CacheEvict(key = "#p0.id")
 	int increaseUserLoginCount(UserInfo user);
 
 	/**
@@ -21,6 +27,6 @@ public interface UserDao extends BaseDao<UserInfo, UserCriteria> {
 	 * @param weixinOpenId
 	 * @return
 	 */
-	@ModelCacheEvict(modelType = UserInfo.class, allEntries = true)
+	@CacheEvict(allEntries = true)
 	int clearWeixinOpenId(String weixinOpenId);
 }

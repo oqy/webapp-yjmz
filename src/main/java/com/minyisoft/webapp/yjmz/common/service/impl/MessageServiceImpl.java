@@ -10,9 +10,10 @@ import org.springframework.util.Assert;
 import com.google.common.collect.Maps;
 import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
-import com.minyisoft.webapp.weixin.common.model.dto.send.TemplateMessageData;
-import com.minyisoft.webapp.weixin.common.service.WeixinCommonService;
-import com.minyisoft.webapp.weixin.common.service.WeixinPostService;
+import com.minyisoft.webapp.weixin.mp.dto.MpDevCredential;
+import com.minyisoft.webapp.weixin.mp.dto.MpEnvelope;
+import com.minyisoft.webapp.weixin.mp.dto.message.send.TemplateMessageData;
+import com.minyisoft.webapp.weixin.mp.service.MpPostService;
 import com.minyisoft.webapp.yjmz.common.model.MessageInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.MessageCriteria;
@@ -26,9 +27,9 @@ import com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor;
 public class MessageServiceImpl extends BaseServiceImpl<MessageInfo, MessageCriteria, MessageDao> implements
 		MessageService {
 	@Autowired
-	private WeixinCommonService weixinCommonService;
+	private MpPostService mpPostService;
 	@Autowired
-	private WeixinPostService weixinPostService;
+	private MpDevCredential mpDevCredential;
 
 	@Override
 	public void delete(MessageInfo info) {
@@ -68,11 +69,12 @@ public class MessageServiceImpl extends BaseServiceImpl<MessageInfo, MessageCrit
 				messageData.put(templateMessage.getPlaceholders()[i], new TemplateMessageData(params[i]));
 			}
 
-			weixinPostService.postTemplateMessage(
-					weixinOpenId,
+			MpEnvelope envelope = new MpEnvelope(mpDevCredential, weixinOpenId);
+			mpPostService.postTemplateMessage(
+					envelope,
 					templateMessage.getTemplateId(),
 					StringUtils.isBlank(url) ? null : WeixinOAuthInterceptor.appendWeixinTicket(url,
-							weixinCommonService.genWeixinTicket(weixinOpenId)), messageData);
+							mpPostService.genWeixinTicket(envelope)), messageData);
 		}
 	}
 }
