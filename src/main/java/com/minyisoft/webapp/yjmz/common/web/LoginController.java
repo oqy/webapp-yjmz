@@ -14,11 +14,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.web.BaseController;
+import com.minyisoft.webapp.weixin.mp.util.MpConstant;
 import com.minyisoft.webapp.yjmz.common.model.CompanyInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
 import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
-import com.minyisoft.webapp.yjmz.weixin.web.interceptor.WeixinOAuthInterceptor;
 
 /**
  * @author qingyong_ou 用户登入登出controller
@@ -48,7 +48,7 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "/login.html", method = RequestMethod.POST)
 	public String login(@RequestParam("userLoginName") String userLoginName,
 			@RequestParam("userPassword") String userPassword,
-			@RequestParam(value = WeixinOAuthInterceptor.WEIXIN_OPEN_ID, required = false) String weixinOpenId,
+			@RequestParam(value = MpConstant.WEIXIN_OPEN_ID_VAR_NAME, required = false) String weixinOpenId,
 			RedirectAttributes redirectAttributes) {
 		if (StringUtils.hasText(userLoginName) && StringUtils.hasText(userPassword)) {
 			try {
@@ -61,10 +61,6 @@ public class LoginController extends BaseController {
 				ISystemOrgObject loginOrg = _getLoginOrg(loginUser);
 				if (loginOrg != null) {
 					userService.switchOrg(loginUser, loginOrg);
-					// 绑定微信号
-					if (StringUtils.hasText(weixinOpenId)) {
-						userService.bindWeixinOpenId(userService.getValue(loginUser.getId()), weixinOpenId);
-					}
 					return "redirect:manage/index.html";
 				} else {
 					redirectAttributes.addFlashAttribute("errorMsg", "抱歉，您尚不隶属系统内任何公司，暂不能使用系统，请首先联系系统管理员添加组织隶属关系");

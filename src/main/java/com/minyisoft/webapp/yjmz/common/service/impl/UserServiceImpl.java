@@ -19,6 +19,7 @@ import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.PermissionInfo;
 import com.minyisoft.webapp.core.security.shiro.BasePrincipal;
 import com.minyisoft.webapp.core.service.impl.BaseServiceImpl;
+import com.minyisoft.webapp.weixin.mp.util.MpConstant;
 import com.minyisoft.webapp.yjmz.common.model.RoleInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.criteria.UserCriteria;
@@ -53,11 +54,14 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 
 		// 累增用户登录次数并记录登录日志
 		getBaseDao().increaseUserLoginCount(loginUser);
-		/*
-		 * if (loginDetail == null) { loginDetail = new UserLoginLogEntity(); }
-		 * loginDetail.setUser(loginUser);
-		 * userDao.insertUserLoginLog(loginDetail);
-		 */
+
+		// 绑定服务微信服务号openId
+		String weixinOpenId = (String) securitySubject.getSession().getAttribute(MpConstant.WEIXIN_OPEN_ID_VAR_NAME);
+		if (StringUtils.isNotBlank(weixinOpenId)) {
+			getBaseDao().clearWeixinOpenId(weixinOpenId);
+			getBaseDao().bindWeixinOpenId(loginUser, weixinOpenId);
+			securitySubject.getSession().removeAttribute(MpConstant.WEIXIN_OPEN_ID_VAR_NAME);
+		}
 		return loginUser;
 	}
 
@@ -114,15 +118,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserCriteria, Use
 			permissionList.addAll(role.getPermissions());
 		}
 		return ImmutableList.copyOf(permissionList);
-	}
-
-	@Override
-	public void bindWeixinOpenId(UserInfo user, String weixinOpenId) {
-		Assert.notNull(user, "待绑定账户不能为空");
-		Assert.hasText(weixinOpenId, "待绑定微信openId不能为空");
-		getBaseDao().clearWeixinOpenId(weixinOpenId);
-		user.setWeixinOpenId(weixinOpenId);
-		save(user);
 	}
 
 	@Override

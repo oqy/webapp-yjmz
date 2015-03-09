@@ -1,5 +1,6 @@
 package com.minyisoft.webapp.yjmz.common.persistence;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 
@@ -29,4 +30,14 @@ public interface UserDao extends BaseDao<UserInfo, UserCriteria> {
 	 */
 	@CacheEvict(allEntries = true)
 	int clearWeixinOpenId(String weixinOpenId);
+
+	/**
+	 * 绑定微信用户id
+	 * 
+	 * @param user
+	 * @param weixinOpenId
+	 * @return
+	 */
+	@CacheEvict(key = "#p0.id")
+	int bindWeixinOpenId(@Param("user") UserInfo user, @Param("weixinOpenId") String weixinOpenId);
 }

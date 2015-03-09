@@ -126,10 +126,14 @@
   </delete>
   
   <update id="increaseUserLoginCount" parameterType="UserInfo">
-    update t_common_user set flogincount=flogincount+1,flastlogintime=now(),fversion=fversion+1 where fid=#{id} and fversion=#{version}
+    update t_common_user set flogincount=flogincount+1,flastlogintime=now() where fid=#{id} and fversion=#{version}
   </update>
   
   <update id="clearWeixinOpenId" parameterType="String">
     update t_common_user set fweixinopenid=null where fweixinopenid=#{id}
+  </update>
+  
+  <update id="bindWeixinOpenId">
+    update t_common_user set fweixinopenid=#{weixinOpenId} where fid=#{user.id}
   </update>
 </mapper>

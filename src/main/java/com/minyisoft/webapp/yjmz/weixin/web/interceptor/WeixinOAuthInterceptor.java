@@ -13,6 +13,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.google.common.base.Optional;
 import com.minyisoft.webapp.weixin.mp.dto.MpDevCredential;
 import com.minyisoft.webapp.weixin.mp.service.MpPostService;
+import com.minyisoft.webapp.weixin.mp.util.MpConstant;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
 import com.minyisoft.webapp.yjmz.common.service.UserService;
@@ -22,9 +23,7 @@ import com.minyisoft.webapp.yjmz.common.service.UserService;
  */
 public class WeixinOAuthInterceptor extends HandlerInterceptorAdapter {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	public final static String WEIXIN_OPEN_ID = "weixinOpenId";
-	private final static String WEIXIN_TICKET = "weixinTicket";// 微信ticket
-																// url参数名
+
 	@Autowired
 	private MpPostService mpPostService;
 	@Autowired
@@ -34,14 +33,14 @@ public class WeixinOAuthInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		String weixinOpenId = request.getParameter(WEIXIN_OPEN_ID);
+		String weixinOpenId = request.getParameter(MpConstant.WEIXIN_OPEN_ID_VAR_NAME);
 		if (StringUtils.isNotBlank(weixinOpenId)) {
 			logger.info(new StringBuffer("由微信客户端进入网页，微信openId：").append(weixinOpenId).append("，待访问网址：")
 					.append(request.getRequestURI()).toString());
 
-		} else if (StringUtils.isNotBlank(request.getParameter(WEIXIN_TICKET))) {
-			Optional<String> optionalWeixinOpenId = mpPostService
-					.getOpenIdByTicket(request.getParameter(WEIXIN_TICKET));
+		} else if (StringUtils.isNotBlank(request.getParameter(MpConstant.WEIXIN_TICKET_VAR_NAME))) {
+			Optional<String> optionalWeixinOpenId = mpPostService.getOpenIdByTicket(request
+					.getParameter(MpConstant.WEIXIN_TICKET_VAR_NAME));
 			if (optionalWeixinOpenId.isPresent()) {
 				weixinOpenId = optionalWeixinOpenId.get();
 				logger.info(new StringBuffer("由微信ticket获取微信openid：").append(weixinOpenId).toString());
@@ -59,7 +58,8 @@ public class WeixinOAuthInterceptor extends HandlerInterceptorAdapter {
 		}
 		// 获取微信openId后，若对应用户已注册但尚未登录，执行登录操作
 		if (weixinOpenId != null) {
-			request.getSession().setAttribute(WEIXIN_OPEN_ID, weixinOpenId);
+			org.apache.shiro.SecurityUtils.getSubject().getSession()
+					.setAttribute(MpConstant.WEIXIN_OPEN_ID_VAR_NAME, weixinOpenId);
 
 			UserInfo weixinUser = userService.getValue(weixinOpenId);
 			// 由于当前对象更新后redis缓存内没有清楚hashkey的对应关系，因此先在这里再做一次微信openId匹配判断
@@ -92,6 +92,6 @@ public class WeixinOAuthInterceptor extends HandlerInterceptorAdapter {
 		} else {
 			appendUrl.append("?");
 		}
-		return appendUrl.append(WEIXIN_TICKET).append("=").append(ticket).toString();
+		return appendUrl.append(MpConstant.WEIXIN_TICKET_VAR_NAME).append("=").append(ticket).toString();
 	}
 }

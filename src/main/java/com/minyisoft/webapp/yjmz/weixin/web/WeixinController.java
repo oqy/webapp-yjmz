@@ -33,6 +33,7 @@ import com.minyisoft.webapp.weixin.mp.dto.message.request.response.TransferCusto
 import com.minyisoft.webapp.weixin.mp.dto.message.send.Article;
 import com.minyisoft.webapp.weixin.mp.service.MpPostService;
 import com.minyisoft.webapp.weixin.mp.util.MessageMapper;
+import com.minyisoft.webapp.weixin.mp.util.WeixinValidationUtils;
 import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.entity.WeixinTemplateMessage;
@@ -57,6 +58,8 @@ public class WeixinController extends BaseController {
 	@Autowired
 	private MpDevCredential mpDevCredential;
 
+	@Value("#{applicationProperties['weixin.token']}")
+	private String weixinToken;
 	// 公众号微信号
 	@Value("#{applicationProperties['weixin.weixinNumber']}")
 	private String weixinNumber;
@@ -80,7 +83,11 @@ public class WeixinController extends BaseController {
 	 * 申请接入
 	 */
 	@RequestMapping(value = "receiveMessage.html", method = RequestMethod.GET, params = "echostr")
-	public ResponseEntity<String> apply(@RequestParam String echostr) {
+	public ResponseEntity<String> apply(@RequestParam String timestamp, @RequestParam String nonce,
+			@RequestParam String signature, @RequestParam String echostr) {
+		if (!WeixinValidationUtils.isSignatureValid(timestamp, nonce, weixinToken, signature)) {
+			return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+		}
 		logger.info("验证接入微信，原样返回echostr参数内容");
 		return new ResponseEntity<String>(echostr, HttpStatus.OK);
 	}
@@ -89,7 +96,12 @@ public class WeixinController extends BaseController {
 	 * 接收信息，采用新线程处理信息，避免形成阻塞
 	 */
 	@RequestMapping(value = "receiveMessage.html", method = RequestMethod.POST)
-	public ResponseEntity<String> receiveMessage(@RequestBody final String messageString) {
+	public ResponseEntity<String> receiveMessage(@RequestParam String timestamp, @RequestParam String nonce,
+			@RequestParam String signature, @RequestBody final String messageString) {
+		if (!WeixinValidationUtils.isSignatureValid(timestamp, nonce, weixinToken, signature)) {
+			return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+		}
+
 		logger.info("接收来自微信的信息：" + messageString);
 		final RequestMessage message = MessageMapper.fromXML(messageString);
 		// 只处理系统定义了的消息

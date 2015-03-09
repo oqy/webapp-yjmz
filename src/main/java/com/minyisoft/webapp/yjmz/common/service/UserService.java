@@ -44,12 +44,4 @@ public interface UserService extends BaseService<UserInfo, UserCriteria> {
 	 * @return
 	 */
 	List<PermissionInfo> getUserPermissions(UserInfo user, ISystemOrgObject org);
-
-	/**
-	 * 绑定微信用户
-	 * 
-	 * @param user
-	 * @param weixinOpenId
-	 */
-	void bindWeixinOpenId(UserInfo user, String weixinOpenId);
 }
