@@ -72,9 +72,8 @@ public class MessageServiceImpl extends BaseServiceImpl<MessageInfo, MessageCrit
 			MpEnvelope envelope = new MpEnvelope(mpDevCredential, weixinOpenId);
 			mpPostService.postTemplateMessage(
 					envelope,
-					templateMessage.getTemplateId(),
 					StringUtils.isBlank(url) ? null : WeixinOAuthInterceptor.appendWeixinTicket(url,
-							mpPostService.genWeixinTicket(envelope)), messageData);
+							mpPostService.genWeixinTicket(envelope)), templateMessage.getTemplateId(), messageData);
 		}
 	}
 }
