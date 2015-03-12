@@ -51,7 +51,7 @@
     <tr>
       <td colspan="4"><label th:each="type : ${maintainTypes}" class="checkbox-inline">
         <input type="checkbox" disabled="disabled" th:checked="${#arrays.contains(maintainReqBill.maintainTypes, type)}" th:text="${type.description}"/>
-        1 </label>
+        </label>
       </td>
     </tr>
     <tr>
