@@ -90,7 +90,7 @@
       </tr>
     </tbody>
   </table>
-  <input type="hidden" id="examiner" name="examiner" th:with="departmentLeader=${maintainReqBill.department!=null}?${@userOrgRelationService.getDepartmentLeader(maintainReqBill.department)}" th:value="${departmentLeader!=null and departmentLeader.present}?${departmentLeader.get().id}:${maintainReqBill.createUser.id}"/>
+  <input type="hidden" id="examiner" name="examiner" th:value="${maintainReqBill.createUser.id}"/>
   <input type="hidden" id="finishDate" name="finishDate" th:value="${#dates.format(#dates.createToday(),'yyyy-MM-dd')}"/>
 </div>
 <div th:fragment="maintainAssign">
