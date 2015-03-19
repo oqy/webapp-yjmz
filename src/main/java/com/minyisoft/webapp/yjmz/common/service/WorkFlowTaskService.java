@@ -73,4 +73,12 @@ public interface WorkFlowTaskService {
 	 * @return
 	 */
 	List<Task> getProcessInstanceActiveTasks(String processInstanceId);
+
+	/**
+	 * 重设任务执行人
+	 * 
+	 * @param taskId
+	 * @param newAssignee
+	 */
+	void changeAssignee(String taskId, UserInfo newAssignee);
 }

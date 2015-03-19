@@ -11,6 +11,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -123,5 +124,12 @@ public class WorkFlowTaskServiceImpl implements WorkFlowTaskService {
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
 		return processInstance != null ? (WorkFlowBusinessModel) ServiceUtils
 				.getModel(processInstance.getBusinessKey()) : null;
+	}
+
+	@Override
+	public void changeAssignee(String taskId, UserInfo newAssignee) {
+		Assert.hasText(taskId);
+		Assert.isTrue(newAssignee != null && StringUtils.isNotBlank(newAssignee.getCellPhoneNumber()));
+		taskService.setAssignee(taskId, newAssignee.getCellPhoneNumber());
 	}
 }

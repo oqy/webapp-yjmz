@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.web.BaseController;
+import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowBusinessModel;
 import com.minyisoft.webapp.yjmz.common.model.WorkFlowConfigInfo;
+import com.minyisoft.webapp.yjmz.common.model.criteria.UserOrgRelationCriteria;
 import com.minyisoft.webapp.yjmz.common.security.SecurityUtils;
+import com.minyisoft.webapp.yjmz.common.service.UserOrgRelationService;
 import com.minyisoft.webapp.yjmz.common.service.WorkFlowProcessService;
+import com.minyisoft.webapp.yjmz.common.service.WorkFlowTaskService;
 import com.minyisoft.webapp.yjmz.common.util.workflow.ActivitiHelper;
 import com.minyisoft.webapp.yjmz.oa.model.MaintainReqBillInfo;
 import com.minyisoft.webapp.yjmz.oa.model.enumField.MaintainTypeEnum;
@@ -38,6 +43,10 @@ public class WorkFlowProcessController extends BaseController {
 	private HistoryService historyService;
 	@Autowired
 	private RuntimeService runtimeService;
+	@Autowired
+	private UserOrgRelationService userOrgRelationService;
+	@Autowired
+	private WorkFlowTaskService workFlowTaskService;
 
 	/**
 	 * 获取运行中的工作流程实例列表
@@ -125,8 +134,28 @@ public class WorkFlowProcessController extends BaseController {
 			model.addAttribute("processInstance", processInstance);
 			model.addAttribute("historicTaskInstances",
 					ActivitiHelper.getHistoricTaskInstances(businessModel.getProcessInstanceId()));
+
+			UserOrgRelationCriteria criteria = new UserOrgRelationCriteria();
+			criteria.setOrg(businessModel.getCompany());
+			model.addAttribute("userOrgRelations", userOrgRelationService.getCollection(criteria));
 		}
 		return "admin/workFlowDetail";
+	}
+
+	/**
+	 * 更改任务执行人
+	 */
+	@RequestMapping(value = "changeTaskAssignee.html", method = RequestMethod.POST, params = "workFlowModelId")
+	public String changeTaskAssignee(@RequestParam(value = "workFlowModelId", required = false) String workFlowModelId,
+			@RequestParam(value = "taskId", required = false) String taskId,
+			@RequestParam(value = "assignee", required = false) UserInfo assignee) {
+		if (StringUtils.isNotBlank(taskId) && assignee != null) {
+			workFlowTaskService.changeAssignee(taskId, assignee);
+		}
+		if (StringUtils.isNotBlank(workFlowModelId)) {
+			return "redirect:workFlowDetail.html?workFlowModelId=" + workFlowModelId;
+		}
+		return "redirect:processInstances.html";
 	}
 
 	/**

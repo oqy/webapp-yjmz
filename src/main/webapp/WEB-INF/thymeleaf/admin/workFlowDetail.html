@@ -4,7 +4,8 @@
 <title th:text="${classLabel}+'详情-敏易在线办公系统'">编辑工作报告-敏易在线办公系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style type="text/css" th:substituteby="component/resource::css"></style>
+<style type="text/css" th:substituteby="component/resource::css">
+</style>
 </head>
 <body>
 <!-- navbar -->
@@ -56,7 +57,7 @@
             <tr th:each="task : ${historicTaskInstances}">
               <td th:text="${taskStat.count+1}"></td>
               <td th:text="${task.name}"></td>
-              <td th:text="${!#strings.isEmpty(task.assignee)}?${@userService.getValue(task.assignee).name}"></td>
+              <td><span th:remove="tag" th:text="${!#strings.isEmpty(task.assignee)}?${@userService.getValue(task.assignee).name}"></span><a style="margin-left: 5px;" href="#" th:rel="${task.id}" th:if="${task.endTime==null}" class="text-danger change-assignee">[更换执行人]</a></td>
               <td th:text="${task.startTime!=null}?${#dates.format(task.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
               <td th:text="${task.claimTime!=null}?${#dates.format(task.claimTime,'yyyy-MM-dd HH:mm:ss')}"></td>
               <td th:text="${task.endTime!=null}?${#dates.format(task.endTime,'yyyy-MM-dd HH:mm:ss')}"></td>
@@ -69,7 +70,47 @@
     </div>
   </div>
 </div>
+<!-- 更换执行人模态框 begin -->
+<div class="modal fade" id="diagramModal" tabindex="-1" role="dialog" aria-labelledby="diagramModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">更换执行人</h4>
+      </div>
+      <div class="modal-body">
+        <form method="post" th:action="@{'/admin/changeTaskAssignee.html'}">
+          <div class="form-group">
+            <label for="assignee" class="col-md-2 control-label">新执行人：</label>
+            <div class="col-md-6">
+              <select id="assignee" name="assignee" class="form-control">
+                <option th:each="userOrgRelation : ${userOrgRelations}" th:value="${userOrgRelation.user.id}" th:text="${userOrgRelation.user.name}"></option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-default">提交</button>
+              <button type="reset" class="btn btn-info">重置</button>
+              <input id="taskId" name="taskId" type="hidden"/>
+              <input name="workFlowModelId" type="hidden" th:value="${businessModel.id}"/>
+            </div>
+          </div>
+        </form>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 更换执行人模态框 end -->
 <!-- end main container -->
 <script type="text/javascript" th:include="component/resource::js" th:with="menu='menu_workflow_config'" th:remove="tag"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('a.change-assignee').click(function(){
+		jQuery('#diagramModal #taskId').val(jQuery(this).attr('rel'));
+		jQuery('#diagramModal').modal('show');
+		return false;
+	});
+});
+</script>
 </body>
 </html>
