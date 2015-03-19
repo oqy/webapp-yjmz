@@ -42,7 +42,7 @@
         <td><a th:href="@{'/admin/workFlowDetail.html?workFlowModelId='+${businessModel.id}}" class="btn btn-default btn-sm oprt-ajax" role="button">详情</a></td>
       </tr>
     </table>
-    <div th:if="${!#lists.isEmpty(processInstances)} and ${pageDevice.totalPages gt 1}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${pageDevice},url='historicProcessInstances.html',pageNumberVariableName='currentPage'"></div>
+    <div th:if="${!#lists.isEmpty(processInstances)} and ${pageDevice.totalPages gt 1}" th:include="component/pagination::pagination" th:remove="tag" th:with="pageDevice=${pageDevice},url='historicProcessInstances.html?workFlowConfigId='+${workFlowConfig.id},pageNumberVariableName='currentPage'"></div>
     <div class="alert alert-warning" role="alert" th:if="${#lists.isEmpty(processInstances)}">暂没有已结束的流程实例</div>
   </div>
 </div>
