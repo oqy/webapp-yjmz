@@ -105,18 +105,6 @@
     </div>
   </div>
 </div>
-<div th:fragment="maintainAssign">
-  <div class="form-group">
-    <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;维修技师：</label>
-    <div class="col-md-6">
-      <select id="maintenanceMan" name="maintenanceMan" class="form-control">
-        <option th:value="${currentUser.id}" th:text="${currentUser.name}"></option>
-        <option th:each="user : ${@userOrgRelationService.getSubordinateness(currentCompany,currentUser)}" th:value="${user.id}" th:text="${user.name}"></option>
-      </select>
-      <input type="hidden" id="receiver" name="receiver" th:value="${currentUser.id}"/>
-    </div>
-  </div>
-</div>
 <div th:fragment="maintainReceiveDeptPurchase">
   <div class="form-group">
     <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;物料采购：</label>
