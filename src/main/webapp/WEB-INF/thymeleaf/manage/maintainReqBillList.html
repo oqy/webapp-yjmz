@@ -36,12 +36,12 @@
         </tr>
       </thead>
       <tbody th:if="${!#lists.isEmpty(maintainReqBills)}">
-        <tr th:each="maintainReqBill :${maintainReqBills}" th:with="editable = ${currentUser.equals(maintainReqBill.createUser) and maintainReqBill.processUnStarted}">
+        <tr th:class="${colorBg}?'danger'" th:each="maintainReqBill :${maintainReqBills}" th:with="editable = ${currentUser.equals(maintainReqBill.createUser) and maintainReqBill.processUnStarted}, colorBg = ${filter.criteria.processStatus.value==1 and maintainReqBill.maintainReply!=null and maintainReqBill.maintainReply.value!=0}">
           <td class="hidden-xs"><input type="checkbox" name="exportIds" th:value="${maintainReqBill.id}"/></td>
           <td th:text="${maintainReqBill.department!=null}?${maintainReqBill.department.name}:'-'"></td>
           <td class="hidden-xs" th:text="${#dates.format(maintainReqBill.createDate,'yyyy-MM-dd HH:mm')}"></td>
           <td class="hidden-xs" th:text="${maintainReqBill.createUser.name}"></td>
-          <td th:text="${maintainReqBill.location}"></td>
+          <td><span th:text="${maintainReqBill.location}" th:remove="tag"></span><span th:if="${colorBg}" th:text="'（'+${maintainReqBill.maintainReply.description}+')'" class="text-danger"></span></td>
           <td class="hidden-xs"><span th:each="type : ${maintainReqBill.maintainTypes}" th:text="${type.description}+(${!typeStat.last}?'&nbsp;':'')" th:remove="tag"></span></td>
           <td class="hidden-xs" th:text="${maintainReqBill.maintenanceMan!=null}?${maintainReqBill.maintenanceMan.name}"></td>
           <td class="hidden-xs" th:text="${maintainReqBill.finishDate!=null}?${#dates.format(maintainReqBill.finishDate,'yyyy-MM-dd')}"></td>

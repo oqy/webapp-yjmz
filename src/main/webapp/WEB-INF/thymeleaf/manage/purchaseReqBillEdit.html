@@ -112,6 +112,7 @@
           <button type="submit" class="btn btn-primary">提交</button>
           <button type="reset" class="btn btn-info">重置</button>
           <input name="purchaseReqBillId" type="hidden" th:value="${purchaseReqBill.id}"/>
+          <input name="sourceBill" type="hidden" th:value="${sourceBill.id}" th:if="${sourceBill!=null}"/>
         </div>
       </div>
     </form>

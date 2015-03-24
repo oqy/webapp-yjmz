@@ -1,5 +1,7 @@
 package com.minyisoft.webapp.yjmz.oa.model;
 
+import static org.springframework.util.Assert.notNull;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -94,5 +96,29 @@ public class MaintainReqBillInfo extends CompanyWorkFlowBillBaseInfo {
 	@Override
 	public String getBusinessModelProcessVariableName() {
 		return PROCESS_VARIABLE_NAME;
+	}
+
+	private static final String _PURCHASE_CREATE_PREMISSION = "MaintainReqBill:create";
+
+	/**
+	 * 获取维修单接单部门采购单发起人
+	 * 
+	 * @return
+	 */
+	public UserInfo getReceiveDeptPurchasePromoter() {
+		notNull(receiver);
+		return receiver.hasPermission(getCompany(), _PURCHASE_CREATE_PREMISSION) ? receiver : receiver
+				.getUpperUser(getCompany());
+	}
+
+	/**
+	 * 获取维修单申请部门采购单发起人
+	 * 
+	 * @return
+	 */
+	public UserInfo getApplyDeptDeptPurchasePromoter() {
+		notNull(getCreateUser());
+		return ((UserInfo) getCreateUser()).hasPermission(getCompany(), _PURCHASE_CREATE_PREMISSION) ? ((UserInfo) getCreateUser())
+				: ((UserInfo) getCreateUser()).getUpperUser(getCompany());
 	}
 }

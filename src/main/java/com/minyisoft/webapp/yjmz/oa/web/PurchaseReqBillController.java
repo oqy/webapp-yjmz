@@ -1,10 +1,12 @@
 package com.minyisoft.webapp.yjmz.oa.web;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.minyisoft.webapp.core.model.IBillObject;
 import com.minyisoft.webapp.core.model.criteria.PageDevice;
 import com.minyisoft.webapp.core.security.utils.PermissionUtils;
 import com.minyisoft.webapp.core.web.utils.SelectModuleFilter;
@@ -25,7 +29,10 @@ import com.minyisoft.webapp.yjmz.common.model.UserInfo;
 import com.minyisoft.webapp.yjmz.common.model.UserOrgRelationInfo;
 import com.minyisoft.webapp.yjmz.common.model.enumField.WorkFlowProcessStatusEnum;
 import com.minyisoft.webapp.yjmz.common.web.manage.ManageBaseController;
+import com.minyisoft.webapp.yjmz.oa.model.MaintainReqBillInfo;
+import com.minyisoft.webapp.yjmz.oa.model.MaintainReqEntryInfo;
 import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo;
+import com.minyisoft.webapp.yjmz.oa.model.PurchaseReqEntryInfo;
 import com.minyisoft.webapp.yjmz.oa.model.criteria.PurchaseReqBillCriteria;
 import com.minyisoft.webapp.yjmz.oa.service.PurchaseReqBillService;
 import com.minyisoft.webapp.yjmz.oa.web.view.PurchaseReqBillExcelView;
@@ -101,12 +108,28 @@ public class PurchaseReqBillController extends ManageBaseController {
 	 */
 	@RequestMapping(value = "purchaseReqBillEdit.html", method = RequestMethod.GET)
 	public String getPurchaseReqBillEditForm(@ModelAttribute("purchaseReqBill") PurchaseReqBillInfo purchaseReqBill,
-			Model model) {
+			@RequestParam(value = "sourceBill", required = false) IBillObject sourceBill, Model model) {
 		// 采购单已进入工作流程，不允许编辑
 		if (!purchaseReqBill.isProcessUnStarted()) {
 			return "redirect:purchaseReqBillList.html?processStatus=" + purchaseReqBill.getProcessStatus().getValue();
 		}
 		model.addAttribute("purchaseReqBill", purchaseReqBill);
+		model.addAttribute("sourceBill", sourceBill);
+		// 源单为工程维修单，将维修单分录转为采购单分录
+		if (sourceBill instanceof MaintainReqBillInfo
+				&& CollectionUtils.isNotEmpty(((MaintainReqBillInfo) sourceBill).getEntry())
+				&& CollectionUtils.isEmpty(purchaseReqBill.getEntry())) {
+			List<PurchaseReqEntryInfo> entry = Lists.newArrayList();
+			PurchaseReqEntryInfo purchaseReqEntry = null;
+			for (MaintainReqEntryInfo maintainReqEntry : ((MaintainReqBillInfo) sourceBill).getEntry()) {
+				purchaseReqEntry = new PurchaseReqEntryInfo();
+				purchaseReqEntry.setName(maintainReqEntry.getName());
+				purchaseReqEntry.setQuantity(maintainReqEntry.getQuantity());
+				purchaseReqEntry.setUnitPrice(maintainReqEntry.getPrice());
+				entry.add(purchaseReqEntry);
+			}
+			purchaseReqBill.setEntry(entry);
+		}
 		return "manage/purchaseReqBillEdit";
 	}
 

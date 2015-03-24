@@ -95,6 +95,25 @@
       <td th:text="${maintainReqBill.examiner!=null}?${maintainReqBill.examiner.name}">&nbsp;</td>
     </tr>
   </table>
+  <div th:with="optionalPurchaseReqBills = ${maintainReqBill.getChildBills(T(com.minyisoft.webapp.yjmz.oa.model.PurchaseReqBillInfo))}">
+    <table class="table table-bordered" th:if="${optionalPurchaseReqBills.present}">
+      <tr>
+        <th colspan="4">关联采购单</th>
+      </tr>
+      <tr>
+        <td>创建时间</td>
+        <td>采购申请人</td>
+        <td>采购进度</td>
+        <td>操作</td>
+      </tr>
+      <tr th:each="maintainReqBill : ${optionalPurchaseReqBills.get()}">
+      	<td th:text="${#dates.format(maintainReqBill.createDate,'yyyy-MM-dd HH:mm')}"></td>
+      	<td th:text="${maintainReqBill.createUser.name}"></td>
+      	<td th:text="${maintainReqBill.processStatus.description}"></td>
+      	<td><a class="btn btn-sm btn-primary" th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${maintainReqBill.id}}">详情</a></td>
+      </tr>
+    </table>
+  </div>
 </div>
 <div th:fragment="purchaseReqBill">
   <table style="width:100%; margin:10px 0px;">
@@ -124,6 +143,7 @@
       <td th:text="${entry.remark}">&nbsp;</td>
     </tr>
   </table>
+  <p th:if="${purchaseReqBill.sourceBill!=null}" th:with="sourceBillClassLabel = ${purchaseReqBill.sourceBill.classLabel}">备注：该采购单由上游<span th:text="${sourceBillClassLabel}"></span>关联生成&nbsp;<a class="btn btn-sm btn-primary" th:href="@{'/manage/workFlowDetail.html?workFlowModelId='+${purchaseReqBill.sourceBill.id}}">查看对应<span th:text="${sourceBillClassLabel}"></span>详情</a></p>
   <div class="row" th:if="${!#lists.isEmpty(purchaseReqBill.attachments)}">
     <div class="col-xs-6 col-md-3" th:each="attachment : ${purchaseReqBill.attachments}">
       <div class="thumbnail"><a th:href="${attachment.url}" target="_blank" th:class="${attachment.image}?'modal-view'"> <img th:src="${not attachment.image}?${resourceUrlRoot}+'/img/file-icon.jpg':${attachment.url}" class="img-responsive" style="height:150px;" th:title="${attachment.name}"/> </a>

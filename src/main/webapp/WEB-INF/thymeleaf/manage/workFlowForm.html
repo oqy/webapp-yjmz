@@ -105,6 +105,41 @@
     </div>
   </div>
 </div>
+<div th:fragment="maintainAssign">
+  <div class="form-group">
+    <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;维修技师：</label>
+    <div class="col-md-6">
+      <select id="maintenanceMan" name="maintenanceMan" class="form-control">
+        <option th:value="${currentUser.id}" th:text="${currentUser.name}"></option>
+        <option th:each="user : ${@userOrgRelationService.getSubordinateness(currentCompany,currentUser)}" th:value="${user.id}" th:text="${user.name}"></option>
+      </select>
+      <input type="hidden" id="receiver" name="receiver" th:value="${currentUser.id}"/>
+    </div>
+  </div>
+</div>
+<div th:fragment="maintainReceiveDeptPurchase">
+  <div class="form-group">
+    <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;物料采购：</label>
+    <div class="col-md-6">
+    <p class="help-block"><a class="btn btn-sm btn-success" th:href="@{'/manage/purchaseReqBillEdit.html?sourceBill='+${maintainReqBill.id}}">由工程部发起物料采购流程</a></p>
+    
+      <label class="radio-inline">
+      <input type="radio" name="purchaseFinished" value="true" checked="checked"/>
+      工程部已采购所选物料</label>
+      <label class="radio-inline">
+      <input type="radio" name="purchaseFinished" value="false"/>
+      需申请部门进行采购</label>
+      </div>
+  </div>
+</div>
+<div th:fragment="maintainApplyDeptPurchase">
+  <div class="form-group">
+    <label class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;物料采购：</label>
+    <div class="col-md-6">
+      <p class="help-block">若维修所选物料已采购完毕，请提交任务，否则请先&nbsp;<a class="btn btn-sm btn-success" th:href="@{'/manage/purchaseReqBillEdit.html?sourceBill='+${maintainReqBill.id}}">发起维修物料采购流程</a></p>
+    </div>
+  </div>
+</div>
 <div th:fragment="purchaseReqDepotCheck">
   <div class="form-group">
     <label for="reportTitle" class="col-md-2 control-label">采购信息：</label>

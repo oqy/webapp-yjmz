@@ -27,36 +27,36 @@
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="RoleResult">
     select
-    			r.forgid ,
-            	r.fvalue ,
-            	r.fname ,
-            	r.fdescription ,
-            	r.fcreateuserid ,
-            	r.fcreatedate ,
-            	r.flastupdateuserid ,
-            	r.flastupdatedate ,
-            	r.fversion,
-            	r.fid ,
-            	rp.fpermissionid
-          from t_common_role r left join t_common_role_permission rp on r.fid = rp.froleid
+		r.forgid ,
+      	r.fvalue ,
+      	r.fname ,
+      	r.fdescription ,
+      	r.fcreateuserid ,
+      	r.fcreatedate ,
+      	r.flastupdateuserid ,
+      	r.flastupdatedate ,
+      	r.fversion,
+      	r.fid ,
+      	rp.fpermissionid
+    from t_common_role r left join t_common_role_permission rp on r.fid = rp.froleid
     where r.fid = #{id}
   </select>
   
   <select id="getUserRoles" resultMap="RoleResult">
     select
-    			r.forgid ,
-            	r.fvalue ,
-            	r.fname ,
-            	r.fdescription ,
-            	r.fcreateuserid ,
-            	r.fcreatedate ,
-            	r.flastupdateuserid ,
-            	r.flastupdatedate ,
-            	r.fversion,
-            	r.fid  ,
-            	rp.fpermissionid
-    from  t_common_user_role ur left join t_common_role r on ur.froleid=r.fid
-    		left join t_common_role_permission rp on r.fid = rp.froleid
+		r.forgid ,
+      	r.fvalue ,
+      	r.fname ,
+      	r.fdescription ,
+      	r.fcreateuserid ,
+      	r.fcreatedate ,
+      	r.flastupdateuserid ,
+      	r.flastupdatedate ,
+      	r.fversion,
+      	r.fid  ,
+      	rp.fpermissionid
+	from  t_common_user_role ur left join t_common_role r on ur.froleid=r.fid
+			left join t_common_role_permission rp on r.fid = rp.froleid
     where ur.fuserid = #{user.id} 
     <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
     	and r.forgid= #{org.id}
@@ -90,17 +90,17 @@
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="RoleCriteria" resultMap="RoleResult">
     select
-    			r.forgid ,
-            	r.fvalue ,
-            	r.fname ,
-            	r.fdescription ,
-            	r.fcreateuserid ,
-            	r.fcreatedate ,
-            	r.flastupdateuserid ,
-            	r.flastupdatedate ,
-            	r.fversion,
-            	r.fid  ,
-            	rp.fpermissionid
+		r.forgid ,
+      	r.fvalue ,
+      	r.fname ,
+      	r.fdescription ,
+      	r.fcreateuserid ,
+      	r.fcreatedate ,
+      	r.flastupdateuserid ,
+      	r.flastupdatedate ,
+      	r.fversion,
+      	r.fid  ,
+      	rp.fpermissionid
     from (
     select * from t_common_role
     <include refid="getCriteriaCondition"/>

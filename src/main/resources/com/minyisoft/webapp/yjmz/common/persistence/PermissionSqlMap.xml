@@ -19,38 +19,31 @@
     </resultMap>
 
   <!-- 重要：下面增、删、改、查等操作定义，均会被基类方法调用，主要不要修改其id值 -->
+  
+  <sql id="selectItems">
+	select
+      	p.fvalue ,
+      	p.fgrouplabel ,
+      	p.fmodulecode ,
+      	p.fname ,
+      	p.fdescription ,
+      	p.fcreateuserid ,
+      	p.fcreatedate ,
+      	p.flastupdateuserid ,
+      	p.flastupdatedate ,
+      	p.fversion,
+      	p.fid 
+  </sql>
 
   <!-- 根据ID查询记录 -->
   <select id="getEntity" parameterType="String" resultMap="PermissionResult">
-    select
-            	fvalue ,
-            	fgrouplabel ,
-            	fmodulecode ,
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fversion,
-            	fid 
-          from t_common_permission
+    <include refid="selectItems"/>
+    from t_common_permission p
     where fid = #{id}
   </select>
   
   <select id="getRolePermission" parameterType="RoleInfo" resultMap="PermissionResult">
-    select
-            	p.fid ,            	
-            	p.fversion,
-            	p.fcreateuserid ,            	
-            	p.fdescription ,            	
-            	p.fname ,            	
-            	p.fvalue ,            	
-            	p.flastupdateuserid ,            	
-            	p.fcreatedate ,            	
-            	p.flastupdatedate ,
-            	p.fgrouplabel,
-            	p.fmodulecode
+    <include refid="selectItems"/>
     from  t_common_role_permission rp left join t_common_permission p on rp.fpermissionid=p.fid
     where froleid = #{id}
     order by fmodulecode asc,fgrouplabel asc
@@ -76,19 +69,8 @@
   
   <!-- 获取满足指定过滤条件的记录 -->
   <select id="getEntityCollection" parameterType="PermissionCriteria" resultMap="PermissionResult">
-    select
-            	fvalue ,
-            	fgrouplabel ,
-            	fmodulecode ,
-            	fname ,
-            	fdescription ,
-            	fcreateuserid ,
-            	fcreatedate ,
-            	flastupdateuserid ,
-            	flastupdatedate ,
-            	fversion,
-            	fid 
-          from t_common_permission
+    <include refid="selectItems"/>
+    from t_common_permission p
     <include refid="getCriteriaCondition"/>
     order by fmodulecode asc,fgrouplabel asc
 	<if test="pageDevice!=null">
@@ -120,4 +102,18 @@
   <delete id="deleteUselessRolePermission">
     delete from t_common_role_permission where fpermissionid not in (select fid from t_common_permission)
   </delete>
+  
+  <select id="hasPermission" resultType="Boolean">
+    select count(*) from t_common_permission p left join t_common_role_permission rp on p.fid=rp.fpermissionid
+    	left join t_common_role r on rp.froleid=r.fid 
+    	left join t_common_user_role ur on ur.froleid=r.fid
+    where ur.fuserid=#{user.id}
+    <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isNotEmpty(org)">
+    	and r.forgid= #{org.id}
+    </if>
+    <if test="@com.minyisoft.webapp.core.utils.mybatis.Ognl@isEmpty(org)">
+    	and r.forgid is null
+    </if>
+    and p.fvalue=#{value}
+  </select>
 </mapper>

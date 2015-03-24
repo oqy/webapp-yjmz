@@ -1,5 +1,8 @@
 package com.minyisoft.webapp.yjmz.common.model;
 
+import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.isTrue;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -23,9 +26,11 @@ import com.minyisoft.webapp.core.model.ISystemOrgObject;
 import com.minyisoft.webapp.core.model.ISystemUserObject;
 import com.minyisoft.webapp.core.security.utils.DigestUtils;
 import com.minyisoft.webapp.core.security.utils.EncodeUtils;
+import com.minyisoft.webapp.core.utils.spring.SpringUtils;
 import com.minyisoft.webapp.yjmz.common.model.enumField.CompanyStatusEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserMaleEnum;
 import com.minyisoft.webapp.yjmz.common.model.enumField.UserStatusEnum;
+import com.minyisoft.webapp.yjmz.common.persistence.PermissionDao;
 import com.minyisoft.webapp.yjmz.common.security.ShiroDbRealm;
 import com.minyisoft.webapp.yjmz.common.util.SystemConstant;
 
@@ -195,5 +200,20 @@ public class UserInfo extends DataBaseInfo implements ISystemUserObject {
 		}
 		return StringUtils.indexOf(targetUser.getUserPath(org), SystemConstant.ID_SEPARATOR + getId()
 				+ SystemConstant.ID_SEPARATOR) >= 0;
+	}
+
+	/**
+	 * 判断当前用户在指定组织是否拥有指定权限
+	 * 
+	 * @param org
+	 * @param permissionString
+	 * @return
+	 */
+	public boolean hasPermission(ISystemOrgObject org, String permissionString) {
+		isTrue(isBelongTo(org));
+		hasText(permissionString);
+
+		return SpringUtils.getApplicationContext().getBean(PermissionDao.class)
+				.hasPermission(this, org, permissionString);
 	}
 }
