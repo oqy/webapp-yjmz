@@ -15,6 +15,7 @@ import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.form.BooleanFormType;
 import org.activiti.engine.impl.form.DateFormType;
+import org.activiti.engine.impl.form.LongFormType;
 import org.activiti.engine.impl.form.StringFormType;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
@@ -205,6 +206,8 @@ public class WorkFlowController extends ManageBaseController {
 					if (user != null) {
 						variablesLocal.put(property.getName(), user.getName());
 					}
+				} else if (property.getType() instanceof LongFormType) {
+					variables.put(property.getId(), Long.parseLong(propertyVal));
 				} else if (property.getType() instanceof DateFormType) {
 					variables.put(property.getId(), DateUtils.parseDate(propertyVal, new String[] { "yyyy-MM-dd" }));
 					variablesLocal.put(property.getName(), propertyVal);

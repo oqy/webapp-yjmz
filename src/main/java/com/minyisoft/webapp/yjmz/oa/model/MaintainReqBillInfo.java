@@ -101,17 +101,6 @@ public class MaintainReqBillInfo extends CompanyWorkFlowBillBaseInfo {
 	private static final String _PURCHASE_CREATE_PREMISSION = "MaintainReqBill:create";
 
 	/**
-	 * 获取维修单接单部门采购单发起人
-	 * 
-	 * @return
-	 */
-	public UserInfo getReceiveDeptPurchasePromoter() {
-		notNull(receiver);
-		return receiver.hasPermission(getCompany(), _PURCHASE_CREATE_PREMISSION) ? receiver : receiver
-				.getUpperUser(getCompany());
-	}
-
-	/**
 	 * 获取维修单申请部门采购单发起人
 	 * 
 	 * @return

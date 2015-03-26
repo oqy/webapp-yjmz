@@ -112,11 +112,14 @@
     <p class="help-block"><a class="btn btn-sm btn-success" th:href="@{'/manage/purchaseReqBillEdit.html?sourceBill='+${maintainReqBill.id}}">由工程部发起物料采购流程</a></p>
     
       <label class="radio-inline">
-      <input type="radio" name="purchaseFinished" value="true" checked="checked"/>
+      <input type="radio" name="edPurchaseStatus" value="0" checked="checked"/>
       工程部已采购所选物料</label>
       <label class="radio-inline">
-      <input type="radio" name="purchaseFinished" value="false"/>
+      <input type="radio" name="edPurchaseStatus" value="1"/>
       需申请部门进行采购</label>
+      <label class="radio-inline">
+      <input type="radio" name="edPurchaseStatus" value="2"/>
+      需采购部协助外修</label>
       </div>
   </div>
 </div>
