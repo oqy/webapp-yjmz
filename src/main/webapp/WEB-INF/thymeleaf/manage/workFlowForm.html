@@ -109,18 +109,28 @@
   <div class="form-group">
     <label for="reportTitle" class="col-md-2 control-label"><span class="text-danger">*</span>&nbsp;物料采购：</label>
     <div class="col-md-6">
-    <p class="help-block"><a class="btn btn-sm btn-success" th:href="@{'/manage/purchaseReqBillEdit.html?sourceBill='+${maintainReqBill.id}}">由工程部发起物料采购流程</a></p>
-    
-      <label class="radio-inline">
-      <input type="radio" name="edPurchaseStatus" value="0" checked="checked"/>
-      工程部已采购所选物料</label>
-      <label class="radio-inline">
-      <input type="radio" name="edPurchaseStatus" value="1"/>
-      需申请部门进行采购</label>
-      <label class="radio-inline">
-      <input type="radio" name="edPurchaseStatus" value="2"/>
-      需采购部协助外修</label>
+      <p class="help-block"><a class="btn btn-sm btn-success" th:href="@{'/manage/purchaseReqBillEdit.html?sourceBill='+${maintainReqBill.id}}">由工程部发起物料采购流程</a></p>
+      <div class="radio">
+        <label>
+        <input type="radio" name="edPurchaseStatus" value="0" checked="checked"/>
+        工程部已采购所选物料</label>
       </div>
+      <div class="radio">
+        <label>
+        <input type="radio" name="edPurchaseStatus" value="1"/>
+        需申请部门进行采购</label>
+      </div>
+      <div class="radio">
+        <label>
+        <input type="radio" name="edPurchaseStatus" value="2"/>
+        需采购部协助外修</label>
+      </div>
+      <div class="radio">
+        <label>
+        <input type="radio" name="edPurchaseStatus" value="3"/>
+        需采购部进行采购</label>
+      </div>
+    </div>
   </div>
 </div>
 <div th:fragment="maintainApplyDeptPurchase">
