@@ -9,7 +9,7 @@
         <activiti:formProperty id="allowPurchaseReq" name="同意采购" type="boolean"></activiti:formProperty>
       </extensionElements>
     </userTask>
-    <userTask id="usertask3" name="采购员采购" activiti:assignee="13726309799" activiti:formKey="purchaseReqBuyerReport">
+    <userTask id="usertask3" name="采购员采购" activiti:assignee="13925493018" activiti:formKey="purchaseReqBuyerReport">
       <extensionElements>
         <activiti:formProperty id="purchaseFinished" name="采购完毕" type="boolean"></activiti:formProperty>
         <activiti:formProperty id="processReport" name="采购进度" type="string"></activiti:formProperty>

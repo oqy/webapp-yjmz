@@ -187,7 +187,7 @@ public class WorkFlowProcessController extends BaseController {
 		if (businessModel != null) {
 			return "redirect:workFlowDetail.html?workFlowModelId=" + businessModel.getId();
 		}
-		return "redirect:processInstances.html";
+		return "redirect:workFlowConfigList.html";
 	}
 
 	/**

@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="maintainProcess" name="工程维修单流程" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="applyUserId"></startEvent>
-    <userTask id="usertask1" name="工程部接单、分单" activiti:candidateUsers="15019638364,13326789149" activiti:formKey="maintainAssign"></userTask>
+    <userTask id="usertask1" name="工程部接单、分单" activiti:candidateUsers="13326789149" activiti:formKey="maintainAssign"></userTask>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
     <userTask id="usertask2" name="接单人维修" activiti:assignee="${maintainReqBill.maintenanceMan.cellPhoneNumber}" activiti:formKey="maintainExecute"></userTask>
     <sequenceFlow id="flow2" sourceRef="usertask1" targetRef="usertask2"></sequenceFlow>
@@ -25,7 +25,7 @@
     <sequenceFlow id="flow11" sourceRef="exclusivegateway2" targetRef="usertask3">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${maintainReqBill.maintainReply.value==0}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask4" name="工程部发起采购" activiti:assignee="15019638364" activiti:formKey="maintainReceiveDeptPurchase">
+    <userTask id="usertask4" name="工程部发起采购" activiti:assignee="13326789149" activiti:formKey="maintainReceiveDeptPurchase">
       <extensionElements>
         <activiti:formProperty id="edPurchaseStatus" name="已采购完毕" type="long"></activiti:formProperty>
       </extensionElements>
@@ -43,11 +43,11 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${edPurchaseStatus==0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow16" sourceRef="usertask5" targetRef="usertask2"></sequenceFlow>
-    <userTask id="usertask6" name="采购部外修" activiti:assignee="13726309799"></userTask>
+    <userTask id="usertask6" name="采购部外修" activiti:assignee="13925493018"></userTask>
     <sequenceFlow id="flow17" sourceRef="exclusivegateway3" targetRef="usertask6">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${edPurchaseStatus==2}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask7" name="工程部外修确认" activiti:assignee="15019638364">
+    <userTask id="usertask7" name="工程部外修确认" activiti:assignee="13326789149">
       <extensionElements>
         <activiti:formProperty id="onSiteRepairFinished" name="外修是否完毕" type="boolean"></activiti:formProperty>
       </extensionElements>
@@ -61,7 +61,7 @@
     <sequenceFlow id="flow21" sourceRef="exclusivegateway4" targetRef="usertask3">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${onSiteRepairFinished}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask8" name="采购部发起采购" activiti:assignee="13726309799" activiti:formKey="maintainApplyDeptPurchase"></userTask>
+    <userTask id="usertask8" name="采购部发起采购" activiti:assignee="13925493018" activiti:formKey="maintainApplyDeptPurchase"></userTask>
     <sequenceFlow id="flow22" sourceRef="exclusivegateway3" targetRef="usertask8">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${edPurchaseStatus==3}]]></conditionExpression>
     </sequenceFlow>
